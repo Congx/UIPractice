@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">UIPractice</string>
+    <string name="behavior_sample_title">com.example.uipractice.nestedscroll.CustomBehavior</string>
+    <string name="behavior_scroll">com.example.uipractice.nestedscroll.ScrollBehavior</string>
+</resources>

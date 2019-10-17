@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:id="@+id/contentView"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="100dp"
+        android:layout_height="match_parent">
+
+        <include layout="@layout/layout_scrollview_fill"></include>
+
+
+    </androidx.core.widget.NestedScrollView>
+
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="100dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="right"
+        app:layout_behavior="@string/behavior_scroll">
+
+        <include layout="@layout/layout_scrollview_fill"></include>
+
+    </androidx.core.widget.NestedScrollView>
+
+
+
+
+    <TextView
+        android:id="@+id/depentent"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:text="title"
+        android:textColor="@android:color/white"
+        android:gravity="center"
+        android:background="@android:color/black"></TextView>
+
+    <TextView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:text="title"
+        android:textColor="@android:color/white"
+        android:gravity="center"
+        android:clickable="true"
+        android:layout_gravity="right"
+        android:background="@android:color/black"
+        app:behavior_attr_test="dddddd"
+        app:layout_behavior="@string/behavior_sample_title"></TextView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

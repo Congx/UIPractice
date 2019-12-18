@@ -1,4 +1,4 @@
-package com.example.uipractice
+package com.example.uipractice.base
 
 import android.app.Activity
 

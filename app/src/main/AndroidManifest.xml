@@ -3,12 +3,20 @@
     package="com.example.uipractice">
 
     <application
+        android:name=".MyApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".AttrStyleActivity"></activity>
+        <activity
+            android:name=".keybord.KeybordActivity"
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".recyclerview.itemdivider.RvDividerActivity" />
+        <activity android:name=".recyclerview.RecyclerviewBaseActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -16,12 +24,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".ivpacage.ImageViewActivity"></activity>
-        <activity android:name=".ivpacage.ImageViewHintActivity"></activity>
-        <activity android:name=".nestedscroll.NestedBaseActivity"></activity>
-        <activity android:name=".nestedscroll.NestedBaseUsedActivity"></activity>
-        <activity android:name=".nestedscroll.NestedBehaviorActivity"></activity>
+        <activity android:name=".ivpacage.ImageViewActivity" />
+        <activity android:name=".ivpacage.ImageViewHintActivity" />
+        <activity android:name=".nestedscroll.NestedBaseActivity" />
+        <activity android:name=".nestedscroll.NestedBaseUsedActivity" />
+        <activity android:name=".nestedscroll.NestedBehaviorActivity" />
     </application>
 
 </manifest>

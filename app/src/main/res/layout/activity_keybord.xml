@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true"
+    tools:context=".keybord.KeybordActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="@color/colorPrimaryDark"></androidx.appcompat.widget.Toolbar>
+
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar"
+        android:layout_weight="1"
+        android:layout_marginBottom="50dp"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:id="@+id/tv_clip_borad"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:text="xxxxxxxxxxxxxxxxxxxxx"></TextView>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:text="xxxxxxxxxxxxxxxxxxxxx"></TextView>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:text="xxxxxxxxxxxxxxxxxxxxx"></TextView>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:text="xxxxxxxxxxxxxxxxxxxxx"></TextView>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:text="xxxxxxxxxxxxxxxxxxxxx"></TextView>
+
+
+        </LinearLayout>
+    </ScrollView>
+
+    <EditText
+        android:id="@+id/edit_query"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_height="wrap_content"></EditText>
+
+</RelativeLayout>

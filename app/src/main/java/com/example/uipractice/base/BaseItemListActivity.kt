@@ -1,8 +1,7 @@
-package com.example.uipractice
+package com.example.uipractice.base
 
 import android.content.Intent
 import android.view.View
-import com.example.uipractice.base.BaseListActivity
 import kotlinx.android.synthetic.main.item_base_list.view.*
 
 

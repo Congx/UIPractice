@@ -21,9 +21,14 @@ open abstract class BaseListAdapter<T> : RecyclerView.Adapter<MyHolder<T>> {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyHolder<T> {
         val inflate =
-            LayoutInflater.from(parent.context).inflate(R.layout.item_base_list, parent, false)
+            LayoutInflater.from(parent.context).inflate(getItemRes(), parent, false)
         return MyHolder(inflate)
     }
+
+    open fun getItemRes():Int {
+        return R.layout.item_base_list
+    }
+
 
     override fun onBindViewHolder(holder: MyHolder<T>, position: Int) {
         bindData(holder.itemView, list?.get(position))

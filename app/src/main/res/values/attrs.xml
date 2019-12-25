@@ -2,4 +2,36 @@
 <resources>
 
     <attr name="behavior_attr_test" format="string"></attr>
+
+    <attr name="text_color" format="color|dimension"></attr>
+
+    <attr name="dogSex">
+        <enum name="girl" value="0"></enum>
+        <enum name="boy" value="1"></enum>
+    </attr>
+
+    <attr name="dogName" format="string"></attr>
+    <attr name="dogColor" format="color|dimension"></attr>
+
+    <!-- flag 可以做或运算，enum 只能选择其中一个-->
+    <attr name="dogFood" format="flags">
+        <flag name="pork" value="0"></flag>
+        <flag name="fish" value="1"></flag>
+        <flag name="beef" value="2"></flag>
+    </attr>
+
+    <declare-styleable name="DogView">
+        <!-- 复用前面已经定义过的attr -->
+        <attr name="dogSex"/>
+        <!-- 错误写法，相当于重新定义了dogName 这是不允许的 不能再指定其他format-->
+<!--        <attr name="dogName" format="flags"></attr>-->
+        <attr name="dogName"/>
+        <attr name="dogColor"/>
+    </declare-styleable>
+
+    <style name="zangAo">
+        <item name="dogName">藏獒</item>
+        <item name="dogColor">@color/dogColor</item>
+        <item name="android:textColor">#2222ff</item>
+    </style>
 </resources>

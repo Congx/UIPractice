@@ -1,4 +1,4 @@
-package com.example.uipractice.ivpacage
+package com.example.uipractice.ui.ivpacage
 
 import android.graphics.Color
 import android.graphics.PorterDuff

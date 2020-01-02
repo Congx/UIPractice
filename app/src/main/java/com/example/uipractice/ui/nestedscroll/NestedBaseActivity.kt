@@ -1,4 +1,4 @@
-package com.example.uipractice.nestedscroll
+package com.example.uipractice.ui.nestedscroll
 
 import com.example.uipractice.base.BaseItemListActivity
 import com.example.uipractice.base.ItemBean

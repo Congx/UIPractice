@@ -8,9 +8,18 @@ import android.app.Application;
  * @description
  */
 public class MyApp extends Application {
+
+    private static MyApp application;
+
     @Override
     public void onCreate() {
+        application = this;
         super.onCreate();
         CrashHandler.getInstance().init(this,BuildConfig.DEBUG);
     }
+
+    public static Application getApplication() {
+        return application;
+    }
+
 }

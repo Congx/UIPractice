@@ -1,4 +1,4 @@
-package com.example.uipractice.keybord;
+package com.example.uipractice.ui.keybord;
 
 import androidx.appcompat.app.AppCompatActivity;
 

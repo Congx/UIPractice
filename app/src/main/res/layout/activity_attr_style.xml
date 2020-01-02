@@ -4,16 +4,35 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AttrStyleActivity">
+    android:foreground="?attr/selectableItemBackground"
+    tools:context=".ui.AttrStyleActivity">
 
-    <com.example.uipractice.custom.DogView
-        android:id="@+id/dogView"
+    <com.example.uipractice.ui.custom.DogView
         style="@style/zangAo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/dogView"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <com.example.uipractice.ui.custom.DogView
+        android:id="@+id/dogView2"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        app:dogStyle="?attr/xiaoHuang"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dogView" />
+
+    <com.example.uipractice.ui.custom.DogView
+        android:id="@+id/dogView3"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        app:dogColor="?attr/colorPrimaryDark"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dogView2" />
 
     <TextView
         style="@style/zangAo"
@@ -24,6 +43,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/dogView3" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

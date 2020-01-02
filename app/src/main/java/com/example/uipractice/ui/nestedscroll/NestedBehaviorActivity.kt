@@ -1,17 +1,9 @@
-package com.example.uipractice.nestedscroll
+package com.example.uipractice.ui.nestedscroll
 
-import android.content.Context
-import android.graphics.Color
-import android.graphics.PorterDuff
 import android.os.Bundle
-import android.util.AttributeSet
-import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
 import com.example.uipractice.R
 import kotlinx.android.synthetic.main.activity_cordinglayout_behavior.*
-import kotlinx.android.synthetic.main.activity_image_hint.*
 
 /**
  * 基本用法

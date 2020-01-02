@@ -2,7 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.uipractice">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
+        android:networkSecurityConfig="@xml/network_security_config"
         android:name=".MyApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -10,13 +14,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".AttrStyleActivity"></activity>
+        <activity android:name=".rxjava.BackPressActivity"></activity>
+        <activity android:name=".rxjava.RxJavaActivity" />
+        <activity android:name=".architecture.LiveActivity" />
+        <activity android:name=".architecture.ArchitectureActivity" />
+        <activity android:name=".ui.UIActivity" />
+        <activity android:name=".ui.AttrStyleActivity" />
         <activity
-            android:name=".keybord.KeybordActivity"
+            android:name=".ui.keybord.KeybordActivity"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".recyclerview.itemdivider.RvDividerActivity" />
-        <activity android:name=".recyclerview.RecyclerviewBaseActivity" />
+        <activity android:name=".ui.recyclerview.itemdivider.RvDividerActivity" />
+        <activity android:name=".ui.recyclerview.RecyclerviewBaseActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,11 +33,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ivpacage.ImageViewActivity" />
-        <activity android:name=".ivpacage.ImageViewHintActivity" />
-        <activity android:name=".nestedscroll.NestedBaseActivity" />
-        <activity android:name=".nestedscroll.NestedBaseUsedActivity" />
-        <activity android:name=".nestedscroll.NestedBehaviorActivity" />
+        <activity android:name=".ui.ivpacage.ImageViewActivity" />
+        <activity android:name=".ui.ivpacage.ImageViewHintActivity" />
+        <activity android:name=".ui.nestedscroll.NestedBaseActivity" />
+        <activity android:name=".ui.nestedscroll.NestedBaseUsedActivity" />
+        <activity android:name=".ui.nestedscroll.NestedBehaviorActivity" />
     </application>
 
 </manifest>

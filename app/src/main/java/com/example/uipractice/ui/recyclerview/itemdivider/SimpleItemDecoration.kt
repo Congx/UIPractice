@@ -1,4 +1,4 @@
-package com.example.uipractice.recyclerview.itemdivider
+package com.example.uipractice.ui.recyclerview.itemdivider
 
 import android.graphics.Canvas
 import android.graphics.Paint

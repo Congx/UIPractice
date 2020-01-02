@@ -1,8 +1,10 @@
-package com.example.uipractice;
+package com.example.uipractice.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.example.uipractice.R;
 
 public class AttrStyleActivity extends AppCompatActivity {
 

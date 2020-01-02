@@ -1,8 +1,8 @@
-package com.example.uipractice.recyclerview
+package com.example.uipractice.ui.recyclerview
 
 import com.example.uipractice.base.BaseItemListActivity
 import com.example.uipractice.base.ItemBean
-import com.example.uipractice.recyclerview.itemdivider.RvDividerActivity
+import com.example.uipractice.ui.recyclerview.itemdivider.RvDividerActivity
 
 import java.util.ArrayList
 

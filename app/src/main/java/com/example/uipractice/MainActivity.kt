@@ -1,20 +1,22 @@
 package com.example.uipractice
 
+import com.example.uipractice.architecture.ArchitectureActivity
 import com.example.uipractice.base.BaseItemListActivity
 import com.example.uipractice.base.ItemBean
-import com.example.uipractice.ivpacage.ImageViewActivity
-import com.example.uipractice.keybord.KeybordActivity
-import com.example.uipractice.nestedscroll.NestedBaseActivity
-import com.example.uipractice.recyclerview.RecyclerviewBaseActivity
+import com.example.uipractice.rxjava.RxJavaActivity
+import com.example.uipractice.ui.AttrStyleActivity
+import com.example.uipractice.ui.UIActivity
+import com.example.uipractice.ui.ivpacage.ImageViewActivity
+import com.example.uipractice.ui.keybord.KeybordActivity
+import com.example.uipractice.ui.nestedscroll.NestedBaseActivity
+import com.example.uipractice.ui.recyclerview.RecyclerviewBaseActivity
 
 class MainActivity : BaseItemListActivity() {
 
     var list:ArrayList<ItemBean>? = arrayListOf(
-        ItemBean("imageView相关", ImageViewActivity::class.java),
-        ItemBean("嵌套滑动", NestedBaseActivity::class.java),
-        ItemBean("recyclerview", RecyclerviewBaseActivity::class.java),
-        ItemBean("软键盘", KeybordActivity::class.java),
-        ItemBean("颜色-主题-属性", AttrStyleActivity::class.java)
+        ItemBean("ui相关", UIActivity::class.java),
+        ItemBean("架构组件", ArchitectureActivity::class.java),
+        ItemBean("rxJava", RxJavaActivity::class.java)
     )
 
     override fun getListData(): ArrayList<ItemBean>? {

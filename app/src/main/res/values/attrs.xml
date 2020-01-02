@@ -12,6 +12,7 @@
 
     <attr name="dogName" format="string"></attr>
     <attr name="dogColor" format="color|dimension"></attr>
+    <attr name="dogColor2" format="color|dimension"></attr>
 
     <!-- flag 可以做或运算，enum 只能选择其中一个-->
     <attr name="dogFood" format="flags">
@@ -27,11 +28,9 @@
 <!--        <attr name="dogName" format="flags"></attr>-->
         <attr name="dogName"/>
         <attr name="dogColor"/>
+        <attr name="android:textColor"/>
+        <attr name="dogStyle" format="reference"></attr>
     </declare-styleable>
 
-    <style name="zangAo">
-        <item name="dogName">藏獒</item>
-        <item name="dogColor">@color/dogColor</item>
-        <item name="android:textColor">#2222ff</item>
-    </style>
+    <attr name="xiaoHuang" format="reference"></attr>
 </resources>

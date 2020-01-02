@@ -1,20 +1,16 @@
-package com.example.uipractice.recyclerview.itemdivider
+package com.example.uipractice.ui.recyclerview.itemdivider
 
 import androidx.appcompat.app.AppCompatActivity
 
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 
 import com.example.uipractice.R
 import com.example.uipractice.base.BaseListAdapter
 import com.example.uipractice.utils.TestDataUtils
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.item_base_list.*
-import kotlinx.android.synthetic.main.item_base_list.view.*
-import kotlinx.android.synthetic.main.item_base_list.view.tv_content
 import java.util.ArrayList
 
 class RvDividerActivity : AppCompatActivity() {

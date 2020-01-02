@@ -1,11 +1,8 @@
-package com.example.uipractice.nestedscroll
+package com.example.uipractice.ui.nestedscroll
 
-import android.graphics.Color
-import android.graphics.PorterDuff
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.uipractice.R
-import kotlinx.android.synthetic.main.activity_image_hint.*
 
 /**
  * 基本用法

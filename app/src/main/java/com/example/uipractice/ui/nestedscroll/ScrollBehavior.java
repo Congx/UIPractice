@@ -1,11 +1,10 @@
-package com.example.uipractice.nestedscroll;
+package com.example.uipractice.ui.nestedscroll;
 
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;

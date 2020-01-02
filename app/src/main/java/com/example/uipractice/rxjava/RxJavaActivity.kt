@@ -1,17 +1,15 @@
-package com.example.uipractice.ivpacage
+package com.example.uipractice.rxjava
 
 import com.example.uipractice.base.BaseItemListActivity
 import com.example.uipractice.base.ItemBean
-import java.util.*
 
-class ImageViewActivity : BaseItemListActivity() {
+class RxJavaActivity : BaseItemListActivity() {
 
     var list:ArrayList<ItemBean>? = arrayListOf(
-        ItemBean("imageView hint 练习", ImageViewHintActivity::class.java)
+        ItemBean("背压", BackPressActivity::class.java)
     )
 
     override fun getListData(): ArrayList<ItemBean>? {
         return list
     }
-
 }

@@ -1,5 +1,6 @@
 package com.example.uipractice.api
 
+import com.base.rxjavalib.RxUtils
 import com.example.uipractice.bean.PublishBean
 import com.example.uipractice.net.RetrofitServer
 import io.reactivex.Observable

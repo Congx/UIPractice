@@ -11,6 +11,9 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.uipractice.R;
+import com.example.uipractice.api.ApiRepository;
+import com.uber.autodispose.AutoDispose;
+import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider;
 
 public class KeybordActivity extends AppCompatActivity {
 

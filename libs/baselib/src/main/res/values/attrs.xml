@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 默认状态栏颜色，在需要在主题中设置 -->
+    <attr name="statuBarColor" format="color|dimension"></attr>
+</resources>

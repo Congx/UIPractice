@@ -1,0 +1,42 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-android'
+android {
+
+    androidLibConfig(getOwner())
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+apply plugin: 'maven'
+/**
+ * 打包到本地测试
+ */
+uploadArchives {
+    description "Installs the artifacts to the local Maven repository."
+    configuration = configurations['archives']
+    repositories {
+        mavenDeployer {
+            pom.version = "1.0.0"
+            pom.artifactId = "libcustom"
+            pom.groupId = "com.base.libcustom"
+            def url = "file://${System.properties['user.home']}/.m2/repository"
+            repository url: url
+            println("本地仓库路径：$url")
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    // kotlin依赖
+    kotlinDependencies()
+    implementation rootProject.ext.libs.libsAll
+    implementation project(path: ':baselib')
+}

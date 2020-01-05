@@ -1,6 +1,5 @@
 package com.example.uipractice.net
 
-import android.util.Log
 import com.example.uipractice.MyApp
 import com.example.uipractice.utils.NetworkUtils
 import okhttp3.CacheControl

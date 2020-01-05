@@ -2,6 +2,8 @@ package com.example.uipractice.net
 
 import org.json.JSONException
 import com.google.gson.JsonParseException
+import com.google.gson.stream.MalformedJsonException
+import org.apache.http.conn.ConnectTimeoutException
 import retrofit2.HttpException
 import java.net.ConnectException
 import java.text.ParseException
@@ -14,10 +16,58 @@ import java.text.ParseException
  */
 class ExceptionHandle {
 
+    private val UNAUTHORIZED = 401
+    private val FORBIDDEN = 403
+    private val NOT_FOUND = 404
+    private val NOT_ALLOW = 405
+    private val REQUEST_TIMEOUT = 408
+    private val INTERNAL_SERVER_ERROR = 500
+    private val SERVICE_UNAVAILABLE = 503
+
+    fun handleException(e: Throwable?): ServiceException {
+        e?.printStackTrace()
+        val ex: ServiceException
+        if (e is HttpException) {
+            val httpException = e as HttpException?
+            var message: String? = null
+            when (httpException!!.code()) {
+                UNAUTHORIZED -> message = "操作未授权"
+                FORBIDDEN -> message = "请求被拒绝"
+                NOT_FOUND -> message = "服务器不可用"
+                REQUEST_TIMEOUT -> message = "服务器执行超时"
+                INTERNAL_SERVER_ERROR -> message = "服务器内部错误"
+                SERVICE_UNAVAILABLE -> message = "服务器不可用"
+                NOT_ALLOW -> message = "HTTP 405 not allowed"
+                else -> message = "网络错误"
+            }
+            ex = ServiceException(httpException.code(), message)
+        } else if (e is JsonParseException
+            || e is JSONException
+            || e is android.net.ParseException || e is MalformedJsonException
+        ) {
+            ex = ServiceException(ERROR.PARSE_ERROR, "解析错误")
+        } else if (e is ConnectException) {
+            ex = ServiceException(ERROR.NETWORD_ERROR, "连接失败")
+        } else if (e is javax.net.ssl.SSLException) {
+            ex = ServiceException(ERROR.SSL_ERROR, "证书验证失败")
+        } else if (e is ConnectTimeoutException) {
+            ex = ServiceException(ERROR.TIMEOUT_ERROR, "连接超时")
+        } else if (e is java.net.SocketTimeoutException) {
+            ex = ServiceException(ERROR.TIMEOUT_ERROR, "连接超时")
+        } else if (e is java.net.UnknownHostException) {
+            ex = ServiceException(ERROR.TIMEOUT_ERROR, "网络异常、请检查网络！")
+        } else {
+            ex = ServiceException(ERROR.UNKNOWN, "未知错误")
+        }
+        ex.setRawThrowable(e)
+        return ex
+    }
+
+
     /**
-     * 约定异常
+     * 约定异常 这个具体规则需要与服务端或者领导商讨定义
      */
-    internal object ERROR {
+    object ERROR {
         /**
          * 未知错误
          */
@@ -39,61 +89,10 @@ class ExceptionHandle {
          * 证书出错
          */
         val SSL_ERROR = 1005
-    }
 
-    class ResponeThrowable(throwable: Throwable, var code: Int) : Exception(throwable) {
-        override var message: String? = null
-    }
-    inner class ServerException : RuntimeException() {
-        var code: Int = 0
-        override var message: String? = null
-    }
-
-    companion object {
-
-        private val UNAUTHORIZED = 401
-        private val FORBIDDEN = 403
-        private val NOT_FOUND = 404
-        private val REQUEST_TIMEOUT = 408
-        private val INTERNAL_SERVER_ERROR = 500
-        private val BAD_GATEWAY = 502
-        private val SERVICE_UNAVAILABLE = 503
-        private val GATEWAY_TIMEOUT = 504
-
-        fun handleException(e: Throwable): ResponeThrowable {
-            val ex: ResponeThrowable
-            if (e is HttpException) {
-                ex = ResponeThrowable(e, ERROR.HTTP_ERROR)
-                when (e.code()) {
-                    UNAUTHORIZED, FORBIDDEN, NOT_FOUND, REQUEST_TIMEOUT, GATEWAY_TIMEOUT, INTERNAL_SERVER_ERROR, BAD_GATEWAY, SERVICE_UNAVAILABLE -> ex.message =
-                        "网络错误"
-                    else -> ex.message = "网络错误"
-                }
-                return ex
-            } else if (e is ServerException) {
-                ex = ResponeThrowable(e, e.code)
-                ex.message = e.message
-                return ex
-            } else if (e is JsonParseException
-                || e is JSONException
-                || e is ParseException
-            ) {
-                ex = ResponeThrowable(e, ERROR.PARSE_ERROR)
-                ex.message = "解析错误"
-                return ex
-            } else if (e is ConnectException) {
-                ex = ResponeThrowable(e, ERROR.NETWORD_ERROR)
-                ex.message = "连接失败"
-                return ex
-            } else if (e is javax.net.ssl.SSLHandshakeException) {
-                ex = ResponeThrowable(e, ERROR.SSL_ERROR)
-                ex.message = "证书验证失败"
-                return ex
-            } else {
-                ex = ResponeThrowable(e, ERROR.UNKNOWN)
-                ex.message = "未知错误"
-                return ex
-            }
-        }
+        /**
+         * 连接超时
+         */
+        val TIMEOUT_ERROR = 1006
     }
 }

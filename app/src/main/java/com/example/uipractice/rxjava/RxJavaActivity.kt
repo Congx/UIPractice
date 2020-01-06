@@ -6,6 +6,7 @@ import com.example.uipractice.base.ItemBean
 class RxJavaActivity : BaseItemListActivity() {
 
     var list:ArrayList<ItemBean>? = arrayListOf(
+        ItemBean("autodispose", AutoDisposeActivity::class.java),
         ItemBean("背压", BackPressActivity::class.java)
     )
 

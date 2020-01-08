@@ -14,7 +14,7 @@ open class DefaultDelegateImpl<T : LifyCycleViewModel>(var activity: BaseViewAct
 
     override lateinit var viewModule: T
 
-    override var statusViewControl:StatusViewControl = StatusViewControl(activity)
+    override var statusViewControl:StatusViewControl = StatusViewControl()
 
     override fun showDialog(message: String) {
 
@@ -64,10 +64,6 @@ open class DefaultDelegateImpl<T : LifyCycleViewModel>(var activity: BaseViewAct
 
     }
 
-//    override fun getStatusControl(): StatusViewControl {
-//        return statusViewControl
-//    }
-
     override fun createViewModel(activity: FragmentActivity, tClass: Class<T>): T {
         viewModule = ViewModelProviders.of(activity).get(tClass)
         activity.lifecycle.addObserver(viewModule)
@@ -80,8 +76,5 @@ open class DefaultDelegateImpl<T : LifyCycleViewModel>(var activity: BaseViewAct
         return viewModule
     }
 
-//    override fun getViewModel(): T {
-//        return viewModle
-//    }
 
 }

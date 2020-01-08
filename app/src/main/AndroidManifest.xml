@@ -14,6 +14,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <activity android:name=".SplashActivity"
+            android:theme="@style/Splash">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <activity android:name=".rxjava.AutoDisposeActivity"></activity>
         <activity android:name=".ui.viewPager2.ViewPagerActivity" />
         <activity android:name=".ui.viewPager2.ViewPager2Activity" />
@@ -30,11 +40,6 @@
         <activity android:name=".ui.recyclerview.itemdivider.RvDividerActivity" />
         <activity android:name=".ui.recyclerview.RecyclerviewBaseActivity" />
         <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".ui.ivpacage.ImageViewActivity" />
         <activity android:name=".ui.ivpacage.ImageViewHintActivity" />

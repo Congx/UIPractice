@@ -20,10 +20,18 @@ class BackPressActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_back_press)
-        val disposable = Observable.just("str")
-            .doOnDispose { Log.e("AutoDisposeActivity", "dispose") }
-            .`as`(RxUtils.bindLifecycle(this))
-            .subscribe { str -> Log.e("AutoDisposeActivity", str) }
+//        val disposable = Observable.just("str")
+//            .doOnDispose { Log.e("AutoDisposeActivity", "dispose") }
+//            .`as`(RxUtils.bindLifecycle(this))
+//            .subscribe { str -> Log.e("AutoDisposeActivity", str) }
+
+        ApiRepository.getPublishList().`as`(RxUtils.bindLifecycle(this))
+            .subscribe({ list->
+                Log.e("BackPressActivity",list.size.toString())
+            },{ e->
+                e.printStackTrace()
+            })
+
 
     }
 

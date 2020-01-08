@@ -1,6 +1,7 @@
 package com.base.framwork.activity;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.View;
 
 import androidx.annotation.CallSuper;
@@ -25,9 +26,9 @@ public abstract class BaseViewActivity<T extends LifyCycleViewModel> extends Flo
     private BaseViewDelegate<T> mDelegate;
 
     @Override
-    @CallSuper
-    public void initView() {
+    protected void onCreate(@androidx.annotation.Nullable Bundle savedInstanceState) {
         createViewModel();
+        super.onCreate(savedInstanceState);
     }
 
     /**
@@ -64,7 +65,11 @@ public abstract class BaseViewActivity<T extends LifyCycleViewModel> extends Flo
     }
 
     public T getViewModel() {
-       return getViewDelegate().getViewModule();
+        T viewModule = getViewDelegate().getViewModule();
+        if(viewModule == null) {
+            viewModule = createViewModel();
+        }
+        return viewModule;
     }
 
     /**
@@ -79,7 +84,7 @@ public abstract class BaseViewActivity<T extends LifyCycleViewModel> extends Flo
         return mDelegate;
     }
 
-    public void setDelegate(DefaultDelegateImpl<T> delegate) {
+    public void setDelegate(BaseViewDelegate<T> delegate) {
         this.mDelegate = delegate;
     }
 
@@ -142,4 +147,6 @@ public abstract class BaseViewActivity<T extends LifyCycleViewModel> extends Flo
     public void gotoLoginActivity() {
         getViewDelegate().gotoLoginActivity();
     }
+
+
 }

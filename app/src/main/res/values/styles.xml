@@ -26,4 +26,14 @@
         <item name="android:textColor">#2222ff</item>
     </style>
 
+    <!-- Base application theme. -->
+    <style name="BaseTheme.AppTheme" >
+        <!-- todo -->
+    </style>
+
+    <style name="Splash" parent="BaseTheme.AppTheme">
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
 </resources>

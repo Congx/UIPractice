@@ -19,17 +19,11 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class RxUtils {
     public static <T> ObservableTransformer<T,T> applySchedulers() {
-        return new ObservableTransformer<T,T>() {
-
-            @Override
-            public ObservableSource<T> apply(Observable<T> upstream) {
-                return upstream.subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread());
-            }
-        };
+        return upstream -> upstream.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
     }
 
     public static <T> AutoDisposeConverter<T> bindLifecycle(LifecycleOwner lifecycleOwner) {
-        return AutoDispose.<T>autoDisposable(AndroidLifecycleScopeProvider.from(lifecycleOwner));
+        return AutoDispose.autoDisposable(AndroidLifecycleScopeProvider.from(lifecycleOwner));
     }
 }

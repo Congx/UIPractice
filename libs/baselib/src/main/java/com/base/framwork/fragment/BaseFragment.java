@@ -28,13 +28,16 @@ public abstract class BaseFragment extends Fragment implements ILifeProcessor {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // fragment intent为空
-        initParams(null);
+        initParams();
+    }
+
+    public void initParams() {
+
     }
 
     @Override
     public void initParams(@NotNull Intent intent) {
-
+        // empty
     }
 
     @Nullable

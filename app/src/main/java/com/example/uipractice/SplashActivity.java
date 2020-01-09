@@ -6,11 +6,13 @@ import android.os.Build;
 import android.os.Handler;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
 import com.base.framwork.activity.BaseViewActivity;
+import com.base.framwork.image.ImageLoader;
 import com.base.framwork.p.LifyCycleViewModel;
 
 import io.reactivex.Observable;
@@ -87,10 +89,7 @@ public class SplashActivity extends BaseViewActivity {
     @SuppressLint("AutoDispose")
     @Override
     public void initData() {
-//        Observable.just("")
-//                .flatMap(t-> Observable.empty()).subscribe(t-> {
-//
-//        });
+
     }
 
     @Override

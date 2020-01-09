@@ -10,6 +10,7 @@ import com.base.custom.callback.TimeoutCallback;
 import com.base.framwork.BuildConfig;
 import com.base.framwork.app.AppActivityLifecycleCallback;
 import com.base.framwork.app.CrashHandler;
+import com.base.framwork.image.ImageLoader;
 import com.base.framwork.ui.statusview.core.LoadSir;
 
 /**
@@ -38,6 +39,9 @@ public class MyApp extends Application {
                 .addCallback(new CustomCallback())
                 .setDefaultCallback(LoadingCallback.class)
                 .commit();
+
+        ImageLoader.globeErrorId = R.mipmap.app_logo;
+        ImageLoader.globeProgressId = R.mipmap.app_logo;
     }
 
     public static Application getApplication() {

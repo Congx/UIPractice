@@ -11,6 +11,10 @@ ext {
     ]
 
     libVersion = {
+        other = [
+                "glide"   : "4.10.0",
+        ]
+
         rxJava = [
                 "rxJava"   : "2.2.15",
                 "rxAndrood": "2.1.1",
@@ -31,7 +35,8 @@ ext {
         libsMap = new HashMap<String, String>()
         //单独引用，用这里
         other = [
-                "leakcanary"   : "com.squareup.leakcanary:leakcanary-android:2.0"
+                "leakcanary"   : "com.squareup.leakcanary:leakcanary-android:2.0",
+                "glide"   : "com.github.bumptech.glide:glide:${rootProject.ext.libVersion.other.glide}"
         ]
         rxJava = [
                 "rxjava"   : "io.reactivex.rxjava2:rxjava:${rootProject.ext.libVersion.rxJava.rxJava}",

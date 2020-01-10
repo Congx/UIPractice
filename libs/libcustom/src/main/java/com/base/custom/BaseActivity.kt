@@ -22,39 +22,8 @@ abstract class BaseActivity<T : LifyCycleViewModel> : BaseViewActivity<T>() {
     override fun getViewDelegate(): BaseViewDelegate<T> {
         super.getViewDelegate()
 
-        viewDelegate.statusViewControl.dialog = object : DialogLoading() {
-
-            override fun hideLoading() {
-                Toast.makeText(this@BaseActivity, "hideLoading", Toast.LENGTH_LONG).show()
-            }
-
-            override fun showLoading() {
-                Toast.makeText(this@BaseActivity, "showLoading", Toast.LENGTH_LONG).show()
-            }
-
-        }
-
-
-        viewDelegate.statusViewControl.loaderSir = object : AbStatusView() {
-
-            override fun register(target: View, callback: (View) -> Unit) {
-                default = LoadSir.getDefault().register(target,callback)
-            }
-
-            override fun showLoading(message: String, type: Int) {
-                default?.showCallback(LoadingCallback::class.java)
-
-            }
-
-            override fun showNormal() {
-                default?.showSuccess()
-            }
-
-            override fun showError(message: String, type: Int) {
-                default?.showCallback(ErrorCallback::class.java)
-            }
-
-        }
+        viewDelegate.statusViewControl.dialog = DialogDefault(this)
+        viewDelegate.statusViewControl.loaderSir = LoadSirDefault()
 
         return viewDelegate
     }

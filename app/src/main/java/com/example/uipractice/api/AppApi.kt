@@ -1,9 +1,8 @@
 package com.example.uipractice.api
 
 import com.example.uipractice.bean.PublishBean
-import com.example.uipractice.net.BaseResponse
+import com.base.custom.net.BaseResponse
 import io.reactivex.Observable
-import retrofit2.Call
 import retrofit2.http.GET
 
 

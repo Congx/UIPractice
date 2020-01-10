@@ -1,4 +1,4 @@
-package com.example.uipractice.net
+package com.base.custom.net
 
 /**
  * @date 2019-12-29

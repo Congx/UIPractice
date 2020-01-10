@@ -2,6 +2,7 @@ package com.example.uipractice;
 
 import android.app.Application;
 
+import com.base.custom.AppContext;
 import com.base.custom.callback.CustomCallback;
 import com.base.custom.callback.EmptyCallback;
 import com.base.custom.callback.ErrorCallback;
@@ -42,6 +43,10 @@ public class MyApp extends Application {
 
         ImageLoader.globeErrorId = R.mipmap.app_logo;
         ImageLoader.globeProgressId = R.mipmap.app_logo;
+
+        // 初始化 别的库用到的context
+        // 基础库的
+        AppContext.INSTANCE.init(this);
     }
 
     public static Application getApplication() {

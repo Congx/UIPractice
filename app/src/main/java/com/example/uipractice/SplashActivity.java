@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
 import com.base.framwork.activity.BaseViewActivity;
+import com.base.framwork.image.IimageLoader;
 import com.base.framwork.image.ImageLoader;
 import com.base.framwork.p.LifyCycleViewModel;
 
@@ -89,7 +90,16 @@ public class SplashActivity extends BaseViewActivity {
     @SuppressLint("AutoDispose")
     @Override
     public void initData() {
-
+//        Observable.just("")
+//                .flatMap(t-> Observable.empty()).subscribe(t-> {
+//
+//        });
+//        String imgUrl = "http://p15.qhimg.com/bdm/720_444_0/t01b12dfd7f42342197.jpg";
+//        ImageView image = findViewById(R.id.image);
+//        IimageLoader request = ImageLoader.getRequest();
+//        request.getConfig().setProgressId(R.drawable.ic_svg_chevron_back_solid);
+//        request.getConfig().setErrorId(R.drawable.ic_launcher_background);
+//        request.display(image.getContext(),image,imgUrl,R.mipmap.app_logo);
     }
 
     @Override

@@ -14,15 +14,8 @@ object ApiRepository {
 
     fun getPublishList(): Observable<List<PublishBean>> {
         return RetrofitServer.defaultRetrofitClient.create(AppApi::class.java).getPublishList()
-            .compose(RxUtils.applySchedulers())
-            .flatMap {
-                var list = it.data
-                if (list == null) {
-                    Observable.empty()
-                } else {
-                    Observable.just(list)
-                }
-            }
+            .compose(RxUtils.transformer())
 
     }
+
 }

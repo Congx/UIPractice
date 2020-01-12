@@ -42,42 +42,62 @@ class GlideLoader : IimageLoader {
         }
     }
 
-    fun displayRealy(
+    override var config: IimageLoader.Config = IimageLoader.Config()
+
+    override fun config(config: IimageLoader.Config) {
+        this.config
+    }
+
+    override fun isNeedLoadingImg(boolean: Boolean) {
+        this.config.isNeedLoadingImg = boolean
+    }
+
+    override fun isNeedLoadFault(boolean: Boolean) {
+        this.config.isNeedLoadError = boolean
+    }
+
+    private fun displayRealy(
         context: Any,
         imageView: ImageView,
         url: String,
-        progressId: Int,
-        errorId: Int,
-        radio: Int
-    ) {
+        config: IimageLoader.Config
+    ) : IimageLoader {
         try { // 以防万一
-            val requestOptions = RequestOptions.bitmapTransform(RoundedCorners(radio))
-            if(progressId != -1) {
-                requestOptions.placeholder(progressId)
+            val requestOptions:RequestOptions = if (config.radio > 0) {
+                RequestOptions.bitmapTransform(RoundedCorners(config.radio))
             }else {
-                if(ImageLoader.globeErrorId != -1)requestOptions.placeholder(ImageLoader.globeProgressId)
+                RequestOptions()
             }
-
-            if(errorId != -1) {
-                progressId?.let { requestOptions.placeholder(it) }
+            // 大于0 肯定是有加载占位图
+            if(config.progressId != -1) {
+                requestOptions.placeholder(config.progressId)
             }else {
-                if(ImageLoader.globeErrorId != -1)requestOptions.placeholder(ImageLoader.globeErrorId)
+                // 在没有设置的占位id的情况下，判断开关是否开启+id是否全局设置，默认关闭
+                if(ImageLoader.globeProgressId != -1 && config.isNeedLoadingImg)
+                    requestOptions.placeholder(ImageLoader.globeProgressId)
+            }
+            // 逻辑同上
+            if(config.errorId != -1) {
+                config.errorId?.let { requestOptions.placeholder(it) }
+            }else {
+                if(ImageLoader.globeErrorId != -1 && config.isNeedLoadError)
+                    requestOptions.placeholder(ImageLoader.globeErrorId)
             }
 
             if(context is Activity && isValidContextForGlide(context)) {
                 Glide.with(context).load(url).apply(requestOptions)
                     .apply(requestOptions).into(imageView)
-                return
+                return this
             }
 
             if(context is Fragment && isValidContextForGlide(context)) {
                 Glide.with(context).load(url).apply(requestOptions).into(imageView)
-                return
+                return this
             }
 
             if(context is View && isValidContextForGlide(context.context)) {
                 Glide.with(context).load(url).apply(requestOptions).into(imageView)
-                return
+                return this
             }
 
             // 不建议使用
@@ -88,6 +108,7 @@ class GlideLoader : IimageLoader {
             e.printStackTrace()
         }
 
+        return this
 
     }
 
@@ -105,8 +126,17 @@ class GlideLoader : IimageLoader {
         progressId: Int,
         errorId: Int,
         radio: Int
-    ) {
-        displayRealy(context,imageView,url,progressId,errorId,radio)
+    ) : IimageLoader {
+        if(progressId > 0) {
+            config.progressId = progressId
+        }
+        if (errorId > 0) {
+            config.errorId = errorId
+        }
+        if (radio > 0) {
+            config.radio = radio
+        }
+        return displayRealy(context,imageView,url,config)
     }
 
     override fun display(
@@ -115,16 +145,20 @@ class GlideLoader : IimageLoader {
         url: String,
         progressId: Int,
         errorId: Int
-    ) {
-        display(context,imageView,url,progressId,errorId,0)
+    ) : IimageLoader {
+        return display(context,imageView,url,progressId,errorId,0)
     }
 
-    override fun display(context: Context, imageView: ImageView, url: String, progressId: Int) {
-        display(context,imageView,url,progressId,-1)
+    override fun display(context: Context, imageView: ImageView, url: String, progressId: Int) : IimageLoader {
+        return display(context,imageView,url,progressId,-1)
     }
 
-    override fun display(context: Context, imageView: ImageView, url: String) {
-        display(context,imageView,url,-1)
+    override fun display(context: Context, imageView: ImageView, url: String) : IimageLoader {
+        return display(context,imageView,url,-1)
+    }
+
+    override fun display(context: Context, imageView: ImageView, url: String, config: IimageLoader.Config): IimageLoader {
+        return displayRealy(context,imageView,url,config)
     }
 
     /**
@@ -137,8 +171,11 @@ class GlideLoader : IimageLoader {
         progressId: Int,
         errorId: Int,
         radio: Int
-    ) {
-        displayRealy(context,imageView,url,progressId,errorId,radio)
+    ) : IimageLoader {
+        config.progressId = progressId
+        config.errorId = errorId
+        config.radio = radio
+        return displayRealy(context,imageView,url,config)
     }
 
     override fun display(
@@ -147,16 +184,20 @@ class GlideLoader : IimageLoader {
         url: String,
         progressId: Int,
         errorId: Int
-    ) {
-        displayRealy(context,imageView,url,progressId,errorId,0)
+    ) : IimageLoader {
+        return display(context,imageView,url,progressId,errorId,0)
     }
 
-    override fun display(context: Fragment, imageView: ImageView, url: String, progressId: Int) {
-        display(context,imageView,url,progressId,-1)
+    override fun display(context: Fragment, imageView: ImageView, url: String, progressId: Int) : IimageLoader {
+        return display(context,imageView,url,progressId,-1)
     }
 
-    override fun display(context: Fragment, imageView: ImageView, url: String) {
-        display(context,imageView,url,-1)
+    override fun display(context: Fragment, imageView: ImageView, url: String) : IimageLoader {
+        return display(context,imageView,url,-1)
+    }
+
+    override fun display(context: Fragment, imageView: ImageView, url: String, config: IimageLoader.Config): IimageLoader {
+        return displayRealy(context,imageView,url,config)
     }
 
     /**
@@ -169,8 +210,11 @@ class GlideLoader : IimageLoader {
         progressId: Int,
         errorId: Int,
         radio: Int
-    ) {
-        displayRealy(context,imageView,url,progressId,errorId,radio)
+    ) : IimageLoader {
+        config.progressId = progressId
+        config.errorId = errorId
+        config.radio = radio
+        return displayRealy(context,imageView,url,config)
     }
 
     override fun display(
@@ -179,19 +223,23 @@ class GlideLoader : IimageLoader {
         url: String,
         progressId: Int,
         errorId: Int
-    ) {
-        display(context,imageView,url,progressId,errorId,0)
+    ) : IimageLoader {
+        return display(context,imageView,url,progressId,errorId,0)
     }
 
-    override fun display(context: View, imageView: ImageView, url: String, progressId: Int) {
-        display(context,imageView,url,progressId,-1)
+    override fun display(context: View, imageView: ImageView, url: String, progressId: Int) : IimageLoader {
+        return display(context,imageView,url,progressId,-1)
     }
 
-    override fun display(context: View, imageView: ImageView, url: String) {
-        display(context,imageView,url,-1)
+    override fun display(context: View, imageView: ImageView, url: String) : IimageLoader {
+        return display(context,imageView,url,-1)
     }
 
-    override fun display(context: Any, imageView: ImageView, uri: Uri) {
+    override fun display(context: View, imageView: ImageView, url: String, config: IimageLoader.Config): IimageLoader {
+        return displayRealy(context,imageView,url,config)
+    }
+
+    override fun display(context: Any, imageView: ImageView, uri: Uri){
         // empty
     }
 

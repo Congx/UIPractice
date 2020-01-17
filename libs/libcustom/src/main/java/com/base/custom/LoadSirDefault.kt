@@ -4,6 +4,7 @@ import android.view.View
 import com.base.custom.callback.ErrorCallback
 import com.base.custom.callback.LoadingCallback
 import com.base.framwork.interfaces.AbStatusView
+import com.base.framwork.ui.statusview.core.LoadService
 import com.base.framwork.ui.statusview.core.LoadSir
 
 /**
@@ -12,6 +13,8 @@ import com.base.framwork.ui.statusview.core.LoadSir
  * @description
  */
 class LoadSirDefault : AbStatusView() {
+
+    var default: LoadService<Any>? = null
 
     override fun register(target: View, callback: (View) -> Unit) {
         default = LoadSir.getDefault().register(target,callback)

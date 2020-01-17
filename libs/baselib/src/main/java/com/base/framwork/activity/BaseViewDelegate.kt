@@ -31,7 +31,7 @@ abstract class BaseViewDelegate<T : LifyCycleViewModel> : IBaseView {
 
     inner class StatusViewControl:IStatusView {
 
-        var dialog:DialogLoading? = null
+        var dialog:IStatusView? = null
         var loaderSir:AbStatusView? = null
 
         /**

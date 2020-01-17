@@ -15,7 +15,6 @@ class StatusViewModule : BaseViewModle() {
     override fun onCreate() {
         super.onCreate()
         ApiRepository.getPublishList()
-//            .`as` {  }
             .bindLifecycle(this)
             .subscribe({ list->
                 Log.e("BackPressActivity",list.size.toString())

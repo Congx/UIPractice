@@ -2,6 +2,7 @@ package com.base.custom
 
 import android.view.View
 import android.widget.Toast
+import androidx.annotation.CallSuper
 import com.base.custom.callback.ErrorCallback
 import com.base.custom.callback.LoadingCallback
 import com.base.framwork.activity.BaseViewActivity
@@ -14,20 +15,19 @@ import com.base.framwork.ui.statusview.core.LoadSir
 /**
  * @date 2020-01-05
  * @Author luffy
- * @description app 相关的定制的一些东西
+ * @description app 相关通用的定制的一些东西
  */
 abstract class BaseActivity<T : LifyCycleViewModel> : BaseViewActivity<T>() {
 
-
-    override fun getViewDelegate(): BaseViewDelegate<T> {
-        super.getViewDelegate()
-
+    /**
+     * 在delegate创建完成之后，做一些默认初始化操作
+     */
+    override fun afterDedegateCreate(){
         viewDelegate.statusViewControl.dialog = DialogDefault(this)
         viewDelegate.statusViewControl.loaderSir = LoadSirDefault()
-
-        return viewDelegate
     }
 
+    @CallSuper
     fun retry(view: View) {
         Toast.makeText(this@BaseActivity, "retry", Toast.LENGTH_LONG).show()
         viewDelegate.statusViewControl.loaderSir?.showLoading("",1)

@@ -80,8 +80,13 @@ public abstract class BaseViewActivity<T extends LifyCycleViewModel> extends Flo
     public BaseViewDelegate<T> getViewDelegate() {
         if(mDelegate == null) {
             mDelegate =  BaseViewDelegate.Companion.create(this);
+            afterDedegateCreate();
         }
         return mDelegate;
+    }
+
+    protected void afterDedegateCreate() {
+
     }
 
     public void setDelegate(BaseViewDelegate<T> delegate) {

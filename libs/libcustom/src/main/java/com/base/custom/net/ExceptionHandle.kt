@@ -58,7 +58,7 @@ class ExceptionHandle {
         } else {
             ex = ServiceException(ERROR.UNKNOWN, "未知错误")
         }
-        ex.setRawThrowable(e)
+        ex.rawThrowable = e
         return ex
     }
 

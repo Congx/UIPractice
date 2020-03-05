@@ -14,7 +14,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".basepractice.StatusActivity"></activity>
+        <activity android:name=".fragment.FragmentLiveActivity"/>
+        <activity android:name=".fragment.FragmentListActivity" />
+        <activity android:name=".basepractice.StatusActivity" />
         <activity android:name=".basepractice.BaseLibActivity" />
         <activity
             android:name=".SplashActivity"

@@ -39,4 +39,6 @@ dependencies {
     kotlinDependencies()
     implementation rootProject.ext.libs.libsAll
     implementation project(path: ':baselib')
+
+    implementation 'com.airbnb.android:lottie:3.3.0'
 }

@@ -1,4 +1,4 @@
-package com.example.uipractice.net;
+package com.base.custom.net;
 
 import android.content.Context;
 

@@ -1,13 +1,11 @@
 package com.base.framwork.interfaces
 
-import android.app.Activity
-
 /**
  * @date 2020-01-05
  * @Author luffy
  * @description
  */
-open abstract class DialogLoading(activity: Activity):IStatusView {
+open abstract class DialogLoading:IStatusView {
 
     override fun showNormal() {
         hideLoading()

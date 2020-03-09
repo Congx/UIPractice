@@ -49,6 +49,5 @@
         android:clickable="true"
         android:layout_gravity="right"
         android:background="@android:color/black"
-        app:behavior_attr_test="dddddd"
         app:layout_behavior="@string/behavior_sample_title"></TextView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

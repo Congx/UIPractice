@@ -1,6 +1,6 @@
-package com.example.uipractice.net
+package com.base.custom.net
 
-import com.example.uipractice.bean.Constans
+import com.base.custom.Constans
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit

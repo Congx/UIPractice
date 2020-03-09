@@ -1,4 +1,4 @@
-package com.example.uipractice.bean
+package com.base.custom
 
 /**
  * @date 2019-12-29

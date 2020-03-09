@@ -2,10 +2,8 @@ package com.example.uipractice.api
 
 import com.base.rxjavalib.RxUtils
 import com.example.uipractice.bean.PublishBean
-import com.example.uipractice.net.RetrofitServer
+import com.base.custom.net.RetrofitServer
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 
 /**
  * @date 2019-12-29
@@ -16,15 +14,8 @@ object ApiRepository {
 
     fun getPublishList(): Observable<List<PublishBean>> {
         return RetrofitServer.defaultRetrofitClient.create(AppApi::class.java).getPublishList()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .flatMap {
-                var list = it.data
-                if (list == null) {
-                    return@flatMap Observable.empty<List<PublishBean>>()
-                } else {
-                    Observable.just(list)
-                }
-            }
+            .compose(RxUtils.transformer())
+
     }
+
 }

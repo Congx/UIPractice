@@ -23,7 +23,7 @@ uploadArchives {
     configuration = configurations['archives']
     repositories {
         mavenDeployer {
-            pom.version = "1.0.0"
+            pom.version = "1.0.1"
             pom.artifactId = "frawork"
             pom.groupId = "com.base.framwork"
             def url = "file://${System.properties['user.home']}/.m2/repository"

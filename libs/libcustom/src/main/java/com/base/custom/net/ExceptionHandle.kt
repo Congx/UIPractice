@@ -1,4 +1,4 @@
-package com.example.uipractice.net
+package com.base.custom.net
 
 import org.json.JSONException
 import com.google.gson.JsonParseException
@@ -6,7 +6,6 @@ import com.google.gson.stream.MalformedJsonException
 import org.apache.http.conn.ConnectTimeoutException
 import retrofit2.HttpException
 import java.net.ConnectException
-import java.text.ParseException
 
 
 /**

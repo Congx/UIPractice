@@ -56,6 +56,8 @@ class LiveFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         Log.e("LiveFragment","onResume")
+
+//        fragmentManager.frag
     }
 
     override fun onDestroy() {

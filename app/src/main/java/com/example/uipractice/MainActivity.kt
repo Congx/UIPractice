@@ -1,5 +1,6 @@
 package com.example.uipractice
 
+import com.example.uipractice.anim.AnimListActivity
 import com.example.uipractice.architecture.ArchitectureActivity
 import com.example.uipractice.base.BaseItemListActivity
 import com.example.uipractice.base.ItemBean
@@ -20,7 +21,8 @@ class MainActivity : BaseItemListActivity() {
         ItemBean("架构组件", ArchitectureActivity::class.java),
         ItemBean("rxJava", RxJavaActivity::class.java),
         ItemBean("base库的一些用法", BaseLibActivity::class.java),
-        ItemBean("fragment", FragmentListActivity::class.java)
+        ItemBean("fragment", FragmentListActivity::class.java),
+        ItemBean("动画", AnimListActivity::class.java)
     )
 
     override fun getListData(): ArrayList<ItemBean>? {

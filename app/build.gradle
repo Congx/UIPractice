@@ -26,6 +26,33 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    applicationVariants.all { variant ->
+        //这个修改输出的APK路径
+//        if (variant.buildType.name != "debug") {//防止AS无法安装debug包(apk)
+//            variant.getPackageApplication().outputDirectory = new File(myPackageDir())
+//        }
+        variant.getPackageApplication().outputScope.apkDatas.forEach { apkData ->
+            //这个修改输出APK的文件名
+            apkData.outputFileName = "${appNamePrefix()}" +
+                    variant.versionName + "_" +
+                    "${releaseTime()}" + "_" +
+                    variant.flavorName + "_" +
+                    variant.buildType.name + "_" +
+                    ".apk"
+        }
+    }
+
+}
+
+def appNamePrefix() {
+    return "test"
+}
+
+String releaseTime() {
+    Date date = new Date()
+    String dates = date.format("yyyyMMdd_hhmmss", TimeZone.getTimeZone("UTC"))
+    return dates
 }
 
 dependencies {
@@ -92,3 +119,7 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:+'
 }
 
+dependencies {
+    implementation 'androidx.appcompat:appcompat:+'
+    implementation 'androidx.constraintlayout:constraintlayout:+'
+}

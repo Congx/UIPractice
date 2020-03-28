@@ -27,6 +27,7 @@ object RxUtils {
             upstream.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .dataMap()
+                .errorTransformer()
         }
     }
 

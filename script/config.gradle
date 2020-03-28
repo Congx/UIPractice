@@ -114,7 +114,7 @@ ext {
         }
     }
 
-    androidConfig = { owner, isKotlin = true ->
+    androidConfig = { owner ->
         isLib = false
         rootProject.ext.androidClosure.delegate = owner
         rootProject.ext.androidClosure.call()

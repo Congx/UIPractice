@@ -16,21 +16,22 @@ import java.util.Map;
  */
 public class BaseViewModle extends LifyCycleViewModel {
 
-    private UIChangeLiveData ui;
+    private UILiveData ui;
 
     @Override
     public void onCreate() {
         super.onCreate();
     }
 
-    public UIChangeLiveData getUi() {
+    public UILiveData getUi() {
         if (ui == null) {
-            ui = new UIChangeLiveData();
+            ui = new UILiveData();
         }
         return ui;
     }
 
-    public final class UIChangeLiveData {
+    public final class UILiveData {
+
         private MutableLiveData<Void> finishEvent;
         private MutableLiveData<Void> onBackPressedEvent;
         private MutableLiveData<String> showLoadingEvent;

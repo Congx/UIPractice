@@ -1,6 +1,7 @@
 package com.example.uipractice.basepractice
 
 import com.base.custom.BaseActivity
+import com.base.framwork.p.LifyCycleViewModel
 import com.example.uipractice.R
 import com.example.uipractice.basepractice.viewmodule.StatusViewModule
 import kotlinx.android.synthetic.main.activity_status.*
@@ -22,7 +23,9 @@ class StatusActivity : BaseActivity<StatusViewModule>() {
     }
 
     override fun initEvent() {
-
+        btnRegist.setOnClickListener {
+            lifecycle.addObserver(LifyCycleViewModel())
+        }
     }
 
     override fun initData() {

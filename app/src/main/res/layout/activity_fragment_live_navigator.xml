@@ -8,11 +8,14 @@
     tools:context=".fragment.FragmentLiveActivity">
 
 
-    <FrameLayout
-        android:id="@+id/containerTop"
+    <fragment
+        android:id="@+id/nav_host_fragment"
+        android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1"
+        android:layout_height="match_parent"
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/home_tab_navigation"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -27,23 +30,7 @@
             app:tabIndicatorHeight="0dp"
             app:tabBackground="@drawable/selector_tab_item"/>
 
-        <CheckBox
-            android:id="@+id/checkbox"
-            android:layout_width="60dp"
-            android:gravity="center"
-            android:layout_height="match_parent"/>
-
-        <CheckBox
-            android:id="@+id/checkbox2"
-            android:layout_width="60dp"
-            android:gravity="center"
-            android:layout_height="match_parent"/>
 
     </LinearLayout>
 
-    <FrameLayout
-        android:id="@+id/containerBottom"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
 </LinearLayout>

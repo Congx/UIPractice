@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import com.example.uipractice.MainActivity
 import com.example.uipractice.R
 
@@ -56,7 +57,7 @@ class LiveFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         Log.e("LiveFragment","onResume")
-
+        fragmentManager?.beginTransaction()?.setMaxLifecycle(this,Lifecycle.State.RESUMED)
 //        fragmentManager.frag
     }
 

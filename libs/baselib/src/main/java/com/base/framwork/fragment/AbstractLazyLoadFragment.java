@@ -3,6 +3,7 @@ package com.base.framwork.fragment;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -21,11 +22,13 @@ public abstract class AbstractLazyLoadFragment extends Fragment {
     abstract protected void onLazyLoadData();
 
     @Override
+    @CallSuper
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         isViewCreated = true;
     }
 
     @Override
+    @CallSuper
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if(isFragmentVisible(this) && this.isAdded()){
@@ -40,6 +43,7 @@ public abstract class AbstractLazyLoadFragment extends Fragment {
 
 
     @Override
+    @CallSuper
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if(isFragmentVisible(this) && !isLoadData && isViewCreated && this.isAdded()){
@@ -50,8 +54,10 @@ public abstract class AbstractLazyLoadFragment extends Fragment {
 
 
     @Override
+    @CallSuper
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
+        //只要通过 show+hide 方式控制 Fragment 的显隐，那么在第一次初始化后，Fragment 任何的生命周期方法都不会调用，只有 onHiddenChanged 方法会被调用
         //onHiddenChanged调用在Resumed之前，所以此时可能fragment被add, 但还没resumed
         if(!hidden && !this.isResumed())
             return;
@@ -63,6 +69,7 @@ public abstract class AbstractLazyLoadFragment extends Fragment {
     }
 
     @Override
+    @CallSuper
     public void onDestroyView() {
         super.onDestroyView();
         isViewCreated = false;

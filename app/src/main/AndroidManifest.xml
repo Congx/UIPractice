@@ -17,6 +17,8 @@
         <activity android:name=".anim.AnimTestActivity"></activity>
         <activity android:name=".anim.AnimListActivity"></activity>
         <activity android:name=".fragment.FragmentLiveActivity" />
+        <activity android:name=".fragment.FragmentLifecyclerActivity" />
+        <activity android:name=".fragment.FragmentNavigatorLifecyclerActivity" />
         <activity android:name=".fragment.FragmentListActivity" />
         <activity android:name=".basepractice.StatusActivity" />
         <activity android:name=".basepractice.BaseLibActivity" />

@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.fragment.app.Fragment
 import com.example.uipractice.R
 import kotlinx.android.synthetic.main.activity_fragment_live.*
+import kotlinx.android.synthetic.main.activity_fragment_live_back.*
 
 /**
  * fragment 被回收的生命周期
@@ -15,7 +16,7 @@ class FragmentLiveActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_fragment_live)
+        setContentView(R.layout.activity_fragment_live_back)
 
         var fragment1:Fragment = LiveFragment()
         var fragment2:Fragment = LiveFragment()

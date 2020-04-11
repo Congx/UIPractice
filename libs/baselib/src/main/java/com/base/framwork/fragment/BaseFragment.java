@@ -1,11 +1,13 @@
 package com.base.framwork.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.CallSuper;
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,26 +20,28 @@ import org.jetbrains.annotations.NotNull;
 /**
  * @date 2019-12-09
  * @Author luffy
- * @description Androidx 有了新的懒加载方案 结合setMaxLifecycle方法来使用
+ * @description
  */
 public abstract class BaseFragment extends Fragment implements ILifeProcessor {
 
     private View rootView;
-    private boolean isFirstLoad = true; // 是否第一次加载
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initParams();
+        initParams(null);
     }
 
-    public void initParams() {
-
-    }
-
-    @Override
+    /**
+     * @param intent 在fragment 中总是null
+     */
     public void initParams(@NotNull Intent intent) {
-        // empty
+
     }
 
     @Nullable
@@ -52,19 +56,18 @@ public abstract class BaseFragment extends Fragment implements ILifeProcessor {
         setStatusBar();
         initView();
         initEvent();
+        initData();
         return rootView;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if (isFirstLoad && isLazyLoad()) {
-            // 将数据加载逻辑放到onResume()方法中
-            initData();
-            isFirstLoad = false;
-        }else {
-            initData();
-        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
     }
 
     @NotNull
@@ -74,21 +77,34 @@ public abstract class BaseFragment extends Fragment implements ILifeProcessor {
     }
 
     @Override
+    @CallSuper
+    public void onDestroyView() {
+        super.onDestroyView();
+        rootView = null;
+    }
+
+    @Override
     public void setStatusBar() {
         // empty
         // 一般activity 已经有实现了，如果单独fragment需要，重写
     }
 
-    /**
-     * 用新的Androidx新的懒加载方案，旧方案用{@link AbstractLazyLoadFragment}
-     * 不过旧方案都过时了，google不建议使用
-     * 是否懒加载，不需要重写
-     * @return 默认为懒加载
-     */
-    public boolean isLazyLoad() {
-        return true;
-    }
+//    /**
+//     * 用新的Androidx新的懒加载方案，旧方案用{@link AbstractLazyLoadFragment}
+//     * 不过旧方案都过时了，google不建议使用
+//     * 是否懒加载，不需要重写
+//     * @return 默认为懒加载
+//     */
+//    public boolean isLazyLoad() {
+//        return true;
+//    }
 
+    /**
+     * 提供给java 用，尽早用kotlin吧
+     * @param id
+     * @param <T>
+     * @return
+     */
     public <T extends View> T findViewById(@IdRes int id) {
         return rootView.findViewById(id);
     }

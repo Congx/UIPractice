@@ -20,7 +20,6 @@ class FragmentLiveActivity : AppCompatActivity() {
 
         var fragment1:Fragment = LiveFragment()
         var fragment2:Fragment = LiveFragment()
-
         supportFragmentManager.beginTransaction().add(R.id.content,fragment1).commit()
 
         btnFragment1.setOnClickListener {

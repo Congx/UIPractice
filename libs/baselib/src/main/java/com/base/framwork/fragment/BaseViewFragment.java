@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
  * @Author luffy
  * @description 分装与P层交互的一些逻辑和通用的UI的部分实现
  */
-public abstract class BaseViewFragment<T extends LifyCycleViewModel> extends BaseFragment implements IBaseView {
+public abstract class BaseViewFragment<T extends LifyCycleViewModel> extends LazyFragment implements IBaseView {
 
     // 具体实现的代理类
     protected  BaseViewDelegate<T> mDelegate;

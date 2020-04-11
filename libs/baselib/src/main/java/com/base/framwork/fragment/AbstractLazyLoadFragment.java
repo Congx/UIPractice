@@ -11,8 +11,9 @@ import androidx.fragment.app.Fragment;
 /**
  * @date 2020-01-04
  * @Author luffy
- * @description
+ * @description 旧的懒加载方案，目前有androidx的新方案
  */
+@Deprecated
 public abstract class AbstractLazyLoadFragment extends Fragment {
 
     private boolean isViewCreated = false;//布局是否被创建

@@ -1,5 +1,7 @@
 package com.base.custom
 
+import android.os.Bundle
+import androidx.lifecycle.Observer
 import com.base.framwork.activity.AbstractActivity
 import com.base.framwork.activity.BaseActivity
 import com.base.framwork.fragment.BaseFragment
@@ -15,5 +17,83 @@ import com.base.framwork.fragment.BaseFragment
  * 否则由于基类的一些扩展或者一些改动，必须去更改基本类，影响太大
  */
 open class XBaseFragment : BaseFragment() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val viewModel = getViewModel()
+        if (viewModel is BaseViewModel) {
+            // 简单的UI交互，复杂的自己扩展
+            viewModel.ui.liveData.observe(this, Observer{
+                when(it) {
+                    BaseViewModel.UILiveData.TYPE.SHOWLOADINGDIALOG -> hindLoadingDialog()
+                    BaseViewModel.UILiveData.TYPE.HIDELOADINGDIALOG -> hindLoadingDialog()
+                    BaseViewModel.UILiveData.TYPE.SHOWLOADING -> showLoading()
+                    BaseViewModel.UILiveData.TYPE.SHOWCONTENT -> showNormal()
+                    BaseViewModel.UILiveData.TYPE.SHOWERROR -> showError()
+                    BaseViewModel.UILiveData.TYPE.SHOWNONETWORK -> showNoNet()
+                    BaseViewModel.UILiveData.TYPE.FINISH -> activity?.finish()
+                }
+            })
+        }
+    }
+
+    /**
+     * 显示dialog
+     *
+     * @param message 消息内容
+     * @param type    弹框类型
+     */
+    @JvmOverloads
+    fun showLoadingDialog(message: String = "", type: Int = -1) {
+
+    }
+
+    /**
+     * 隐藏dialog
+     *
+     */
+    fun hindLoadingDialog() {}
+
+    /**
+     * 显示loading页面
+     *
+     * @param message 加载信息
+     */
+    @JvmOverloads
+    fun showLoading(message: String = "", type: Int = -1) {}
+
+    /**
+     * 空页面
+     */
+    @JvmOverloads
+    fun showEmpty(message: String = "", type: Int = -1) {}
+
+    /**
+     * 无网络
+     */
+    @JvmOverloads
+    fun showNoNet(message: String = "", type: Int = -1) {}
+
+    /**
+     * 出现错误
+     *
+     * @param message
+     * @param type
+     */
+    @JvmOverloads
+    fun showError(message: String = "", type: Int = -1) {}
+
+    /**
+     * 正常展示页面
+     */
+    fun showNormal() {}
+
+    /**
+     * 信息Toast提示
+     *
+     * @param message 提示信息
+     */
+    @JvmOverloads
+    fun showToast(message: String = "") {}
 
 }

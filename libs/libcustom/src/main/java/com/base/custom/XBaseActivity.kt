@@ -37,4 +37,63 @@ open class XBaseActivity : BaseActivity() {
         }
     }
 
+    /**
+     * 显示dialog
+     *
+     * @param message 消息内容
+     * @param type    弹框类型
+     */
+    @JvmOverloads
+    fun showLoadingDialog(message: String = "", type: Int = -1) {
+
+    }
+
+    /**
+     * 隐藏dialog
+     *
+     */
+    fun hindLoadingDialog() {}
+
+    /**
+     * 显示loading页面
+     *
+     * @param message 加载信息
+     */
+    @JvmOverloads
+    fun showLoading(message: String = "", type: Int = -1) {}
+
+    /**
+     * 空页面
+     */
+    @JvmOverloads
+    fun showEmpty(message: String = "", type: Int = -1) {}
+
+    /**
+     * 无网络
+     */
+    @JvmOverloads
+    fun showNoNet(message: String = "", type: Int = -1) {}
+
+    /**
+     * 出现错误
+     *
+     * @param message
+     * @param type
+     */
+    @JvmOverloads
+    fun showError(message: String = "", type: Int = -1) {}
+
+    /**
+     * 正常展示页面
+     */
+    fun showNormal() {}
+
+    /**
+     * 信息Toast提示
+     *
+     * @param message 提示信息
+     */
+    @JvmOverloads
+    fun showToast(message: String = "") {}
+
 }

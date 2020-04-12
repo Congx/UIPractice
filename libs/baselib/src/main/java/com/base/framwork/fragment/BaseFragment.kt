@@ -6,7 +6,6 @@ import androidx.annotation.CallSuper
 import androidx.annotation.IdRes
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.ViewModel
-import com.base.framwork.view.IBaseView
 import com.base.framwork.activity.BaseActivity
 
 /**
@@ -14,9 +13,10 @@ import com.base.framwork.activity.BaseActivity
  * @Author luffy
  * @description 同[BaseActivity]
  */
-open class BaseFragment : LazyFragment(), IBaseView {
+open class BaseFragment : LazyFragment(){
 
     var rootView: View? = null
+    private var viewModel:ViewModel? = null
 
     @CallSuper
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,10 +47,17 @@ open class BaseFragment : LazyFragment(), IBaseView {
     }
 
     /**
+     * 没有使用ViewModel 返回空，可以忽略
+     */
+    fun getViewModel():ViewModel? {
+        return viewModel
+    }
+
+    /**
      * 如果需要，绑定生命周期
      */
     open fun bindLifeIfNeed() {
-        var viewModel = createViewModel()
+        viewModel = createViewModel()
         viewModel?.let {
             if (it is LifecycleObserver) {
                 lifecycle.addObserver(viewModel as LifecycleObserver)
@@ -75,58 +82,4 @@ open class BaseFragment : LazyFragment(), IBaseView {
     fun createViewModel(): ViewModel? {
         return null
     }
-
-    /**
-     * 显示dialog
-     *
-     * @param message 消息内容
-     * @param type    弹框类型
-     */
-    @JvmOverloads
-    override fun showLoadingDialog(message: String, type: Int) {
-
-    }
-
-    /**
-     * 隐藏dialog
-     *
-     */
-    override fun hindLoadingDialog() {}
-
-    /**
-     * 显示loading页面
-     *
-     * @param message 加载信息
-     */
-    override fun showLoading(message: String, type: Int) {}
-
-    /**
-     * 空页面
-     */
-    override fun showEmpty(message: String, type: Int) {}
-
-    /**
-     * 无网络
-     */
-    override fun showNoNet(message: String, type: Int) {}
-
-    /**
-     * 出现错误
-     *
-     * @param message
-     * @param type
-     */
-    override fun showError(message: String, type: Int) {}
-
-    /**
-     * 正常展示页面
-     */
-    override fun showNormal() {}
-
-    /**
-     * 信息Toast提示
-     *
-     * @param message 提示信息
-     */
-    override fun showToast(message: String) {}
 }

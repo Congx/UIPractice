@@ -2,37 +2,37 @@ package com.base.framwork.activity
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.ViewModelProviders
-import com.base.framwork.p.LifyCycleViewModel
+import androidx.lifecycle.*
 
 /**
  * @date 2020-01-03
  * @Author luffy
  * @description
  */
-open class DefaultDelegateImpl<T : LifyCycleViewModel>(var activity: BaseViewActivity<T>) : BaseViewDelegate<T>() {
+open class DefaultDelegateImpl(var activity: BaseActivity) : BaseViewDelegate() {
 
-    override lateinit var viewModule: T
-
+    override var viewModule: ViewModel? = null
     override var statusViewControl:StatusViewControl = StatusViewControl()
 
-    override fun showDialog(message: String) {
+    override fun showLoadingDialog(message: String, type: Int) {
+        statusViewControl
+    }
+
+    override fun hindLoadingDialog() {
+    }
+
+    override fun showLoading(message: String, type: Int) {
 
     }
 
-    override fun showDialog(message: String, type: Int) {
+    override fun showEmpty(message: String, type: Int) {
 
     }
 
-    override fun showLoading() {
-
+    override fun showNoNet(message: String, type: Int) {
     }
 
-    override fun showLoading(message: String?) {
-
-    }
-
-    override fun hideLoading() {
+    override fun showError(message: String, type: Int) {
 
     }
 
@@ -40,39 +40,27 @@ open class DefaultDelegateImpl<T : LifyCycleViewModel>(var activity: BaseViewAct
 
     }
 
-    override fun showEmpty() {
-
-    }
-
-    override fun showError() {
-
-    }
-
-    override fun showError(message: String) {
-
-    }
-
-    override fun showError(message: String, type: Int) {
-
-    }
-
     override fun showToast(message: String) {
 
     }
 
-    override fun gotoLoginActivity() {
-
-    }
-
-    override fun createViewModel(activity: FragmentActivity, tClass: Class<T>): T {
+    override fun <T:ViewModel>createViewModel(activity: FragmentActivity, tClass: Class<T>?): ViewModel? {
+        if (tClass == null) return null
         viewModule = ViewModelProviders.of(activity).get(tClass)
-        activity.lifecycle.addObserver(viewModule)
-        return viewModule
+        if (viewModule is LifecycleObserver) {
+            var owner = viewModule as LifecycleObserver
+            activity.lifecycle.addObserver(owner)
+        }
+        return viewModule as T
     }
 
-    override fun createViewModel(fragment: Fragment, tClass: Class<T>): T {
+    override fun <T:ViewModel>createViewModel(fragment: Fragment, tClass: Class<T>?): ViewModel? {
+        if (tClass == null) return null
         viewModule = ViewModelProviders.of(fragment).get(tClass)
-        fragment.lifecycle.addObserver(viewModule)
+        if (viewModule is LifecycleObserver) {
+            var owner = viewModule as LifecycleObserver
+            activity.lifecycle.addObserver(owner)
+        }
         return viewModule
     }
 

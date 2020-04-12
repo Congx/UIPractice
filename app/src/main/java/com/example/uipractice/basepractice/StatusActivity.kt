@@ -1,35 +1,23 @@
 package com.example.uipractice.basepractice
 
-import com.base.custom.BaseActivity
+import android.os.Bundle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProviders
+import com.base.custom.XBaseActivity
 import com.base.framwork.p.LifyCycleViewModel
 import com.example.uipractice.R
-import com.example.uipractice.basepractice.viewmodule.StatusViewModule
-import kotlinx.android.synthetic.main.activity_status.*
 
-class StatusActivity : BaseActivity<StatusViewModule>() {
+class StatusActivity : XBaseActivity() {
 
+    var viewModel:LifyCycleViewModel? = null
 
-    override fun generateIdLayout(): Int {
-        return R.layout.activity_status
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_status)
     }
 
-    override fun getViewModelClass(): Class<StatusViewModule> {
-        return StatusViewModule::class.java
+    override fun createViewModel(): ViewModel? {
+        viewModel = ViewModelProviders.of(this).get(LifyCycleViewModel::class.java)
+        return viewModel
     }
-
-    override fun initView() {
-        regist(content)
-        viewDelegate.statusViewControl.loaderSir?.showError("",1)
-    }
-
-    override fun initEvent() {
-        btnRegist.setOnClickListener {
-            lifecycle.addObserver(LifyCycleViewModel())
-        }
-    }
-
-    override fun initData() {
-
-    }
-
 }

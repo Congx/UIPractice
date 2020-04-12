@@ -9,6 +9,7 @@ import android.view.View
  * @Author luffy
  * @description
  */
+@Deprecated("弃用")
 interface ILifeProcessor {
 
     /**
@@ -25,13 +26,13 @@ interface ILifeProcessor {
      * 布局id
      * @return layout id
      */
-    fun generateIdLayout(): Int
+    fun generateIdLayout(): Int?
 
     /**
      * 布局view
      * @return layout view
      */
-    fun generateViewLayout(): View
+    fun generateViewLayout(): View?
 
     /**
      * 初始化Views

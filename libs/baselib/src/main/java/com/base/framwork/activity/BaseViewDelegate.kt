@@ -2,10 +2,9 @@ package com.base.framwork.activity
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.ViewModel
 import com.base.framwork.interfaces.AbStatusView
-import com.base.framwork.interfaces.DialogLoading
 import com.base.framwork.interfaces.IStatusView
-import com.base.framwork.p.LifyCycleViewModel
 import com.base.framwork.view.IBaseView
 
 /**
@@ -13,19 +12,19 @@ import com.base.framwork.view.IBaseView
  * @Author luffy
  * @description
  */
-abstract class BaseViewDelegate<T : LifyCycleViewModel> : IBaseView {
+abstract class BaseViewDelegate : IBaseView {
 
     abstract var statusViewControl:StatusViewControl
 
-    abstract var viewModule:T
+    abstract var viewModule:ViewModel?
 
-    abstract fun createViewModel(activity: FragmentActivity, tClass: Class<T>): T
+    abstract fun <T:ViewModel>createViewModel(activity: FragmentActivity, tClass: Class<T>?): ViewModel?
 
-    abstract fun createViewModel(activity: Fragment, tClass: Class<T>): T
+    abstract fun <T:ViewModel>createViewModel(activity: Fragment, tClass: Class<T>?): ViewModel?
 
     companion object {
-        fun <R : LifyCycleViewModel> create(activity: BaseViewActivity<R>): BaseViewDelegate<R> {
-            return DefaultDelegateImpl<R>(activity)
+        fun <R : ViewModel> create(activity: BaseActivity): BaseViewDelegate {
+            return DefaultDelegateImpl(activity)
         }
     }
 

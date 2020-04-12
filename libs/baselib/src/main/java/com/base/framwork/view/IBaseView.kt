@@ -6,12 +6,6 @@ package com.base.framwork.view
  * @description
  */
 interface IBaseView {
-    /**
-     * 显示dialog默认展示type 0
-     *
-     * @param message 消息内容
-     */
-    fun showDialog(message: String)
 
     /**
      * 显示dialog
@@ -19,43 +13,30 @@ interface IBaseView {
      * @param message 消息内容
      * @param type    弹框类型
      */
-    fun showDialog(message: String, type: Int)
+    fun showLoadingDialog(message: String = "", type: Int = -1)
 
     /**
-     * 显示loading页面
+     * 隐藏dialog
+     *
      */
-    fun showLoading()
+    fun hindLoadingDialog()
 
     /**
      * 显示loading页面
      *
      * @param message 加载信息
      */
-    fun showLoading(message: String?)
-
-    /**
-     * 隐藏loading页面
-     */
-    fun hideLoading()
-
-    /**
-     * 正常展示页面
-     */
-    fun showNormal()
+    fun showLoading(message: String = "", type: Int = -1)
 
     /**
      * 空页面
      */
-    fun showEmpty()
+    fun showEmpty(message: String = "", type: Int = -1)
 
     /**
-     * 出现错误默认展示type 0
-     *
-     * @param message
+     * 无网络
      */
-    fun showError(message: String)
-
-    fun showError()
+    fun showNoNet(message: String = "", type: Int = -1)
 
     /**
      * 出现错误
@@ -63,18 +44,18 @@ interface IBaseView {
      * @param message
      * @param type
      */
-    fun showError(message: String, type: Int)
+    fun showError(message: String = "", type: Int = -1)
+
+    /**
+     * 正常展示页面
+     */
+    fun showNormal()
 
     /**
      * 信息Toast提示
      *
      * @param message 提示信息
      */
-    fun showToast(message: String)
-
-    /**
-     * 跳转到登录界面
-     */
-    fun gotoLoginActivity()
+    fun showToast(message: String = "")
 
 }

@@ -22,22 +22,27 @@ public class LifyCycleViewModel extends ViewModel implements ILifecycle, Lifecyc
 
     LifecycleRegistry mLifecycleRegistry;
 
-    public LifyCycleViewModel() {
-        initLifecycle();
-    }
-
-    private void initLifecycle() {
-        mLifecycleRegistry = new LifecycleRegistry(this);
-    }
-
     @NonNull
     @Override
     public Lifecycle getLifecycle() {
+        if (mLifecycleRegistry == null) {
+            mLifecycleRegistry = new LifecycleRegistry(this);
+        }
         return mLifecycleRegistry;
+    }
+
+    /**
+     * 是否注册给，lifecyclerOwner，默认为true，不需要监听生命周期，重写返回false
+     * @return
+     */
+    public boolean needObserver() {
+        return true;
     }
 
     @Override
     public void onStateChanged(@NonNull LifecycleOwner source, @NonNull Lifecycle.Event event) {
+        // 不需要生命周期 直接返回
+        if (!needObserver()) return;
         Log.i(TAG,"lifecycle:" + event.toString());
         switch (event) {
             case ON_CREATE:

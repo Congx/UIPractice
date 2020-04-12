@@ -1,22 +1,20 @@
 package com.example.uipractice;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
+import android.os.PersistableBundle;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ImageView;
 
-import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProviders;
 
-import com.base.framwork.activity.BaseViewActivity;
-import com.base.framwork.image.IimageLoader;
-import com.base.framwork.image.ImageLoader;
+import com.base.framwork.activity.BaseActivity;
 import com.base.framwork.p.LifyCycleViewModel;
-
-import io.reactivex.Observable;
 
 
 /**
@@ -24,7 +22,13 @@ import io.reactivex.Observable;
  * @Author luffy
  * @description
  */
-public class SplashActivity extends BaseViewActivity {
+public class SplashActivity extends BaseActivity {
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
+        super.onCreate(savedInstanceState, persistentState);
+        setContentView(R.layout.activity_splash);
+    }
 
     @Override
     protected void onResume() {
@@ -71,39 +75,8 @@ public class SplashActivity extends BaseViewActivity {
 
     }
 
-    @NonNull
     @Override
-    public Class getViewModelClass() {
-        return LifyCycleViewModel.class;
-    }
-
-    @Override
-    public int generateIdLayout() {
-        return R.layout.activity_splash;
-    }
-
-    @Override
-    public void initEvent() {
-
-    }
-
-    @SuppressLint("AutoDispose")
-    @Override
-    public void initData() {
-//        Observable.just("")
-//                .flatMap(t-> Observable.empty()).subscribe(t-> {
-//
-//        });
-//        String imgUrl = "http://p15.qhimg.com/bdm/720_444_0/t01b12dfd7f42342197.jpg";
-//        ImageView image = findViewById(R.id.image);
-//        IimageLoader request = ImageLoader.getRequest();
-//        request.getConfig().setProgressId(R.drawable.ic_svg_chevron_back_solid);
-//        request.getConfig().setErrorId(R.drawable.ic_launcher_background);
-//        request.display(image.getContext(),image,imgUrl,R.mipmap.app_logo);
-    }
-
-    @Override
-    public void initView() {
-
+    public ViewModel createViewModel() {
+        return ViewModelProviders.of(this).get(LifyCycleViewModel.class);
     }
 }

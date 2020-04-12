@@ -1,14 +1,17 @@
 package com.base.framwork.fragment
 
+import androidx.annotation.CallSuper
+
 /**
  * @date 11/4/2020
  * @Author luffy
  * @description 懒加载
  */
-abstract class LazyFragment : BaseFragment() {
+open class LazyFragment : AbstractFragment() {
 
     private var isLoaded = false
 
+    @CallSuper
     override fun onResume() {
         super.onResume()
         if (!isLoaded) {
@@ -21,6 +24,7 @@ abstract class LazyFragment : BaseFragment() {
         }
     }
 
+    @CallSuper
     override fun onDestroyView() {
         super.onDestroyView()
         isLoaded = false
@@ -29,14 +33,14 @@ abstract class LazyFragment : BaseFragment() {
     /**
      * 第一次可见，调用，一般用于懒加载
      */
-    fun lazyLoad() {
+    open fun lazyLoad() {
 
     }
 
     /**
      * 在第一次懒加载之后，如果切换resumue 可见需要刷新数据的情况
      */
-    fun afterLazyLoad() {
+    open fun afterLazyLoad() {
 
     }
 

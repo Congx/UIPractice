@@ -1,8 +1,8 @@
 package com.example.uipractice.api
 
-import com.base.rxjavalib.RxUtils
-import com.example.uipractice.bean.PublishBean
 import com.base.custom.net.RetrofitServer
+import com.base.rxjavalib.transformer
+import com.example.uipractice.bean.PublishBean
 import io.reactivex.Observable
 
 /**
@@ -14,7 +14,7 @@ object ApiRepository {
 
     fun getPublishList(): Observable<List<PublishBean>> {
         return RetrofitServer.defaultRetrofitClient.create(AppApi::class.java).getPublishList()
-            .compose(RxUtils.transformer())
+            .transformer()
 
     }
 

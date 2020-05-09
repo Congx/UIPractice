@@ -1,4 +1,4 @@
-package com.base.custom.net
+package com.base.net
 
 import org.json.JSONException
 import com.google.gson.JsonParseException
@@ -13,9 +13,10 @@ import java.net.ConnectException
  * @Author luffy
  * @description
  */
-class ExceptionHandle {
+object ExceptionHandle {
 
     private val UNAUTHORIZED = 401
+    private val NOT_NET = 100
     private val FORBIDDEN = 403
     private val NOT_FOUND = 404
     private val NOT_ALLOW = 405
@@ -23,9 +24,10 @@ class ExceptionHandle {
     private val INTERNAL_SERVER_ERROR = 500
     private val SERVICE_UNAVAILABLE = 503
 
+    @JvmStatic
     fun handleException(e: Throwable?): ServiceException {
         e?.printStackTrace()
-        val ex: ServiceException
+        var ex: ServiceException
         if (e is HttpException) {
             val httpException = e as HttpException?
             var message: String? = null
@@ -37,6 +39,7 @@ class ExceptionHandle {
                 INTERNAL_SERVER_ERROR -> message = "服务器内部错误"
                 SERVICE_UNAVAILABLE -> message = "服务器不可用"
                 NOT_ALLOW -> message = "HTTP 405 not allowed"
+                NOT_NET -> message = "网络未连接"
                 else -> message = "网络错误"
             }
             ex = ServiceException(httpException.code(), message)
@@ -58,7 +61,7 @@ class ExceptionHandle {
         } else {
             ex = ServiceException(ERROR.UNKNOWN, "未知错误")
         }
-        ex.setRawThrowable(e)
+        ex.rawThrowable = e
         return ex
     }
 

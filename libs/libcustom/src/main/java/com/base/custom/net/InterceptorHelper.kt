@@ -1,6 +1,6 @@
 package com.base.custom.net
 
-import com.base.custom.AppContext
+import com.base.context.ContextProvider
 import com.base.framwork.utils.NetworkUtils
 import okhttp3.CacheControl
 import okhttp3.Interceptor
@@ -38,7 +38,7 @@ object InterceptorHelper {
             @Throws(IOException::class)
             override fun intercept(chain: Interceptor.Chain): Response {
                 var request = chain.request()
-                if (!NetworkUtils.isConnected(AppContext.getContext())) {
+                if (!NetworkUtils.isConnected(ContextProvider.getContext())) {
                     val maxStale = 4 * 7 * 24 * 60
                     val tempCacheControl = CacheControl.Builder()
                         .onlyIfCached()

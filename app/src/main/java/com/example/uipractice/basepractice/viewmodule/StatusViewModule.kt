@@ -1,7 +1,7 @@
 package com.example.uipractice.basepractice.viewmodule
 
 import android.util.Log
-import com.base.framwork.p.BaseViewModle
+import com.base.custom.BaseViewModel
 import com.base.rxjavalib.bindLifecycle
 import com.example.uipractice.api.ApiRepository
 
@@ -10,12 +10,11 @@ import com.example.uipractice.api.ApiRepository
  * @Author luffy
  * @description
  */
-class StatusViewModule : BaseViewModle() {
+class StatusViewModule : BaseViewModel() {
 
     override fun onCreate() {
         super.onCreate()
         ApiRepository.getPublishList()
-//            .`as` {  }
             .bindLifecycle(this)
             .subscribe({ list->
                 Log.e("BackPressActivity",list.size.toString())

@@ -6,4 +6,16 @@
     android:layout_height="match_parent"
     tools:context=".basepractice.StatusActivity">
 
+
+    <FrameLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <Button
+        android:id="@+id/btnRegist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="订阅"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

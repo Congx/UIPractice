@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/home_tab_navigation"
+    app:startDestination="@id/AFragment">
+
+    <fragment
+        android:id="@+id/AFragment"
+        android:name="com.example.uipractice.fragment.AFragment"
+        android:label="AFragment" />
+    <fragment
+        android:id="@+id/BFragment"
+        android:name="com.example.uipractice.fragment.BFragment"
+        android:label="BFragment" />
+</navigation>

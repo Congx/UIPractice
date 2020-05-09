@@ -12,7 +12,7 @@ import com.base.framwork.interfaces.DialogLoading
 class DialogDefault(private var activity: Activity) : DialogLoading() {
 
     override fun hideLoading() {
-        Toast.makeText(activity, "hideLoading", Toast.LENGTH_LONG).show()
+        Toast.makeText(activity!!, "hideLoading", Toast.LENGTH_LONG).show()
     }
 
     override fun showLoading() {

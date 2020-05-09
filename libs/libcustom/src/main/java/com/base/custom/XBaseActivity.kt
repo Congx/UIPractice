@@ -21,7 +21,7 @@ open class XBaseActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val viewModel = getViewModel()
-        if (viewModel is BaseViewModel) {
+        if (viewModel != null && viewModel is BaseViewModel) {
             // 简单的UI交互，复杂的自己扩展
             viewModel.ui.liveData.observe(this, Observer{
                 when(it) {

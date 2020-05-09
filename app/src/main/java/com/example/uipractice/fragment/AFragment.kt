@@ -7,9 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleRegistry
-import com.base.framwork.p.LifyCycleViewModel
+import androidx.lifecycle.ViewModelProvider
+import com.base.custom.BaseViewModel
 import com.example.uipractice.R
 import kotlinx.android.synthetic.main.layout_fragment_a.*
 
@@ -21,7 +20,7 @@ import kotlinx.android.synthetic.main.layout_fragment_a.*
 class AFragment : Fragment() {
 
     var position = "0"
-    var TAG = this.javaClass.simpleName
+    var TAG = "A"
 
 
     override fun onAttach(context: Context) {
@@ -35,6 +34,7 @@ class AFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.e(TAG,"onCreate")
+        ViewModelProvider(this).get(BaseViewModel::class.java)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -48,7 +48,7 @@ class AFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         Log.e(TAG,"onCreateView")
-        lifecycle.addObserver(LifyCycleViewModel())
+//        lifecycle.addObserver(LifyCycleViewModel())
         return inflater.inflate(R.layout.layout_fragment_a, container, false)
     }
 

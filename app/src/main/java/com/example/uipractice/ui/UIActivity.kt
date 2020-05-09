@@ -2,9 +2,11 @@ package com.example.uipractice.ui
 
 import com.example.uipractice.base.BaseItemListActivity
 import com.example.uipractice.base.ItemBean
+import com.example.uipractice.ui.eventdispatch.EventDispatchActivity
 import com.example.uipractice.ui.ivpacage.ImageViewActivity
 import com.example.uipractice.ui.keybord.KeybordActivity
 import com.example.uipractice.ui.nestedscroll.NestedBaseActivity
+import com.example.uipractice.ui.others.OthersUIActivity
 import com.example.uipractice.ui.recyclerview.RecyclerviewBaseActivity
 import com.example.uipractice.ui.viewPager2.ViewPager2Activity
 
@@ -15,7 +17,9 @@ class UIActivity : BaseItemListActivity() {
         ItemBean("recyclerview", RecyclerviewBaseActivity::class.java),
         ItemBean("软键盘", KeybordActivity::class.java),
         ItemBean("颜色-主题-属性", AttrStyleActivity::class.java),
-        ItemBean("ViewPager-新懒加载", ViewPager2Activity::class.java)
+        ItemBean("ViewPager-新懒加载", ViewPager2Activity::class.java),
+        ItemBean("事件分发", EventDispatchActivity::class.java),
+        ItemBean("其他", OthersUIActivity::class.java)
     )
 
     override fun getListData(): ArrayList<ItemBean>? {

@@ -16,7 +16,7 @@ import androidx.lifecycle.ViewModel;
  *              让viewmode像Activity/Fragment一样具有生命周期事件发射能力，
  *              和生命周期管理能力，完全解耦View层和viewModle(Presenter)层
  */
-public class LifyCycleViewModel extends ViewModel implements ILifecycle, LifecycleEventObserver,LifecycleOwner {
+public class LifyCycleViewModel extends ViewModel implements LifecycleEventObserver,LifecycleOwner {
 
     private String TAG = this.getClass().getSimpleName();
 
@@ -24,7 +24,7 @@ public class LifyCycleViewModel extends ViewModel implements ILifecycle, Lifecyc
 
     @NonNull
     @Override
-    public Lifecycle getLifecycle() {
+    public LifecycleRegistry getLifecycle() {
         if (mLifecycleRegistry == null) {
             mLifecycleRegistry = new LifecycleRegistry(this);
         }
@@ -65,35 +65,29 @@ public class LifyCycleViewModel extends ViewModel implements ILifecycle, Lifecyc
                 break;
         }
         // 事件转发，具有LifecycleOwner能力
-        mLifecycleRegistry.handleLifecycleEvent(event);
+        getLifecycle().handleLifecycleEvent(event);
     }
 
-    @Override
     public void onCreate() {
 
     }
 
-    @Override
     public void onStart() {
 
     }
 
-    @Override
     public void onResume() {
 
     }
 
-    @Override
     public void onPause() {
 
     }
 
-    @Override
     public void onStop() {
 
     }
 
-    @Override
     public void onDestroy() {
 
     }

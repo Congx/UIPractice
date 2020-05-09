@@ -61,8 +61,6 @@ open class BaseActivity : AbstractActivity(){
         }
     }
 
-    //------------ 以下的功能需要就用，不需要不管
-
     /**
      * 创建viewmodel 需要才重写，不需要不重写
      * @return

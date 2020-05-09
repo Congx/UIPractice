@@ -46,7 +46,7 @@ open class DefaultDelegateImpl(var activity: BaseActivity) : BaseViewDelegate() 
 
     override fun <T:ViewModel>createViewModel(activity: FragmentActivity, tClass: Class<T>?): ViewModel? {
         if (tClass == null) return null
-        viewModule = ViewModelProviders.of(activity).get(tClass)
+        viewModule = ViewModelProvider(activity).get(tClass)
         if (viewModule is LifecycleObserver) {
             var owner = viewModule as LifecycleObserver
             activity.lifecycle.addObserver(owner)
@@ -56,7 +56,7 @@ open class DefaultDelegateImpl(var activity: BaseActivity) : BaseViewDelegate() 
 
     override fun <T:ViewModel>createViewModel(fragment: Fragment, tClass: Class<T>?): ViewModel? {
         if (tClass == null) return null
-        viewModule = ViewModelProviders.of(fragment).get(tClass)
+        viewModule = ViewModelProvider(fragment).get(tClass)
         if (viewModule is LifecycleObserver) {
             var owner = viewModule as LifecycleObserver
             activity.lifecycle.addObserver(owner)

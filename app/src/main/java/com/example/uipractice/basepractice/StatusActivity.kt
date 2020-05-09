@@ -2,7 +2,7 @@ package com.example.uipractice.basepractice
 
 import android.os.Bundle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import com.base.custom.XBaseActivity
 import com.base.framwork.p.LifyCycleViewModel
 import com.example.uipractice.R
@@ -17,7 +17,7 @@ class StatusActivity : XBaseActivity() {
     }
 
     override fun createViewModel(): ViewModel? {
-        viewModel = ViewModelProviders.of(this).get(LifyCycleViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(LifyCycleViewModel::class.java)
         return viewModel
     }
 }

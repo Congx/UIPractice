@@ -32,10 +32,10 @@ ext {
                 "appcompat"        : "1.1.0",
                 "recyclerview"     : "1.1.0-beta04",
                 "constraintlayout" : "1.1.3",
-                "lifecycle"        : "2.1.0",
-                "constraintlayout" : "1.1.3",
+                "lifecycle"        : "2.2.0",
                 "coordinatorlayout": "1.1.0-beta01",
-                "navigation"       : "2.3.0-alpha01"
+                "navigation"       : "2.3.0-alpha01",
+                "viewpager2"       : "1.0.0"
         ]
     }
     libVersion.call()
@@ -61,11 +61,11 @@ ext {
                 "appcompat"           : "androidx.appcompat:appcompat:${rootProject.ext.libVersion.androidx.appcompat}",
                 "recyclerview"        : "androidx.recyclerview:recyclerview:${rootProject.ext.libVersion.androidx.recyclerview}",
                 "constraintlayout"    : "androidx.constraintlayout:constraintlayout:${rootProject.ext.libVersion.androidx.constraintlayout}",
-                "lifecycle-extensions": "androidx.lifecycle:lifecycle-extensions:${rootProject.ext.libVersion.androidx.lifecycle}",
                 "reactivestreams"     : "androidx.lifecycle:lifecycle-reactivestreams:${rootProject.ext.libVersion.androidx.lifecycle}",
                 "coordinatorlayout"   : "androidx.coordinatorlayout:coordinatorlayout:${rootProject.ext.libVersion.androidx.coordinatorlayout}",
                 "navigation"          : "androidx.navigation:navigation-fragment:${rootProject.ext.libVersion.androidx.navigation}",
-                "navigation-ui"          : "androidx.navigation:navigation-ui:${rootProject.ext.libVersion.androidx.navigation}"
+                "navigation-ui"       : "androidx.navigation:navigation-ui:${rootProject.ext.libVersion.androidx.navigation}",
+                "viewpager2"          : "androidx.viewpager2:viewpager2:${rootProject.ext.libVersion.androidx.viewpager2}",
         ]
 
         net = [

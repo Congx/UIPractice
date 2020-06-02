@@ -35,15 +35,15 @@ class FragmentViewpager2Activity : AppCompatActivity() {
         viewPager.adapter = Myadapter()
         //
         viewPager.orientation = ORIENTATION_HORIZONTAL
-//        val compositePageTransformer = CompositePageTransformer()
-//        val marginPageTransformer = MarginPageTransformer(10)
-//        viewPager.setPageTransformer(marginPageTransformer)
-//        val scaleInTransformer = ScaleInTransformer()
-//        compositePageTransformer.also {
-//            it.addTransformer(scaleInTransformer)
-//            it.addTransformer(marginPageTransformer)
-//        }
-//        viewPager.setPageTransformer(compositePageTransformer)
+        val compositePageTransformer = CompositePageTransformer()
+        val marginPageTransformer = MarginPageTransformer(10)
+        viewPager.setPageTransformer(marginPageTransformer)
+        val scaleInTransformer = ScaleInTransformer()
+        compositePageTransformer.also {
+            it.addTransformer(scaleInTransformer)
+            it.addTransformer(marginPageTransformer)
+        }
+        viewPager.setPageTransformer(compositePageTransformer)
 //        viewPager.isUserInputEnabled = false
 //        viewPager.offscreenPageLimit = 1
 
@@ -64,7 +64,9 @@ class FragmentViewpager2Activity : AppCompatActivity() {
             }
 
         })
-//        (viewPager.getChildAt(0) as ViewGroup).clipToPadding = false
+        (viewPager.getChildAt(0) as ViewGroup).setPadding(20,20,20,20)
+        (viewPager.getChildAt(0) as ViewGroup).clipChildren = false
+        (viewPager.getChildAt(0) as ViewGroup).clipToPadding = false
     }
 
 
@@ -76,7 +78,7 @@ class FragmentViewpager2Activity : AppCompatActivity() {
 
         override fun createFragment(position: Int): Fragment {
             Log.e("Myadapter","createFragment -> $position")
-            return fragments[position]
+            return AFragment.newInstance(position.toString())
         }
 
     }

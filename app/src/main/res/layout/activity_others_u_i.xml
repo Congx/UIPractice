@@ -17,6 +17,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginLeft="10dp"
         android:clickable="true"
-        android:background="@color/dogColor2"/>
+        android:background="@drawable/shape_round_red"
+        app:clipToOutline="true"/>
 
 </FrameLayout>

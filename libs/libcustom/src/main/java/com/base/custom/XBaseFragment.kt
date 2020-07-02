@@ -16,25 +16,26 @@ import com.base.framwork.fragment.BaseFragment
  *
  * 否则由于基类的一些扩展或者一些改动，必须去更改基本类，影响太大
  */
+@Deprecated("")
 open class XBaseFragment : BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val viewModel = getViewModel()
-        if (viewModel is BaseViewModel) {
-            // 简单的UI交互，复杂的自己扩展
-            viewModel.ui.liveData.observe(this, Observer{
-                when(it) {
-                    BaseViewModel.UILiveData.TYPE.SHOWLOADINGDIALOG -> hindLoadingDialog()
-                    BaseViewModel.UILiveData.TYPE.HIDELOADINGDIALOG -> hindLoadingDialog()
-                    BaseViewModel.UILiveData.TYPE.SHOWLOADING -> showLoading()
-                    BaseViewModel.UILiveData.TYPE.SHOWCONTENT -> showNormal()
-                    BaseViewModel.UILiveData.TYPE.SHOWERROR -> showError()
-                    BaseViewModel.UILiveData.TYPE.SHOWNONETWORK -> showNoNet()
-                    BaseViewModel.UILiveData.TYPE.FINISH -> activity?.finish()
-                }
-            })
-        }
+//        val viewModel = getViewModel()
+//        if (viewModel is BaseViewModel) {
+//            // 简单的UI交互，复杂的自己扩展
+//            viewModel.ui.liveData.observe(this, Observer{
+//                when(it) {
+//                    BaseViewModel.UILiveData.TYPE.SHOWLOADINGDIALOG -> hindLoadingDialog()
+//                    BaseViewModel.UILiveData.TYPE.HIDELOADINGDIALOG -> hindLoadingDialog()
+//                    BaseViewModel.UILiveData.TYPE.SHOWLOADING -> showLoading()
+//                    BaseViewModel.UILiveData.TYPE.SHOWCONTENT -> showNormal()
+//                    BaseViewModel.UILiveData.TYPE.SHOWERROR -> showError()
+//                    BaseViewModel.UILiveData.TYPE.SHOWNONETWORK -> showNoNet()
+//                    BaseViewModel.UILiveData.TYPE.FINISH -> activity?.finish()
+//                }
+//            })
+//        }
     }
 
     /**

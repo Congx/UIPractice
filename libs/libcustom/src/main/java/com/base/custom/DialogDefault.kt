@@ -9,6 +9,7 @@ import com.base.framwork.interfaces.DialogLoading
  * @Author luffy
  * @description
  */
+@Deprecated("")
 class DialogDefault(private var activity: Activity) : DialogLoading() {
 
     override fun hideLoading() {

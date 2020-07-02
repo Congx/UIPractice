@@ -2,7 +2,7 @@ package com.base.custom;
 
 import androidx.lifecycle.MutableLiveData;
 
-import com.base.framwork.p.LifyCycleViewModel;
+import com.lp.base.viewmodel.LifecycleViewModel;
 
 
 /**
@@ -10,7 +10,8 @@ import com.base.framwork.p.LifyCycleViewModel;
  * @Author luffy
  * @description
  */
-public class BaseViewModel extends LifyCycleViewModel {
+@Deprecated()
+public class BaseViewModel extends LifecycleViewModel {
 
     private UILiveData ui;
 

@@ -1,9 +1,5 @@
 package com.base.custom
 
-import android.os.Bundle
-import androidx.lifecycle.Observer
-import com.base.custom.BaseViewModel.UILiveData.TYPE.*
-import com.base.framwork.activity.AbstractActivity
 import com.base.framwork.activity.BaseActivity
 
 /**

@@ -1,23 +1,18 @@
 package com.example.uipractice.basepractice
 
 import android.os.Bundle
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import com.base.custom.XBaseActivity
-import com.base.framwork.p.LifyCycleViewModel
+import androidx.activity.viewModels
+import com.base.framwork.activity.XBaseActivity
 import com.example.uipractice.R
+import com.lp.base.viewmodel.LifecycleViewModel
 
 class StatusActivity : XBaseActivity() {
 
-    var viewModel:LifyCycleViewModel? = null
+    val viewModel:LifecycleViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_status)
     }
 
-    override fun createViewModel(): ViewModel? {
-        viewModel = ViewModelProvider(this).get(LifyCycleViewModel::class.java)
-        return viewModel
-    }
 }

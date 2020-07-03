@@ -1,4 +1,4 @@
-package com.base.custom.net
+package com.base.net
 
 import com.base.context.ContextProvider
 import com.base.framwork.utils.NetworkUtils
@@ -15,7 +15,6 @@ import java.util.concurrent.TimeUnit
  * @Author luffy
  * @description
  */
-@Deprecated("")
 object InterceptorHelper {
 
     var TAG = "Interceptor"

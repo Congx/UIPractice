@@ -1,8 +1,6 @@
 package com.base.custom
 
 import android.os.Bundle
-import androidx.lifecycle.Observer
-import com.base.framwork.activity.AbstractActivity
 import com.base.framwork.activity.BaseActivity
 import com.base.framwork.fragment.BaseFragment
 

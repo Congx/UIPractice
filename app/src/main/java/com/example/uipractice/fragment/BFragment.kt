@@ -7,8 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.base.framwork.p.LifyCycleViewModel
 import com.example.uipractice.R
+import com.lp.base.viewmodel.LifecycleViewModel
 import kotlinx.android.synthetic.main.layout_fragment_b.*
 
 /**
@@ -42,7 +42,7 @@ class BFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         Log.e(TAG,"onActivityCreated")
 //        var viewModel = LifyCycleViewModel()
-        lifecycle.addObserver(LifyCycleViewModel())
+        lifecycle.addObserver(LifecycleViewModel())
     }
 
     override fun onCreateView(

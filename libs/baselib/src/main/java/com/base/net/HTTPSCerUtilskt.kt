@@ -1,4 +1,4 @@
-package com.base.custom.net
+package com.base.net
 
 import android.content.Context
 
@@ -18,7 +18,6 @@ import javax.net.ssl.X509TrustManager
 import okhttp3.OkHttpClient
 
 //信任所有证书
-@Deprecated("")
 inline fun OkHttpClient.Builder.setTrustAllCertificate(): OkHttpClient.Builder{
     try {
         val sc = SSLContext.getInstance("TLS")

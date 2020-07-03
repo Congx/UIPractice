@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.base.framwork.activity.BaseActivity;
+import com.lp.base.viewmodel.LifecycleViewModel;
 
 
 /**
@@ -74,8 +75,4 @@ public class SplashActivity extends BaseActivity {
 
     }
 
-    @Override
-    public ViewModel createViewModel() {
-        return new ViewModelProvider(this).get(LifyCycleViewModel.class);
-    }
 }

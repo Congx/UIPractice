@@ -35,7 +35,8 @@ ext {
                 "lifecycle"        : "2.2.0",
                 "coordinatorlayout": "1.1.0-beta01",
                 "navigation"       : "2.3.0-alpha01",
-                "viewpager2"       : "1.0.0"
+                "viewpager2"       : "1.0.0",
+                "activitykt"       : "1.0.0"
         ]
     }
     libVersion.call()
@@ -66,6 +67,8 @@ ext {
                 "navigation"          : "androidx.navigation:navigation-fragment:${rootProject.ext.libVersion.androidx.navigation}",
                 "navigation-ui"       : "androidx.navigation:navigation-ui:${rootProject.ext.libVersion.androidx.navigation}",
                 "viewpager2"          : "androidx.viewpager2:viewpager2:${rootProject.ext.libVersion.androidx.viewpager2}",
+                "lifecycle-kt"          : "androidx.lifecycle:lifecycle-viewmodel-ktx:${rootProject.ext.libVersion.androidx.lifecycle}",
+                "activity-kt"          : "androidx.activity:activity-ktx:${rootProject.ext.libVersion.androidx.activitykt}",
         ]
 
         net = [

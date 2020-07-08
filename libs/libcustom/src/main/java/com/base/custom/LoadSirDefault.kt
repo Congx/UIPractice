@@ -12,6 +12,7 @@ import com.base.framwork.ui.statusview.core.LoadSir
  * @Author luffy
  * @description
  */
+@Deprecated("")
 class LoadSirDefault : AbStatusView() {
 
     var default: LoadService<Any>? = null

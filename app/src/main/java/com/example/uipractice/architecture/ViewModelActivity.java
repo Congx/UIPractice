@@ -3,18 +3,19 @@ package com.example.uipractice.architecture;
 import android.os.Bundle;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.arch.core.util.Function;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Transformations;
 
-import com.base.framwork.activity.BaseActivity;
+import com.base.framwork.activity.XBaseActivity;
 import com.example.uipractice.R;
 
 import org.jetbrains.annotations.Nullable;
 
 
-public class ViewModelActivity extends BaseActivity {
+public class ViewModelActivity extends XBaseActivity {
 
 
     @Override
@@ -22,7 +23,6 @@ public class ViewModelActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_model);
         transformationsTest();
-
     }
 
     @Override

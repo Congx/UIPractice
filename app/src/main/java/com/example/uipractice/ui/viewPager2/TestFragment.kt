@@ -8,14 +8,16 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.base.framwork.fragment.AbstractFragment
+import com.base.framwork.fragment.XBaseFragment
 import com.example.uipractice.R
+import kotlinx.android.synthetic.main.fragment_test.*
 
 /**
  * @date 2020-01-04
  * @Author luffy
  * @description
  */
-class TestFragment : AbstractFragment() {
+class TestFragment : XBaseFragment() {
     
     var title:String? = null
 
@@ -34,6 +36,19 @@ class TestFragment : AbstractFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_test,container,false)
+        initParams()
+        return layoutInflater.inflate(R.layout.fragment_test,container,false)
+
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        textView.text = title
+
+    }
+
+    fun initParams() {
+        title = arguments?.getString("title")
+    }
+
 }

@@ -3,6 +3,7 @@ package com.example.uipractice.fragment
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.Lifecycle
 import com.example.uipractice.R
 import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_fragment_live.*
@@ -18,7 +19,6 @@ class FragmentLifecyclerActivity : AppCompatActivity() {
     var fragment3:AFragment? = null
 
     private var lastPostion = 0
-    private var isChecked = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,8 +45,8 @@ class FragmentLifecyclerActivity : AppCompatActivity() {
         tablayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
 
             override fun onTabReselected(tab: TabLayout.Tab?) {
-                lastPostion = tab?.position!!
-                showOrHide(tab?.position)
+//                lastPostion = tab?.position!!
+//                showOrHide(tab?.position)
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {
@@ -80,6 +80,8 @@ class FragmentLifecyclerActivity : AppCompatActivity() {
                     fragment0 = AFragment.newInstance(position.toString())
                     beginTransaction.add(R.id.containerTop, fragment0!!)
                 }else {
+                    beginTransaction.setMaxLifecycle(fragment0!!, Lifecycle.State.RESUMED)
+                    // 这种
                     beginTransaction.show(fragment0!!)
                 }
             }
@@ -88,7 +90,7 @@ class FragmentLifecyclerActivity : AppCompatActivity() {
                     fragment1 = AFragment.newInstance(position.toString())
                     beginTransaction.add(R.id.containerTop, fragment1!!)
                 } else {
-//                    beginTransaction.setMaxLifecycle(fragment1!!, Lifecycle.State.RESUMED)
+                    beginTransaction.setMaxLifecycle(fragment1!!, Lifecycle.State.RESUMED)
                     beginTransaction.show(fragment1!!)
                 }
             }
@@ -97,6 +99,7 @@ class FragmentLifecyclerActivity : AppCompatActivity() {
                     fragment2 = AFragment.newInstance(position.toString())
                     beginTransaction.add(R.id.containerTop, fragment2!!)
                 }else {
+                    beginTransaction.setMaxLifecycle(fragment2!!, Lifecycle.State.RESUMED)
                     beginTransaction.show(fragment2!!)
                 }
             }
@@ -105,28 +108,32 @@ class FragmentLifecyclerActivity : AppCompatActivity() {
                     fragment3 = AFragment.newInstance(position.toString())
                     beginTransaction.add(R.id.containerTop, fragment3!!)
                 }else {
+                    beginTransaction.setMaxLifecycle(fragment3!!, Lifecycle.State.RESUMED)
                     beginTransaction.show(fragment3!!)
                 }
             }
 
         }
-//        beginTransaction?.setMaxLifecycle(this, Lifecycle.State.STARTED)
-        beginTransaction.commit()
+        beginTransaction.commitNowAllowingStateLoss()
     }
 
     fun hide(position: Int, beginTransaction: FragmentTransaction) {
         when(position) {
             0-> fragment0?.let {
+                beginTransaction.setMaxLifecycle(fragment0!!, Lifecycle.State.STARTED)
                 beginTransaction.hide(fragment0!!)
+
             }
             1-> fragment1?.let {
-//                beginTransaction.setMaxLifecycle(fragment1!!, Lifecycle.State.STARTED)
+                beginTransaction.setMaxLifecycle(fragment1!!, Lifecycle.State.STARTED)
                 beginTransaction.hide(fragment1!!)
             }
             2-> fragment2?.let {
+                beginTransaction.setMaxLifecycle(fragment2!!, Lifecycle.State.STARTED)
                 beginTransaction.hide(fragment2!!)
             }
             3-> fragment3?.let {
+                beginTransaction.setMaxLifecycle(fragment3!!, Lifecycle.State.STARTED)
                 beginTransaction.hide(fragment3!!)
             }
 

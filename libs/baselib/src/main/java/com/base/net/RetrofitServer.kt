@@ -1,6 +1,6 @@
-package com.base.custom.net
+package com.base.net
 
-import com.base.custom.Constans
+import com.base.Constans
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -14,7 +14,6 @@ import java.util.concurrent.TimeUnit
  * @Author luffy
  * @description
  */
-@Deprecated("")
 object RetrofitServer {
 
     val defaultOkHttpClient:OkHttpClient by lazy {

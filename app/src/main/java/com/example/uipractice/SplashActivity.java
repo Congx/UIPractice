@@ -11,10 +11,10 @@ import android.view.WindowManager;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.base.framwork.activity.BaseActivity;
-import com.base.framwork.p.LifyCycleViewModel;
+import com.lp.base.viewmodel.LifecycleViewModel;
 
 
 /**
@@ -75,8 +75,4 @@ public class SplashActivity extends BaseActivity {
 
     }
 
-    @Override
-    public ViewModel createViewModel() {
-        return ViewModelProviders.of(this).get(LifyCycleViewModel.class);
-    }
 }

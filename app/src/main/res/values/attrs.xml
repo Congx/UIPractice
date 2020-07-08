@@ -33,4 +33,7 @@
     </declare-styleable>
 
     <attr name="xiaoHuang" format="reference"></attr>
+
+    <attr name="clipToOutline" format="dimension|boolean" />
+
 </resources>

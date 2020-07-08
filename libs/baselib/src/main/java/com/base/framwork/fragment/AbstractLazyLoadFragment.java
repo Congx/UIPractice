@@ -20,7 +20,7 @@ public abstract class AbstractLazyLoadFragment extends Fragment {
     private boolean isLoadData = false;//数据是否加载
     private boolean isFirstVisible = true;//是否第一次可见
 
-    abstract protected void onLazyLoadData();
+    abstract protected void onLazyLoad();
 
     @Override
     @CallSuper
@@ -34,7 +34,7 @@ public abstract class AbstractLazyLoadFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         if(isFragmentVisible(this) && this.isAdded()){
             if (this.getParentFragment() == null || isFragmentVisible(this.getParentFragment())) {
-                onLazyLoadData();
+                onLazyLoad();
                 isLoadData = true;
                 if(isFirstVisible)
                     isFirstVisible = false;
@@ -48,7 +48,7 @@ public abstract class AbstractLazyLoadFragment extends Fragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if(isFragmentVisible(this) && !isLoadData && isViewCreated && this.isAdded()){
-            onLazyLoadData();
+            onLazyLoad();
             isLoadData = true;
         }
     }
@@ -64,7 +64,7 @@ public abstract class AbstractLazyLoadFragment extends Fragment {
             return;
         //使用hide和show时，fragment的所有生命周期方法都不会调用，除了onHiddenChanged（）
         if(!hidden && isFirstVisible && this.isAdded()){
-            onLazyLoadData();
+            onLazyLoad();
             isFirstVisible = false;
         }
     }

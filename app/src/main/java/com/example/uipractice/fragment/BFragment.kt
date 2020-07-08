@@ -7,10 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
-import com.base.framwork.p.LifyCycleViewModel
 import com.example.uipractice.R
-import kotlinx.android.synthetic.main.layout_fragment_a.*
+import com.lp.base.viewmodel.LifecycleViewModel
+import kotlinx.android.synthetic.main.layout_fragment_b.*
 
 /**
  * @date 9/4/2020
@@ -20,7 +19,7 @@ import kotlinx.android.synthetic.main.layout_fragment_a.*
 class BFragment : Fragment() {
 
     var position = "0"
-    var TAG = this.javaClass.simpleName
+    var TAG = "B"
 
     var isFirstResume = true
     var hidden = true
@@ -43,7 +42,7 @@ class BFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         Log.e(TAG,"onActivityCreated")
 //        var viewModel = LifyCycleViewModel()
-        lifecycle.addObserver(LifyCycleViewModel())
+        lifecycle.addObserver(LifecycleViewModel())
     }
 
     override fun onCreateView(
@@ -52,7 +51,7 @@ class BFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         Log.e(TAG,"onCreateView")
-        return inflater.inflate(R.layout.layout_fragment_a, container, false)
+        return inflater.inflate(R.layout.layout_fragment_b, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

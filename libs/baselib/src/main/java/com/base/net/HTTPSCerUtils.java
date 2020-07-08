@@ -1,4 +1,4 @@
-package com.base.custom.net;
+package com.base.net;
 
 import android.content.Context;
 
@@ -20,7 +20,6 @@ import javax.net.ssl.X509TrustManager;
 
 import okhttp3.OkHttpClient;
 
-@Deprecated()
 public class HTTPSCerUtils {
 
     //信任所有证书

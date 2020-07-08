@@ -9,8 +9,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.lifecycle.Lifecycle
-import com.base.framwork.p.LifyCycleViewModel
 import com.example.uipractice.R
+import com.lp.base.viewmodel.LifecycleViewModel
 import kotlinx.android.synthetic.main.layout_fragment_a.*
 import kotlinx.android.synthetic.main.layout_fragment_viewpager.*
 
@@ -44,7 +44,7 @@ class ViewPagerFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         Log.e(TAG,"onActivityCreated")
 //        var viewModel = LifyCycleViewModel()
-        lifecycle.addObserver(LifyCycleViewModel())
+        lifecycle.addObserver(LifecycleViewModel())
     }
 
     override fun onCreateView(

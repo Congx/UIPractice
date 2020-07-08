@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.eventdispatch.EventDispatchActivity">
+
+
+    <com.example.uipractice.ui.eventdispatch.ViewGroupOut
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="100dp"
+        android:background="@color/dogColor2">
+
+        <com.example.uipractice.ui.eventdispatch.ViewGroupIn
+            android:layout_width="match_parent"
+            android:layout_height="500dp"
+            android:background="@color/colorAccent">
+
+            <com.example.uipractice.ui.eventdispatch.ViewIn
+                android:id="@+id/viewIn"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:background="@color/design_default_color_primary"/>
+
+        </com.example.uipractice.ui.eventdispatch.ViewGroupIn>
+    </com.example.uipractice.ui.eventdispatch.ViewGroupOut>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

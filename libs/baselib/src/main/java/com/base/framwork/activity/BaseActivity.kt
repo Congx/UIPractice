@@ -2,6 +2,7 @@ package com.base.framwork.activity
 
 import android.os.Bundle
 import android.util.TypedValue
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.ViewModel
 import com.base.framwork.R
@@ -12,9 +13,7 @@ import com.base.framwork.ui.utils.StatusBarUtil
  * @Author luffy
  * @description 部分通用的实现，无侵入,这里的扩展不应该影响上层
  */
-open class BaseActivity : AbstractActivity(){
-
-    private var viewModel:ViewModel? = null
+open class BaseActivity : AppCompatActivity(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,7 +25,6 @@ open class BaseActivity : AbstractActivity(){
      */
     open fun initBase() {
         setStatusBar()
-        bindLifeIfNeed()
     }
 
     /**
@@ -42,33 +40,6 @@ open class BaseActivity : AbstractActivity(){
         }
     }
 
-    /**
-     * 没有使用ViewModel 返回空，可以忽略
-     */
-    fun getViewModel():ViewModel? {
-        return viewModel
-    }
 
-    /**
-     * 如果需要，绑定生命周期
-     */
-    open fun bindLifeIfNeed() {
-        viewModel = createViewModel()
-        viewModel?.let {
-            if (it is LifecycleObserver) {
-                lifecycle.addObserver(viewModel as LifecycleObserver)
-            }
-        }
-    }
-
-    //------------ 以下的功能需要就用，不需要不管
-
-    /**
-     * 创建viewmodel 需要才重写，不需要不重写
-     * @return
-     */
-    open fun createViewModel(): ViewModel? {
-        return null
-    }
 
 }

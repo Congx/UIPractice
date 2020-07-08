@@ -1,11 +1,10 @@
-package com.base.custom
+package com.base
 
 /**
  * @date 2019-12-29
  * @Author luffy
  * @description
  */
-@Deprecated("")
 class Constans {
 
      class URL {

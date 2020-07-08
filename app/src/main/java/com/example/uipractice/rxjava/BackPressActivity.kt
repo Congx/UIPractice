@@ -11,6 +11,7 @@ import com.uber.autodispose.AutoDispose
 import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider
 import io.reactivex.Observable
 
+@SuppressLint("AutoDispose")
 class BackPressActivity : AppCompatActivity() {
 
     @SuppressLint("CheckResult", "AutoDispose")
@@ -21,6 +22,23 @@ class BackPressActivity : AppCompatActivity() {
             .doOnDispose { Log.e("AutoDisposeActivity", "dispose") }
             .`as`(AutoDispose.autoDisposable(AndroidLifecycleScopeProvider.from(this)))
             .subscribe { str -> Log.e("AutoDisposeActivity", str) }
+
+        toList()
+    }
+
+    fun toList() {
+        var list = arrayListOf("a","b","c")
+        Observable.fromArray(list).flatMap {
+            return@flatMap Observable.just(it.get(1))
+        }
+
+        Observable.just("list","array").flatMap {
+            return@flatMap Observable.just(it.get(1))
+        }.toList().subscribe{it-> Log.e("x",it.toString())}
+
+        Observable.fromIterable(list).flatMap {
+            return@flatMap Observable.just(it.get(1))
+        }
 
 
     }

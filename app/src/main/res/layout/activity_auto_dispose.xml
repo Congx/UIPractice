@@ -4,6 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".rxjava.AutoDisposeActivity">
+    tools:context=".rxjava.AutoDisposeActivity"
+    android:background="@color/colorAccent">
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:background="@color/colorPrimary"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

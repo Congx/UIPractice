@@ -25,8 +25,8 @@ import com.lp.base.viewmodel.LifecycleViewModel;
 public class SplashActivity extends BaseActivity {
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
     }
 

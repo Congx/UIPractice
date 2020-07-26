@@ -37,9 +37,9 @@ open class BaseActivity : AppCompatActivity(){
         if (b) {
             val color = typedValue.data
             StatusBarUtil.setColor(this, color)
+        }else {
+            StatusBarUtil.setTranslucentForImageView(this,null)
         }
     }
-
-
 
 }

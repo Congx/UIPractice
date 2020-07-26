@@ -112,6 +112,12 @@ dependencies {
 //    testImplementation "androidx.arch.core:core-testing:$lifecycle_version"
 
     implementation rootProject.ext.libs.libsAll
+
+}
+
+dependencies {
+    implementation 'androidx.appcompat:appcompat:+'
+    implementation 'androidx.constraintlayout:constraintlayout:+'
 }
 
 dependencies {

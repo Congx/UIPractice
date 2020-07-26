@@ -23,7 +23,7 @@ import io.reactivex.schedulers.Schedulers
 /**
  * 绑定生命周期，自动取消订阅
  */
-inline fun <T> Observable<T>.bindLifecycle(lifecycleOwner: LifecycleOwner?): ObservableSubscribeProxy<T> {
+fun <T> Observable<T>.bindLifecycle(lifecycleOwner: LifecycleOwner?): ObservableSubscribeProxy<T> {
     return `as`(AutoDispose.autoDisposable(AndroidLifecycleScopeProvider.from(lifecycleOwner)))
 }
 
@@ -32,7 +32,7 @@ inline fun <T> Observable<T>.bindLifecycle(lifecycleOwner: LifecycleOwner?): Obs
  *
  * 获取BaseResponse 中的data javabean  根据实际情况来
  */
-inline fun <T : BaseResponse<R>, R> Observable<T>.dataMap(): Observable<R> {
+fun <T : BaseResponse<R>, R> Observable<T>.dataMap(): Observable<R> {
     return flatMap {
         Log.i("RxUtilsKt--flatMap", "接口数据转换")
         var list = it.data
@@ -49,7 +49,7 @@ inline fun <T : BaseResponse<R>, R> Observable<T>.dataMap(): Observable<R> {
  * 统一做Rxjava的变换 具有的功能：
  * 单独线程切换
  */
-inline fun <T> Observable<T>.iOtransformer(): Observable<T> {
+fun <T> Observable<T>.iOtransformer(): Observable<T> {
     return subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
 }
 
@@ -57,7 +57,7 @@ inline fun <T> Observable<T>.iOtransformer(): Observable<T> {
  * 统一做Rxjava的变换 具有的功能：
  * http 请求错误处理
  */
-inline fun <T> Observable<T>.errorTransformer(): Observable<T> {
+fun <T> Observable<T>.errorTransformer(): Observable<T> {
     return lift(ApiErrorOperator<T>())
 }
 
@@ -67,6 +67,6 @@ inline fun <T> Observable<T>.errorTransformer(): Observable<T> {
  * 2、数据转换
  * 3、错误处理
  */
-inline fun <T : BaseResponse<R>, R> Observable<T>.transformer(): Observable<R> {
+fun <T : BaseResponse<R>, R> Observable<T>.transformer(): Observable<R> {
     return iOtransformer().dataMap().errorTransformer()
 }

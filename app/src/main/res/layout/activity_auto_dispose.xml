@@ -6,4 +6,11 @@
     android:layout_height="match_parent"
     tools:context=".rxjava.AutoDisposeActivity">
 
+
+    <Button
+        android:id="@+id/btnSend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="发送"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

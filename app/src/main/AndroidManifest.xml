@@ -14,7 +14,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.others.OthersUIActivity"></activity>
+        <activity android:name=".net.WebsocketActivity"></activity>
+        <activity android:name=".ui.others.OthersUIActivity" />
         <activity android:name=".ui.eventdispatch.EventDispatchActivity" />
         <activity android:name=".anim.AnimTestActivity" />
         <activity android:name=".anim.AnimListActivity" />
@@ -24,9 +25,7 @@
         <activity android:name=".fragment.FragmentListActivity" />
         <activity android:name=".basepractice.StatusActivity" />
         <activity android:name=".basepractice.BaseLibActivity" />
-        <activity
-            android:name=".SplashActivity"
-            android:theme="@style/Splash">
+        <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -56,6 +55,7 @@
         <activity android:name=".ui.nestedscroll.NestedBaseUsedActivity" />
         <activity android:name=".ui.nestedscroll.NestedBehaviorActivity" />
         <activity android:name=".architecture.ViewModelActivity" />
+        <activity android:name=".net.NetListActivity" />
     </application>
 
 </manifest>

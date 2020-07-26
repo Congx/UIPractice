@@ -17,7 +17,7 @@ ext {
         ]
 
         net = [
-                "okhttp"             : "4.2.2",
+                "okhttp"             : "4.7.2",
                 "logging_interceptor": "4.2.1",
                 "retrofit2"          : "2.6.3",
                 "coroutines_adapter" : "0.9.2",
@@ -73,6 +73,7 @@ ext {
 
         net = [
                 "okhttp"             : "com.squareup.okhttp3:okhttp:${rootProject.ext.libVersion.net.okhttp}",
+                "okhttpmockwebserver": "com.squareup.okhttp3:mockwebserver:${rootProject.ext.libVersion.net.okhttp}",
                 "logging-interceptor": "com.squareup.okhttp3:logging-interceptor:${rootProject.ext.libVersion.net.logging_interceptor}",
                 "retrofit2"          : "com.squareup.retrofit2:retrofit:${rootProject.ext.libVersion.net.retrofit2}",
                 "converter-gson"     : "com.squareup.retrofit2:converter-gson:${rootProject.ext.libVersion.net.retrofit2}",

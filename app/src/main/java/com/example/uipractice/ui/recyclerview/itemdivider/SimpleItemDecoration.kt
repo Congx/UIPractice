@@ -54,7 +54,7 @@ class SimpleItemDecoration : RecyclerView.ItemDecoration {
             val top = view.top - item_height
             //bottom同理
             val bottom = top + item_height
-            c.drawRect(0F, top.toFloat(), wight.toFloat(), bottom.toFloat(), paint)
+            c.drawRect(0F, top.toFloat(), wight.toFloat(), bottom.toFloat(), paint!!)
         }
     }
 
@@ -64,9 +64,9 @@ class SimpleItemDecoration : RecyclerView.ItemDecoration {
         var childAt = parent.getChildAt(0)
         childAt?.let {
             if(childAt.bottom < item_height) {
-                c.drawRect(0F, 0f, wight.toFloat(), childAt.bottom.toFloat(), paintOver)
+                c.drawRect(0F, 0f, wight.toFloat(), childAt.bottom.toFloat(), paintOver!!)
             }else {
-                c.drawRect(0F, 0f, wight.toFloat(), item_height.toFloat(), paintOver)
+                c.drawRect(0F, 0f, wight.toFloat(), item_height.toFloat(), paintOver!!)
             }
         }
     }

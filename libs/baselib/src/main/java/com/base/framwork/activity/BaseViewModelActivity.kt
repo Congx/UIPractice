@@ -62,6 +62,5 @@ open class BaseViewModelActivity : BaseActivity(){
             initViewModel(viewModel)
             return viewModel
         }
-
     }
 }

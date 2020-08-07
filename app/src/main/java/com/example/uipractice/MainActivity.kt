@@ -7,6 +7,7 @@ import com.example.uipractice.base.ItemBean
 import com.example.uipractice.basepractice.BaseLibActivity
 import com.example.uipractice.fragment.FragmentListActivity
 import com.example.uipractice.net.NetListActivity
+import com.example.uipractice.others.FileProviderActivity
 import com.example.uipractice.rxjava.RxJavaActivity
 import com.example.uipractice.ui.AttrStyleActivity
 import com.example.uipractice.ui.UIActivity
@@ -24,7 +25,8 @@ class MainActivity : BaseItemListActivity() {
         ItemBean("base库的一些用法", BaseLibActivity::class.java),
         ItemBean("fragment", FragmentListActivity::class.java),
         ItemBean("动画", AnimListActivity::class.java),
-        ItemBean("网络", NetListActivity::class.java)
+        ItemBean("网络", NetListActivity::class.java),
+        ItemBean("FileProvider", FileProviderActivity::class.java)
     )
 
     override fun getListData(): ArrayList<ItemBean>? {

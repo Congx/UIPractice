@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".rxjava.HotObserverActivity">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnCold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="code"/>
+
+        <Button
+            android:id="@+id/btnCodeSubscribe"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="btnCodeSubscrib"/>
+
+        <Button
+            android:id="@+id/btnCodeDispose"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="btnCodeDispose"/>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="hot:"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnHot"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="code"/>
+
+        <Button
+            android:id="@+id/btnHotSubscribe"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="btnCodeSubscrib"/>
+
+        <Button
+            android:id="@+id/btnHotDispose"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="btnCodeDispose"/>
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/btnConnet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="connet"/>
+
+    <Button
+        android:id="@+id/btnDisconnet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="disconnet"/>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="share"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnShare"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="code"/>
+
+        <Button
+            android:id="@+id/btnShareSubscribe"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="btnCodeSubscrib"/>
+
+        <Button
+            android:id="@+id/btnShareDispose"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="btnCodeDispose"/>
+    </LinearLayout>
+
+</LinearLayout>

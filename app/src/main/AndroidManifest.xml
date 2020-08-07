@@ -4,6 +4,9 @@
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:name=".MyApp"
@@ -14,7 +17,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".net.WebsocketActivity"></activity>
+        <activity android:name=".rxjava.HotObserverActivity"></activity>
+        <activity android:name=".others.FileProviderActivity" />
+        <activity android:name=".net.WebsocketActivity" />
         <activity android:name=".ui.others.OthersUIActivity" />
         <activity android:name=".ui.eventdispatch.EventDispatchActivity" />
         <activity android:name=".anim.AnimTestActivity" />
@@ -56,6 +61,16 @@
         <activity android:name=".ui.nestedscroll.NestedBehaviorActivity" />
         <activity android:name=".architecture.ViewModelActivity" />
         <activity android:name=".net.NetListActivity" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.example.uipractice.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/export_paths" />
+        </provider>
     </application>
 
 </manifest>

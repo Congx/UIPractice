@@ -1,7 +1,7 @@
 package com.example.uipractice.basepractice.viewmodule
 
 import android.util.Log
-import com.base.custom.BaseViewModel
+import com.base.framwork.p.BaseViewModel
 import com.base.rxjavalib.bindLifecycle
 import com.example.uipractice.api.ApiRepository
 
@@ -13,7 +13,10 @@ import com.example.uipractice.api.ApiRepository
 class StatusViewModule : BaseViewModel() {
 
     override fun onCreate() {
-        super.onCreate()
+
+    }
+
+    fun loaddata() {
         ApiRepository.getPublishList()
             .bindLifecycle(this)
             .subscribe({ list->

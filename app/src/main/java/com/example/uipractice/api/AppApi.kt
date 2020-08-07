@@ -17,6 +17,6 @@ interface AppApi {
     /**
      * 获取公众号列表
      */
-    @GET("/wxarticle/chapters/json")
+    @GET("wxarticle/chapters/json")
     fun getPublishList(): Observable<BaseResponse<List<PublishBean>>>
 }

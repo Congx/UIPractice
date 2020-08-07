@@ -2,8 +2,10 @@ package com.base.net
 
 import com.base.context.ContextProvider
 import com.base.framwork.utils.NetworkUtils
+import com.base.utils.removeExtraSlashOfUrl
 import okhttp3.CacheControl
 import okhttp3.Interceptor
+import okhttp3.Request
 import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import java.io.IOException
@@ -89,11 +91,11 @@ object InterceptorHelper {
         get() = object : Interceptor {
             @Throws(IOException::class)
             override fun intercept(chain: Interceptor.Chain): Response {
-                val originalRequest = chain.request()
-                if (null == originalRequest.body) {
-                    return chain.proceed(originalRequest)
+                var request = checkUrl(chain.request())
+                if (null == request.body) {
+                    return chain.proceed(request)
                 }
-                val compressedRequest = originalRequest.newBuilder()
+                val compressedRequest = request.newBuilder()
                     .header("Content-Encoding", "gzip")
                     .header("User-Agent", "OkHttp Headers.java")
                     .addHeader("Accept", "application/json; q=0.5")
@@ -102,7 +104,21 @@ object InterceptorHelper {
                     .build()
                 return chain.proceed(compressedRequest)
             }
+
+            /**
+             * 校验url是否有多余的 斜杠，有的话去掉
+             */
+            private fun checkUrl(request: Request): Request {
+                var uUrl = request.url.toUrl()
+                uUrl.host
+                var url = uUrl.toString()
+                // 第一步校验多余的斜杠
+                url = removeExtraSlashOfUrl(url)
+                // 第二部，校验是否少了斜杠
+                return request.newBuilder().url(url).build()
+            }
         }
+
 }
 
 

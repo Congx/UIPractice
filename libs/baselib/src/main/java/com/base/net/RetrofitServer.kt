@@ -21,7 +21,7 @@ object RetrofitServer {
             .readTimeout(10,TimeUnit.SECONDS)
             .connectTimeout(10,TimeUnit.SECONDS)
             .writeTimeout(10,TimeUnit.SECONDS)
-            .addInterceptor(InterceptorHelper.logInterceptor)
+//            .addInterceptor(InterceptorHelper.logInterceptor)
             .addInterceptor(InterceptorHelper.headerInterceptor)
             .setTrustAllCertificate()
             .build()

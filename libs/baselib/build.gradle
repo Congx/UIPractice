@@ -42,5 +42,9 @@ dependencies {
     // kotlin依赖
     kotlinDependencies()
     implementation rootProject.ext.libs.libsAll
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 //    implementation project(path: ':rxjavalib')
+}
+repositories {
+    mavenCentral()
 }

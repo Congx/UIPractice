@@ -1,14 +1,16 @@
 package com.example.uipractice.rxjava
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import com.example.uipractice.R
 import io.reactivex.Observable
 import io.reactivex.Observer
 import io.reactivex.disposables.Disposable
-import io.reactivex.internal.operators.flowable.FlowableBlockingSubscribe.subscribe
 import kotlinx.android.synthetic.main.activity_hot_observer.*
+import java.util.concurrent.Callable
+import java.util.concurrent.Executors
+import java.util.concurrent.FutureTask
 import java.util.concurrent.TimeUnit
 
 class HotObserverActivity : AppCompatActivity() {
@@ -29,6 +31,17 @@ class HotObserverActivity : AppCompatActivity() {
         btnShare.setOnClickListener {
             shareFun()
         }
+
+//        Executors.newSingleThreadExecutor().submi
+
+        //input2生成， 需要耗费3秒
+        //input2生成， 需要耗费3秒
+        val input2_futuretask: FutureTask<Int?> = FutureTask(Callable<Int?> {
+            Thread.sleep(3000)
+            5
+        })
+
+        Thread(input2_futuretask).start()
     }
 
     /**

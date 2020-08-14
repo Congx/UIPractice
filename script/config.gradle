@@ -18,7 +18,7 @@ ext {
 
         net = [
                 "okhttp"             : "4.7.2",
-                "logging_interceptor": "4.2.1",
+                "logging_interceptor": "4.8.1",
                 "retrofit2"          : "2.6.3",
                 "coroutines_adapter" : "0.9.2",
         ]

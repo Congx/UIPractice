@@ -9,7 +9,7 @@ class Constans {
 
      class URL {
         companion object {
-            var BASE_URL:String = "https://wanandroid.com"
+            var BASE_URL:String = "https://www.wanandroid.com"
         }
     }
 }

@@ -43,4 +43,7 @@ dependencies {
     kotlinDependencies()
     implementation rootProject.ext.libs.libsAll
 //    implementation project(path: ':rxjavalib')
+    implementation 'com.safframework.log:saf-logginginterceptor:1.4.8'
+    api 'com.jakewharton.timber:timber:4.7.1'
+
 }

@@ -10,7 +10,8 @@ class RxJavaActivity : BaseItemListActivity() {
         ItemBean("autodispose", AutoDisposeActivity::class.java),
         ItemBean("背压", BackPressActivity::class.java),
         ItemBean("线程切换", ThreadActivity::class.java),
-        ItemBean("rxjava冷热", HotObserverActivity::class.java)
+        ItemBean("rxjava冷热", HotObserverActivity::class.java),
+        ItemBean("练习测试", RxTestActivity::class.java)
     )
 
     override fun getListData(): ArrayList<ItemBean>? {

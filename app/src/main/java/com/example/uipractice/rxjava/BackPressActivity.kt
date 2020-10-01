@@ -10,6 +10,8 @@ import com.example.uipractice.api.ApiRepository
 import com.uber.autodispose.AutoDispose
 import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider
 import io.reactivex.Observable
+import kotlinx.android.synthetic.main.activity_back_press.*
+import timber.log.Timber
 
 class BackPressActivity : AppCompatActivity() {
 
@@ -17,12 +19,17 @@ class BackPressActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_back_press)
-        val disposable = Observable.just("str")
-            .doOnDispose { Log.e("AutoDisposeActivity", "dispose") }
-            .`as`(AutoDispose.autoDisposable(AndroidLifecycleScopeProvider.from(this)))
-            .subscribe { str -> Log.e("AutoDisposeActivity", str) }
+        btnTest1.setOnClickListener {
+            test1()
+        }
 
+    }
 
+    fun test1() {
+        val fromIterable = Observable.fromIterable(mutableListOf(1, 2,3))
+        fromIterable.subscribe {
+            Timber.d(it.toString());
+        }
     }
 
 }

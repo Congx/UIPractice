@@ -54,7 +54,8 @@ ext {
                 "rxjava"             : "io.reactivex.rxjava2:rxjava:${rootProject.ext.libVersion.rxJava.rxJava}",
                 "rxAndrood"          : "io.reactivex.rxjava2:rxandroid:${rootProject.ext.libVersion.rxJava.rxAndrood}",
                 "autodispose"        : "com.uber.autodispose:autodispose:${rootProject.ext.libVersion.rxJava.autodispose}",
-                "autodispose-android": "com.uber.autodispose:autodispose-android-archcomponents:${rootProject.ext.libVersion.rxJava.autodispose}"
+                "autodispose-android": "com.uber.autodispose:autodispose-android-archcomponents:${rootProject.ext.libVersion.rxJava.autodispose}",
+                "rxlife"             : 'com.ljx.rxlife2:rxlife-rxjava:2.0.0'
         ]
 
 

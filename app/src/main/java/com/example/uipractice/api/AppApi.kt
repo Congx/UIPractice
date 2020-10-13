@@ -4,7 +4,8 @@ import com.example.uipractice.bean.PublishBean
 import com.base.net.BaseResponse
 import io.reactivex.Observable
 import retrofit2.http.GET
-
+import retrofit2.http.Header
+import retrofit2.http.HeaderMap
 
 
 /**

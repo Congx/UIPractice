@@ -17,7 +17,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".net.RetrofitActivity"></activity>
+        <activity android:name=".rxjava.RxTestActivity"></activity>
+        <activity android:name=".net.RetrofitActivity" />
         <activity android:name=".rxjava.HotObserverActivity" />
         <activity android:name=".others.FileProviderActivity" />
         <activity android:name=".net.WebsocketActivity" />

@@ -13,6 +13,8 @@ import com.base.framwork.app.CrashHandler;
 import com.base.framwork.image.ImageLoader;
 import com.base.framwork.ui.statusview.core.LoadSir;
 
+import timber.log.Timber;
+
 /**
  * @date 2019-11-19
  * @Author luffy
@@ -39,6 +41,10 @@ public class MyApp extends Application {
 
         ImageLoader.globeErrorId = R.mipmap.app_logo;
         ImageLoader.globeProgressId = R.mipmap.app_logo;
+
+        if (BuildConfig.DEBUG) {
+            Timber.plant(new Timber.DebugTree());
+        }
 
     }
 

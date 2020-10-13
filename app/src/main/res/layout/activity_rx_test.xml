@@ -10,7 +10,7 @@
         android:id="@+id/flow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="btnTest1,btnTest2,btnTest3"
+        app:constraint_referenced_ids="btnTest1,btnTest2,btnTest3,btnTest4"
         app:flow_firstHorizontalBias="0.7"
         app:flow_firstVerticalStyle="spread"
         app:flow_horizontalGap="10dp"
@@ -37,5 +37,22 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="btnTest1" />
+
+    <Button
+        android:id="@+id/btnTest4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="btnTest4x" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/btnTest4"
+        android:layout_marginTop="500dp"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

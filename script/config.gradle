@@ -18,7 +18,7 @@ ext {
 
         net = [
                 "okhttp"             : "4.7.2",
-                "logging_interceptor": "4.2.1",
+                "logging_interceptor": "4.8.1",
                 "retrofit2"          : "2.6.3",
                 "coroutines_adapter" : "0.9.2",
         ]
@@ -54,7 +54,8 @@ ext {
                 "rxjava"             : "io.reactivex.rxjava2:rxjava:${rootProject.ext.libVersion.rxJava.rxJava}",
                 "rxAndrood"          : "io.reactivex.rxjava2:rxandroid:${rootProject.ext.libVersion.rxJava.rxAndrood}",
                 "autodispose"        : "com.uber.autodispose:autodispose:${rootProject.ext.libVersion.rxJava.autodispose}",
-                "autodispose-android": "com.uber.autodispose:autodispose-android-archcomponents:${rootProject.ext.libVersion.rxJava.autodispose}"
+                "autodispose-android": "com.uber.autodispose:autodispose-android-archcomponents:${rootProject.ext.libVersion.rxJava.autodispose}",
+                "rxlife"             : 'com.ljx.rxlife2:rxlife-rxjava:2.0.0'
         ]
 
 

@@ -8,7 +8,7 @@ import com.example.uipractice.ui.keybord.KeybordActivity
 import com.example.uipractice.ui.nestedscroll.NestedBaseActivity
 import com.example.uipractice.ui.others.OthersUIActivity
 import com.example.uipractice.ui.recyclerview.RecyclerviewBaseActivity
-import com.example.uipractice.ui.viewPager2.ViewPager2Activity
+import com.example.uipractice.ui.viewPager2.ViewPagerActivity
 
 class UIActivity : BaseItemListActivity() {
     var list:ArrayList<ItemBean>? = arrayListOf(
@@ -17,7 +17,7 @@ class UIActivity : BaseItemListActivity() {
         ItemBean("recyclerview", RecyclerviewBaseActivity::class.java),
         ItemBean("软键盘", KeybordActivity::class.java),
         ItemBean("颜色-主题-属性", AttrStyleActivity::class.java),
-        ItemBean("ViewPager-新懒加载", ViewPager2Activity::class.java),
+        ItemBean("ViewPager-新懒加载", ViewPagerActivity::class.java),
         ItemBean("事件分发", EventDispatchActivity::class.java),
         ItemBean("其他", OthersUIActivity::class.java)
     )

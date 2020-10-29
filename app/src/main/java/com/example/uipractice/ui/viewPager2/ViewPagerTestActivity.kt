@@ -7,7 +7,7 @@ import androidx.fragment.app.FragmentPagerAdapter
 import com.example.uipractice.R
 import kotlinx.android.synthetic.main.activity_view_pager2.*
 
-class ViewPager2Activity : AppCompatActivity() {
+class ViewPagerTestActivity : AppCompatActivity() {
 
     private var position : Int = 0
 

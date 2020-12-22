@@ -61,6 +61,7 @@
         <activity android:name=".ui.nestedscroll.NestedBaseActivity" />
         <activity android:name=".ui.nestedscroll.NestedBaseUsedActivity" />
         <activity android:name=".ui.nestedscroll.NestedBehaviorActivity" />
+        <activity android:name=".ui.nestedscroll.AppbarBehaviorActivity" />
         <activity android:name=".architecture.ViewModelActivity" />
         <activity android:name=".net.NetListActivity" />
 

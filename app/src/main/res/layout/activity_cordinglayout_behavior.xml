@@ -29,8 +29,6 @@
     </androidx.core.widget.NestedScrollView>
 
 
-
-
     <TextView
         android:id="@+id/depentent"
         android:layout_width="50dp"
@@ -38,7 +36,7 @@
         android:text="title"
         android:textColor="@android:color/white"
         android:gravity="center"
-        android:background="@android:color/black"></TextView>
+        android:background="@android:color/black"/>
 
     <TextView
         android:layout_width="50dp"
@@ -49,5 +47,5 @@
         android:clickable="true"
         android:layout_gravity="right"
         android:background="@android:color/black"
-        app:layout_behavior="@string/behavior_sample_title"></TextView>
+        app:layout_behavior="@string/behavior_sample_title"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

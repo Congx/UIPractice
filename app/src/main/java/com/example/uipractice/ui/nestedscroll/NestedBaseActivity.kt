@@ -8,11 +8,9 @@ import java.util.*
 class NestedBaseActivity : BaseItemListActivity() {
 
     var list:ArrayList<ItemBean>? = arrayListOf(
-        ItemBean(
-            "coordinglayout基本用法",
-            NestedBaseUsedActivity::class.java
-        ),
-        ItemBean("自定义behavior", NestedBehaviorActivity::class.java)
+        ItemBean("coordinglayout基本用法", NestedBaseUsedActivity::class.java),
+        ItemBean("自定义behavior", NestedBehaviorActivity::class.java),
+        ItemBean("appbar behavior", AppbarBehaviorActivity::class.java)
     )
 
     override fun getListData(): ArrayList<ItemBean>? {

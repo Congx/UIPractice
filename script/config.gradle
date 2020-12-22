@@ -60,16 +60,18 @@ ext {
 
 
         androidx = [
-                "appcompat"           : "androidx.appcompat:appcompat:${rootProject.ext.libVersion.androidx.appcompat}",
-                "recyclerview"        : "androidx.recyclerview:recyclerview:${rootProject.ext.libVersion.androidx.recyclerview}",
-                "constraintlayout"    : "androidx.constraintlayout:constraintlayout:${rootProject.ext.libVersion.androidx.constraintlayout}",
-                "reactivestreams"     : "androidx.lifecycle:lifecycle-reactivestreams:${rootProject.ext.libVersion.androidx.lifecycle}",
-                "coordinatorlayout"   : "androidx.coordinatorlayout:coordinatorlayout:${rootProject.ext.libVersion.androidx.coordinatorlayout}",
-                "navigation"          : "androidx.navigation:navigation-fragment:${rootProject.ext.libVersion.androidx.navigation}",
-                "navigation-ui"       : "androidx.navigation:navigation-ui:${rootProject.ext.libVersion.androidx.navigation}",
-                "viewpager2"          : "androidx.viewpager2:viewpager2:${rootProject.ext.libVersion.androidx.viewpager2}",
-                "lifecycle-kt"          : "androidx.lifecycle:lifecycle-viewmodel-ktx:${rootProject.ext.libVersion.androidx.lifecycle}",
-                "activity-kt"          : "androidx.activity:activity-ktx:${rootProject.ext.libVersion.androidx.activitykt}",
+                "appcompat"        : "androidx.appcompat:appcompat:${rootProject.ext.libVersion.androidx.appcompat}",
+                "recyclerview"     : "androidx.recyclerview:recyclerview:${rootProject.ext.libVersion.androidx.recyclerview}",
+                "constraintlayout" : "androidx.constraintlayout:constraintlayout:${rootProject.ext.libVersion.androidx.constraintlayout}",
+                "reactivestreams"  : "androidx.lifecycle:lifecycle-reactivestreams:${rootProject.ext.libVersion.androidx.lifecycle}",
+                "coordinatorlayout": "androidx.coordinatorlayout:coordinatorlayout:${rootProject.ext.libVersion.androidx.coordinatorlayout}",
+                "navigation"       : "androidx.navigation:navigation-fragment:${rootProject.ext.libVersion.androidx.navigation}",
+                "navigation-ui"    : "androidx.navigation:navigation-ui:${rootProject.ext.libVersion.androidx.navigation}",
+                "viewpager2"       : "androidx.viewpager2:viewpager2:${rootProject.ext.libVersion.androidx.viewpager2}",
+                "lifecycle-kt"     : "androidx.lifecycle:lifecycle-viewmodel-ktx:${rootProject.ext.libVersion.androidx.lifecycle}",
+                "activity-kt"      : "androidx.activity:activity-ktx:${rootProject.ext.libVersion.androidx.activitykt}",
+                "livedata-kt"      : "androidx.lifecycle:lifecycle-livedata-ktx:${rootProject.ext.libVersion.androidx.lifecycle}",
+                "lifecycle-runtime": "androidx.lifecycle:lifecycle-runtime-ktx:${rootProject.ext.libVersion.androidx.lifecycle}"
         ]
 
         net = [

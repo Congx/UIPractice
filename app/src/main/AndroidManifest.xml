@@ -7,6 +7,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.autofocus"/>
 
     <application
         android:name=".MyApp"
@@ -26,6 +28,7 @@
         <activity android:name=".ui.eventdispatch.EventDispatchActivity" />
         <activity android:name=".anim.AnimTestActivity" />
         <activity android:name=".anim.AnimListActivity" />
+        <activity android:name=".camera.CameraActivity" />
         <activity android:name=".fragment.FragmentLiveActivity" />
         <activity android:name=".fragment.FragmentLifecyclerActivity" />
         <activity android:name=".fragment.FragmentViewpager2Activity" />

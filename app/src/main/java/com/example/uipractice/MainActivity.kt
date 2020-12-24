@@ -5,6 +5,7 @@ import com.example.uipractice.architecture.ArchitectureActivity
 import com.example.uipractice.base.BaseItemListActivity
 import com.example.uipractice.base.ItemBean
 import com.example.uipractice.basepractice.BaseLibActivity
+import com.example.uipractice.camera.CameraActivity
 import com.example.uipractice.fragment.FragmentListActivity
 import com.example.uipractice.net.NetListActivity
 import com.example.uipractice.others.FileProviderActivity
@@ -26,7 +27,8 @@ class MainActivity : BaseItemListActivity() {
         ItemBean("fragment", FragmentListActivity::class.java),
         ItemBean("动画", AnimListActivity::class.java),
         ItemBean("网络", NetListActivity::class.java),
-        ItemBean("FileProvider", FileProviderActivity::class.java)
+        ItemBean("FileProvider", FileProviderActivity::class.java),
+        ItemBean("camera", CameraActivity::class.java)
     )
 
     override fun getListData(): ArrayList<ItemBean>? {

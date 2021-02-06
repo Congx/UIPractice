@@ -29,6 +29,7 @@
         <activity android:name=".anim.AnimTestActivity" />
         <activity android:name=".anim.AnimListActivity" />
         <activity android:name=".camera.CameraActivity" />
+        <activity android:name=".camera.Camera2Activity" />
         <activity android:name=".fragment.FragmentLiveActivity" />
         <activity android:name=".fragment.FragmentLifecyclerActivity" />
         <activity android:name=".fragment.FragmentViewpager2Activity" />

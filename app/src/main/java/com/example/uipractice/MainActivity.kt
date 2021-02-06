@@ -28,7 +28,8 @@ class MainActivity : BaseItemListActivity() {
         ItemBean("动画", AnimListActivity::class.java),
         ItemBean("网络", NetListActivity::class.java),
         ItemBean("FileProvider", FileProviderActivity::class.java),
-        ItemBean("camera", CameraActivity::class.java)
+        ItemBean("camera", CameraActivity::class.java),
+        ItemBean("camera2", CameraActivity::class.java)
     )
 
     override fun getListData(): ArrayList<ItemBean>? {

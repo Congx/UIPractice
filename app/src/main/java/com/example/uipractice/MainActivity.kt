@@ -1,5 +1,8 @@
 package com.example.uipractice
 
+import android.app.AlertDialog
+import android.content.DialogInterface
+import android.os.Bundle
 import com.example.uipractice.anim.AnimListActivity
 import com.example.uipractice.architecture.ArchitectureActivity
 import com.example.uipractice.base.BaseItemListActivity
@@ -16,6 +19,7 @@ import com.example.uipractice.ui.ivpacage.ImageViewActivity
 import com.example.uipractice.ui.keybord.KeybordActivity
 import com.example.uipractice.ui.nestedscroll.NestedBaseActivity
 import com.example.uipractice.ui.recyclerview.RecyclerviewBaseActivity
+import com.example.uipractice.window.WindowTestActivity
 
 class MainActivity : BaseItemListActivity() {
 
@@ -29,11 +33,13 @@ class MainActivity : BaseItemListActivity() {
         ItemBean("网络", NetListActivity::class.java),
         ItemBean("FileProvider", FileProviderActivity::class.java),
         ItemBean("camera", CameraActivity::class.java),
-        ItemBean("camera2", CameraActivity::class.java)
+        ItemBean("camera2", CameraActivity::class.java),
+        ItemBean("window", WindowTestActivity::class.java)
     )
 
     override fun getListData(): ArrayList<ItemBean>? {
         return list
     }
+
 
 }

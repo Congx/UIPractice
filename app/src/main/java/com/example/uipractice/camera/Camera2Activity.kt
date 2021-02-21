@@ -2,11 +2,13 @@ package com.example.uipractice.camera
 
 import android.Manifest
 import android.app.Activity
+import android.content.Context
 import android.graphics.Matrix
 import android.hardware.Camera
 import android.hardware.Camera.CameraInfo
 import android.os.Bundle
 import android.util.Log
+import android.view.Choreographer
 import android.view.Surface
 import android.view.SurfaceHolder
 import android.view.WindowManager
@@ -39,6 +41,7 @@ class Camera2Activity : AppCompatActivity() {
 
         button.setOnClickListener {
         }
+        Choreographer.getInstance();
     }
 
     private fun initCamera() {

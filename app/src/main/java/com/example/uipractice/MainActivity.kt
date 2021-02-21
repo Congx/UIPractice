@@ -30,7 +30,9 @@ class MainActivity : BaseItemListActivity() {
         ItemBean("网络", NetListActivity::class.java),
         ItemBean("FileProvider", FileProviderActivity::class.java),
         ItemBean("camera", CameraActivity::class.java),
-        ItemBean("NDK", NDKActivity::class.java)
+        ItemBean("NDK", NDKActivity::class.java),
+        ItemBean("camera", CameraActivity::class.java),
+        ItemBean("camera2", CameraActivity::class.java)
     )
 
     override fun getListData(): ArrayList<ItemBean>? {

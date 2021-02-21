@@ -9,6 +9,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
+
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.autofocus" />
 
@@ -21,8 +22,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".window.WindowTestActivity"></activity>
+        <activity android:name=".ndk.NDKActivity"></activity>
         <activity android:name=".rxjava.RxTestActivity" />
+        <activity android:name=".window.WindowTestActivity"></activity>
         <activity android:name=".net.RetrofitActivity" />
         <activity android:name=".rxjava.HotObserverActivity" />
         <activity android:name=".others.FileProviderActivity" />

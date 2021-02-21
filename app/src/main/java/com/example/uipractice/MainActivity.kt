@@ -10,6 +10,7 @@ import com.example.uipractice.base.ItemBean
 import com.example.uipractice.basepractice.BaseLibActivity
 import com.example.uipractice.camera.CameraActivity
 import com.example.uipractice.fragment.FragmentListActivity
+import com.example.uipractice.ndk.NDKActivity
 import com.example.uipractice.net.NetListActivity
 import com.example.uipractice.others.FileProviderActivity
 import com.example.uipractice.rxjava.RxJavaActivity
@@ -32,6 +33,7 @@ class MainActivity : BaseItemListActivity() {
         ItemBean("动画", AnimListActivity::class.java),
         ItemBean("网络", NetListActivity::class.java),
         ItemBean("FileProvider", FileProviderActivity::class.java),
+        ItemBean("NDK", NDKActivity::class.java),
         ItemBean("camera", CameraActivity::class.java),
         ItemBean("camera2", CameraActivity::class.java),
         ItemBean("window", WindowTestActivity::class.java)

@@ -2,6 +2,7 @@ package com.example.uipractice.ui
 
 import com.example.uipractice.base.BaseItemListActivity
 import com.example.uipractice.base.ItemBean
+import com.example.uipractice.recyclerview.layoutmanger.LayoutManagerActivity
 import com.example.uipractice.ui.eventdispatch.EventDispatchActivity
 import com.example.uipractice.ui.ivpacage.ImageViewActivity
 import com.example.uipractice.ui.keybord.KeybordActivity
@@ -19,6 +20,7 @@ class UIActivity : BaseItemListActivity() {
         ItemBean("颜色-主题-属性", AttrStyleActivity::class.java),
         ItemBean("ViewPager-新懒加载", ViewPagerActivity::class.java),
         ItemBean("事件分发", EventDispatchActivity::class.java),
+        ItemBean("自定义LayoutManager", LayoutManagerActivity::class.java),
         ItemBean("其他", OthersUIActivity::class.java)
     )
 

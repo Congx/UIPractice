@@ -1,8 +1,5 @@
 package com.example.uipractice
 
-import android.app.AlertDialog
-import android.content.DialogInterface
-import android.os.Bundle
 import com.example.uipractice.anim.AnimListActivity
 import com.example.uipractice.architecture.ArchitectureActivity
 import com.example.uipractice.base.BaseItemListActivity
@@ -14,12 +11,7 @@ import com.example.uipractice.ndk.NDKActivity
 import com.example.uipractice.net.NetListActivity
 import com.example.uipractice.others.FileProviderActivity
 import com.example.uipractice.rxjava.RxJavaActivity
-import com.example.uipractice.ui.AttrStyleActivity
 import com.example.uipractice.ui.UIActivity
-import com.example.uipractice.ui.ivpacage.ImageViewActivity
-import com.example.uipractice.ui.keybord.KeybordActivity
-import com.example.uipractice.ui.nestedscroll.NestedBaseActivity
-import com.example.uipractice.ui.recyclerview.RecyclerviewBaseActivity
 import com.example.uipractice.window.WindowTestActivity
 
 class MainActivity : BaseItemListActivity() {

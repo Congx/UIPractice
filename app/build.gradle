@@ -32,15 +32,17 @@ android {
 //        if (variant.buildType.name != "debug") {//防止AS无法安装debug包(apk)
 //            variant.getPackageApplication().outputDirectory = new File(myPackageDir())
 //        }
-        variant.getPackageApplication().outputScope.apkDatas.forEach { apkData ->
-            //这个修改输出APK的文件名
-            apkData.outputFileName = "${appNamePrefix()}" +
-                    variant.versionName + "_" +
-                    "${releaseTime()}" + "_" +
-                    variant.flavorName + "_" +
-                    variant.buildType.name + "_" +
-                    ".apk"
-        }
+//        variant.getPackageApplicationProvider().outputScope.apkDatas.forEach { apkData ->
+//            //这个修改输出APK的文件名
+//            apkData.outputFileName = "${appNamePrefix()}" +
+//                    variant.versionName + "_" +
+//                    "${releaseTime()}" + "_" +
+//                    variant.flavorName + "_" +
+//                    variant.buildType.name + "_" +
+//                    ".apk"
+//        }
+
+//        variant.getPackageApplicationProvider()
     }
 
     externalNativeBuild {
@@ -49,6 +51,9 @@ android {
             version "3.10.2"
             path file('src/main/jni/CMakeLists.txt')
         }
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
     }
 
 }

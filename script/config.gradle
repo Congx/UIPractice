@@ -36,7 +36,7 @@ ext {
                 "coordinatorlayout": "1.1.0-beta01",
                 "navigation"       : "2.3.0-alpha01",
                 "viewpager2"       : "1.0.0",
-                "activitykt"       : "1.0.0"
+                "activitykt"       : "1.2.1"
         ]
     }
     libVersion.call()

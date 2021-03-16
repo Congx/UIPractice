@@ -129,7 +129,7 @@ class FlowLayoutManager: RecyclerView.LayoutManager() {
                     lineMaxHeight = 0
 
                     //新起一行的时候要判断一下边界
-                    if (topOffset - dy > height - paddingBottom) {
+                    if (height > 0 && topOffset - dy > height - paddingBottom) {
                         //越界了 就回收
                         removeAndRecycleView(child, recycler)
                         mLastVisiPos = i - 1

@@ -21,7 +21,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.example.uipractice.recyclerview.layoutmanger.LayoutManagerActivity"></activity>
+        <activity android:name=".plugin.PluginTestActivity"></activity>
+        <!-- <activity android:name=".plugin.PluginActivity"></activity> -->
+        <activity android:name=".recyclerview.layoutmanger.LayoutManagerActivity" />
         <activity android:name=".ndk.NDKActivity" />
         <activity android:name=".rxjava.RxTestActivity" />
         <activity android:name=".window.WindowTestActivity" />
@@ -83,6 +85,12 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/export_paths" />
         </provider>
+
+        <activity android:name=".plugin.StubActivity" />
+
+        <service android:name=".plugin.service.ProxyService">
+
+        </service>
     </application>
 
 </manifest>

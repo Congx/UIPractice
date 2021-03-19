@@ -1,6 +1,7 @@
 package com.example.uipractice;
 
 import android.app.Application;
+import android.util.Log;
 
 import com.base.custom.callback.CustomCallback;
 import com.base.custom.callback.EmptyCallback;
@@ -12,6 +13,7 @@ import com.base.framwork.app.AppActivityLifecycleCallback;
 import com.base.framwork.app.CrashHandler;
 import com.base.framwork.image.ImageLoader;
 import com.base.framwork.ui.statusview.core.LoadSir;
+import com.example.uipractice.plugin.HookHelper;
 
 import timber.log.Timber;
 
@@ -44,6 +46,14 @@ public class MyApp extends Application {
 
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
+        }
+
+        try{
+//            HookHelper.hookInstrumentation(this);
+            HookHelper.hookAMS();
+        }catch (Exception e) {
+            e.printStackTrace();
+            Log.e("MyApp",e.getMessage());
         }
 
     }

@@ -1,2 +1,2 @@
 
-add_library(math math.cpp)
+add_library(math SHARED math.cpp)

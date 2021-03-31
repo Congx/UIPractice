@@ -54,7 +54,7 @@ class RetrofitActivity : XBaseActivity() {
             .build()
 
 
-        client.newCall(request).execute()
+        val execute = client.newCall(request).execute()
 
         client.newCall(request).enqueue(object :Callback {
 

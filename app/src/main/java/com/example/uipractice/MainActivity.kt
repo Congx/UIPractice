@@ -7,6 +7,7 @@ import com.example.uipractice.base.ItemBean
 import com.example.uipractice.basepractice.BaseLibActivity
 import com.example.uipractice.camera.CameraActivity
 import com.example.uipractice.fragment.FragmentListActivity
+import com.example.uipractice.image.GlideActivity
 import com.example.uipractice.ndk.NDKActivity
 import com.example.uipractice.net.NetListActivity
 import com.example.uipractice.others.FileProviderActivity
@@ -30,7 +31,8 @@ class MainActivity : BaseItemListActivity() {
         ItemBean("camera", CameraActivity::class.java),
         ItemBean("camera2", CameraActivity::class.java),
         ItemBean("window", WindowTestActivity::class.java),
-        ItemBean("插件化", PluginTestActivity::class.java)
+        ItemBean("插件化", PluginTestActivity::class.java),
+        ItemBean("图片相关", GlideActivity::class.java)
     )
 
     override fun getListData(): ArrayList<ItemBean>? {

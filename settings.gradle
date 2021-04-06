@@ -1,3 +1,4 @@
+include ':ffplayer:ffplayer'
 include ':app', ':libcustom'
 rootProject.name='UIPractice'
 include "rxjavalib"

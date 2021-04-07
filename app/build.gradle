@@ -76,7 +76,7 @@ dependencies {
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.4'
 
     implementation project(":baselib")
-    implementation project(":libcustom")
+//    implementation project(":libcustom")
 
     implementation rootProject.ext.libs.libsAll
 

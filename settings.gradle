@@ -1,5 +1,5 @@
 include ':ffplayer:ffplayer'
-include ':app', ':libcustom'
+include ':app'
 rootProject.name='UIPractice'
 include "rxjavalib"
 project(":rxjavalib").projectDir = new File("./libs/rxjavalib")
@@ -7,5 +7,5 @@ project(":rxjavalib").projectDir = new File("./libs/rxjavalib")
 include "baselib"
 project(":baselib").projectDir = new File("./libs/baselib")
 
-include "libcustom"
-project(":libcustom").projectDir = new File("./libs/libcustom")
+//include "libcustom"
+//project(":libcustom").projectDir = new File("./libs/libcustom")

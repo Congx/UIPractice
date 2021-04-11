@@ -71,8 +71,6 @@ String releaseTime() {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation 'com.android.support:design:28.0.0'
-
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.4'
 
     implementation project(":baselib")
@@ -82,8 +80,6 @@ dependencies {
 
     implementation 'pub.devrel:easypermissions:3.0.0'
     implementation 'com.github.tbruyelle:rxpermissions:0.10.2'
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
 }

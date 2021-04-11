@@ -29,9 +29,9 @@ ext {
                 "autodispose": "1.4.0",
         ]
         androidx = [
-                "appcompat"        : "1.1.0",
+                "appcompat"        : "1.2.0",
                 "recyclerview"     : "1.1.0-beta04",
-                "constraintlayout" : "2.0.0-beta8",
+                "constraintlayout" : "2.0.4",
                 "lifecycle"        : "2.2.0",
                 "coordinatorlayout": "1.1.0-beta01",
                 "navigation"       : "2.3.0-alpha01",

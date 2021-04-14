@@ -33,10 +33,7 @@ class AutoDisposeActivity : AppCompatActivity() {
                 )
             )
             .subscribe { str: String? ->
-                Log.e(
-                    "AutoDisposeActivity",
-                    str
-                )
+
             }
 
         btnSend.setOnClickListener {

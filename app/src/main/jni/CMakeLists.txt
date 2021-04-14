@@ -16,9 +16,6 @@ add_library( native-lib2
              native-lib2.cpp)
 
 
-
-
-
 find_library(jnigraphics-lib jnigraphics)
 find_library(log-lib log)
 

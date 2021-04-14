@@ -7,11 +7,39 @@
 #include <string>
 #include <iostream>
 
+
 using namespace std;
 
-extern "C"
-JNIEXPORT jint JNICALL
-Java_com_example_uipractice_ndk_NDKActivity_add(JNIEnv *env, jobject thiz, jint a, jint b) {
-   return 0;
+class Student {
+
+};
+
+void getS(Student ** stu) {
+    // 这里改变了入参的值
+    Student *tmp = static_cast<Student *>(malloc(sizeof(Student)));
+    (*stu) = tmp;
 }
+
+void getS2(Student *& stu) {
+    // 这里改变了入参的值
+    Student *tmp = static_cast<Student *>(malloc(sizeof(Student)));
+    stu = tmp;
+}
+
+Student getStudent() {
+    Student s;
+    return s;
+}
+
+Student getStudent1(Student student) {
+    return student;
+}
+
+void copyConstruct() {
+    Student s1;
+    Student s2 = s1;
+    Student s3 = getStudent();
+    Student s4 = getStudent1(s3);
+}
+
 

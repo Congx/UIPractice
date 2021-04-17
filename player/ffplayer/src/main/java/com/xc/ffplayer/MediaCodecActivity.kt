@@ -10,9 +10,9 @@ class MediaCodecActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_media_codec)
 
-        btnChangeSize.setOnClickListener {
-            surfaceView.layoutParams.width = 300.toPX()
-            surfaceView.layoutParams.width = 300.toPX()
-        }
+//        btnChangeSize.setOnClickListener {
+//            surfaceView.layoutParams.width = 300.toPX()
+//            surfaceView.layoutParams.width = 300.toPX()
+//        }
     }
 }

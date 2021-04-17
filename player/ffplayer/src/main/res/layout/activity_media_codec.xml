@@ -6,4 +6,18 @@
     android:layout_height="match_parent"
     tools:context=".MediaCodecActivity">
 
+
+    <com.xc.ffplayer.MySurfaceView
+        android:id="@+id/surfaceView"
+        android:layout_width="200dp"
+        android:layout_height="200dp"/>
+
+
+    <Button
+        android:id="@+id/btnChangeSize"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="btnChangeSize"
+        android:textAllCaps="false"
+        android:layout_marginTop="300dp"/>
 </FrameLayout>

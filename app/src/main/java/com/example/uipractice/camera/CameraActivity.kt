@@ -55,7 +55,7 @@ class CameraActivity : AppCompatActivity() {
         val holder = surface.holder
         holder.addCallback(object : SurfaceHolder.Callback {
             override fun surfaceChanged(
-                holder: SurfaceHolder?,
+                holder: SurfaceHolder,
                 format: Int,
                 width: Int,
                 height: Int
@@ -63,11 +63,11 @@ class CameraActivity : AppCompatActivity() {
 
             }
 
-            override fun surfaceDestroyed(holder: SurfaceHolder?) {
+            override fun surfaceDestroyed(holder: SurfaceHolder) {
                 camera.release()
             }
 
-            override fun surfaceCreated(holder: SurfaceHolder?) {
+            override fun surfaceCreated(holder: SurfaceHolder) {
                 val preWith = surface.measuredWidth
                 val preHeight = surface.measuredHeight
                 val greastCommonDivisor = MathUtils.getGreastCommonDivisor(preWith, preHeight)

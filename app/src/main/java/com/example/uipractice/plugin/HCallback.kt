@@ -22,7 +22,7 @@ class HCallback(var handler: Handler):Handler.Callback {
                 val target = intent.getParcelableExtra<Intent>(HookHelper.TARGET_INTENT)
                 if (target != null) {
                     intent.component = target?.component
-                    Log.d("HCallback",target?.component?.toString())
+                    Log.d("HCallback",target!!.component.toString())
                 }
             }
         }

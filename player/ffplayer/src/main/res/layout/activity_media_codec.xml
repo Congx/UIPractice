@@ -1,23 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".MediaCodecActivity">
 
+    <com.xc.ffplayer.PlayContainerView
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <com.xc.ffplayer.MySurfaceView
-        android:id="@+id/surfaceView"
-        android:layout_width="200dp"
-        android:layout_height="200dp"/>
+        <com.xc.ffplayer.MySurfaceView
+            android:id="@id/video_surfaceView"
+            android:layout_width="match_parent"
+            android:layout_height="270dp"/>
+        <Button
+            android:id="@+id/btnScreen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="横竖屏"
+            android:textAllCaps="false"
+            android:layout_gravity="right|bottom"/>
+
+    </com.xc.ffplayer.PlayContainerView>
 
 
-    <Button
-        android:id="@+id/btnChangeSize"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="btnChangeSize"
-        android:textAllCaps="false"
-        android:layout_marginTop="300dp"/>
-</FrameLayout>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/btnChangeSize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="btnChangeSize"
+            android:textAllCaps="false"
+            android:layout_marginTop="100dp"/>
+
+
+    </FrameLayout>
+
+
+
+</LinearLayout>

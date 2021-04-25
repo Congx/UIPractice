@@ -126,22 +126,22 @@ class WebsocketActivity : AppCompatActivity() {
             .build()
 
         //建立连接
-        client.newWebSocket(request, object : WebSocketListener() {
+        val newWebSocket = client.newWebSocket(request, object : WebSocketListener() {
             override fun onOpen(webSocket: WebSocket, response: Response) {
                 mWebSocket = webSocket
-                Log.e("Websocket","client onOpen")
+                Log.e("Websocket", "client onOpen")
 
-                Log.e("Websocket","client request header: + ${response.request.headers}")
-                Log.e("Websocket","client response header: + ${response.headers}")
+                Log.e("Websocket", "client request header: + ${response.request.headers}")
+                Log.e("Websocket", "client response header: + ${response.headers}")
 
-                Log.e("Websocket","client response:$response")
+                Log.e("Websocket", "client response:$response")
 
             }
 
             override fun onMessage(webSocket: WebSocket, text: String) {
-                Log.e("Websocket","server response-$text")
+                Log.e("Websocket", "server response-$text")
 
-                Log.e("Websocket",Thread.currentThread().name)
+                Log.e("Websocket", Thread.currentThread().name)
             }
 
             override fun onClosing(
@@ -149,8 +149,8 @@ class WebsocketActivity : AppCompatActivity() {
                 code: Int,
                 reason: String
             ) {
-                Log.e("Websocket","client onClosing")
-                Log.e("Websocket","client code:$code reason:$reason")
+                Log.e("Websocket", "client onClosing")
+                Log.e("Websocket", "client code:$code reason:$reason")
             }
 
             override fun onClosed(
@@ -158,8 +158,8 @@ class WebsocketActivity : AppCompatActivity() {
                 code: Int,
                 reason: String
             ) {
-                Log.e("Websocket","client onClosed")
-                Log.e("Websocket","client code:$code reason:$reason")
+                Log.e("Websocket", "client onClosed")
+                Log.e("Websocket", "client code:$code reason:$reason")
             }
 
             override fun onFailure(
@@ -168,9 +168,9 @@ class WebsocketActivity : AppCompatActivity() {
                 response: Response?
             ) {
                 //出现异常会进入此回调
-                Log.e("Websocket","client onFailure")
-                Log.e("Websocket","throwable:${t.message}")
-                Log.e("Websocket","response:${response?.body.toString()}")
+                Log.e("Websocket", "client onFailure")
+                Log.e("Websocket", "throwable:${t.message}")
+                Log.e("Websocket", "response:${response?.body.toString()}")
             }
         })
     }

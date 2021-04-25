@@ -1,16 +1,38 @@
 package com.xc.ffplayer
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
-import com.base.framwork.activity.BaseActivity
+import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
+import kotlinx.android.synthetic.main.activity_media_codec.*
+import java.io.File
 
-class MediaCodecActivity : BaseActivity() {
+class MediaCodecActivity : AppCompatActivity() {
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_media_codec)
 
-//        btnChangeSize.setOnClickListener {
-//            surfaceView.layoutParams.width = 300.toPX()
-//            surfaceView.layoutParams.width = 300.toPX()
-//        }
+
+        btnScreen.setOnClickListener {
+            //判断当前屏幕方向
+            if(requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+                //切换竖屏
+                requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+            }else{
+                //切换横屏
+                requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+            }
+        }
+
+        initUI()
+    }
+
+    private fun initUI() {
+        var path = getExternalFilesDir("video")?.absolutePath + File.separator + "input.mp4"
+//        var path = getExternalFilesDir("video")?.absolutePath + File.separator + "input.mp4"
+        Log.e("path:" , path)
+        var player = H264Player(video_surfaceView,path)
     }
 }

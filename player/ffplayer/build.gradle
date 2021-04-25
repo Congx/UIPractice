@@ -50,6 +50,4 @@ dependencies {
 
     api rootProject.ext.libs.libsAll
 
-    api project(path: ':libs:baselib')
-
 }

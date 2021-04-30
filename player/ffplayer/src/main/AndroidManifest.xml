@@ -9,9 +9,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.UIPractice">
+        <activity android:name=".MediaRecordActivity"></activity>
         <activity
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:name=".MediaCodecActivity"></activity>
+            android:name=".MediaCodecActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

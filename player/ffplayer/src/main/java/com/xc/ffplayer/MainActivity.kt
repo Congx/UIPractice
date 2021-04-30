@@ -12,5 +12,9 @@ class MainActivity : AppCompatActivity() {
         btnMediaCodec.setOnClickListener {
             startActivity(Intent(this,MediaCodecActivity::class.java))
         }
+
+        btnMediaRecord.setOnClickListener {
+            startActivity(Intent(this,MediaRecordActivity::class.java))
+        }
     }
 }

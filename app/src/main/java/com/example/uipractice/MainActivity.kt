@@ -5,6 +5,7 @@ import com.example.uipractice.architecture.ArchitectureActivity
 import com.example.uipractice.base.BaseItemListActivity
 import com.example.uipractice.base.ItemBean
 import com.example.uipractice.basepractice.BaseLibActivity
+import com.example.uipractice.camera.Camera2Activity
 import com.example.uipractice.camera.CameraActivity
 import com.example.uipractice.fragment.FragmentListActivity
 import com.example.uipractice.image.GlideActivity
@@ -29,7 +30,7 @@ class MainActivity : BaseItemListActivity() {
         ItemBean("FileProvider", FileProviderActivity::class.java),
         ItemBean("NDK", NDKActivity::class.java),
         ItemBean("camera", CameraActivity::class.java),
-        ItemBean("camera2", CameraActivity::class.java),
+        ItemBean("camera2", Camera2Activity::class.java),
         ItemBean("window", WindowTestActivity::class.java),
         ItemBean("插件化", PluginTestActivity::class.java),
         ItemBean("图片相关", GlideActivity::class.java)

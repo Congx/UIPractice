@@ -1,6 +1,7 @@
 package com.example.uipractice.camera
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.graphics.Matrix
 import android.hardware.Camera
@@ -24,6 +25,7 @@ class CameraActivity : AppCompatActivity() {
 
     lateinit var camera: Camera
 
+    @SuppressLint("AutoDispose")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.layout_camera)

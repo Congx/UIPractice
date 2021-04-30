@@ -74,6 +74,7 @@ class HardDecoder(var path: String) : Decoder, Runnable {
     }
 
     override fun run() {
+        // mediaCodec 是个状态机，一定要先start
         mediaCodec.start()
         decode()
     }
@@ -87,6 +88,7 @@ class HardDecoder(var path: String) : Decoder, Runnable {
                 var inputIndex = mediaCodec.dequeueInputBuffer(timeout)
                 if (inputIndex >= 0) {
                     var inputBuffer = mediaCodec.getInputBuffer(inputIndex) ?: continue
+                    // 使用之前一定要clear
                     inputBuffer.clear()
                     // 从视频中，读取数据到buffer中
                     val readSampleData = extractor.readSampleData(inputBuffer, 0)
@@ -121,7 +123,6 @@ class HardDecoder(var path: String) : Decoder, Runnable {
 
                 outputBuffer.position(bufferInfo.offset)
                 outputBuffer.limit(bufferInfo.offset + bufferInfo.size)
-//图像  Java C++
                 //图像  Java C++
                 val ba = ByteArray(outputBuffer.remaining())
                 outputBuffer.get(ba)

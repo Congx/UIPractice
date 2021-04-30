@@ -22,7 +22,7 @@ public class MyApp extends Application {
     public void onCreate() {
         super.onCreate();
         // 自定义crash处理
-        CrashHandler.getInstance().init(this, BuildConfig.DEBUG,false,0,SplashActivity.class);
+//        CrashHandler.getInstance().init(this, BuildConfig.DEBUG,false,0,SplashActivity.class);
         // ActivityLifecycleCallbacks 注册
         registerActivityLifecycleCallbacks(new AppActivityLifecycleCallback());
 

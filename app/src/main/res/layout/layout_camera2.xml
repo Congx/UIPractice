@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
 
-    <TextureView
+    <com.example.uipractice.camera.AutoFitTextureView
         android:id="@+id/textureView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

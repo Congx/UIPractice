@@ -4,7 +4,10 @@ import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
-import android.graphics.*
+import android.graphics.ImageFormat
+import android.graphics.Matrix
+import android.graphics.RectF
+import android.graphics.SurfaceTexture
 import android.hardware.camera2.*
 import android.hardware.camera2.params.OutputConfiguration
 import android.hardware.camera2.params.SessionConfiguration
@@ -18,14 +21,11 @@ import android.util.Log
 import android.util.Size
 import android.util.SparseIntArray
 import android.view.Surface
-import android.view.TextureView
 import android.view.TextureView.SurfaceTextureListener
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import java.io.ByteArrayOutputStream
 import java.io.File
-import java.io.FileOutputStream
-import java.nio.ByteBuffer
 import java.util.concurrent.Executors
 
 /**
@@ -52,7 +52,7 @@ internal class Camera2Provider(private val context: Activity) {
 
     private lateinit var cameraDevice: CameraDevice
     private val handler: Handler
-    private var textureView: TextureView? = null
+    private var textureView: AutoFitTextureView? = null
     private var backCameraId: String? = null
     private var frontCameraId: String? = null
     private var previewSize: Size? = null
@@ -90,7 +90,7 @@ internal class Camera2Provider(private val context: Activity) {
         handler.looper.quit()
     }
 
-    fun initTexture(textureView: TextureView) {
+    fun initTexture(textureView: AutoFitTextureView) {
         this.textureView = textureView
         textureView.surfaceTextureListener = object : SurfaceTextureListener {
             override fun onSurfaceTextureAvailable(surface: SurfaceTexture, width: Int, height: Int) {
@@ -98,7 +98,7 @@ internal class Camera2Provider(private val context: Activity) {
             }
 
             override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture, width: Int, height: Int) {
-                configureTextureViewTransform(width, height)
+                configureTransform(width, height)
 
             }
 
@@ -122,13 +122,13 @@ internal class Camera2Provider(private val context: Activity) {
 
             if (cameraIdList == null || cameraIdList.isEmpty()) return
             var map: StreamConfigurationMap? = null
+            var cameraCharacteristics:CameraCharacteristics? = null
             for (id in cameraIdList) {
                 // 获取摄像头特性
-                val cameraCharacteristics = cameraManager.getCameraCharacteristics(id)
-//                if (!cameraCharacteristics.isHardwareLevelSupported(REQUIRED_SUPPORTED_HARDWARE_LEVEL)) {
-//                    Log.e(TAG, "硬件不支持")
-//                    return
-//                }
+                cameraCharacteristics = cameraManager.getCameraCharacteristics(id)
+
+                cameraCharacteristics.get(CameraCharacteristics.FLASH_INFO_AVAILABLE)//是否支持闪光灯
+                cameraCharacteristics.get(CameraCharacteristics.CONTROL_AF_AVAILABLE_MODES);//是否支持自动对焦
                 // 摄像头类型：前置、后置
                 val integer = cameraCharacteristics.get(CameraCharacteristics.LENS_FACING)
                 // 选择后置摄像头
@@ -143,16 +143,19 @@ internal class Camera2Provider(private val context: Activity) {
                     frontCameraId = id
                 }
             }
+
             if (map == null) return
 //            map.isOutputSupportedFor()
             // 获取所支持预览尺寸
             val previewSizes = map.getOutputSizes(SurfaceTexture::class.java) ?: return
             previewSizes?.let {
                 logSize(previewSizes, "支持预览尺寸")
-                previewSize = CameraUtil.getOptimalSize(it, width, height)
+//                previewSize = CameraUtil.getOptimalSize(it, width, height)
+                previewSize = getPreviewOutputSize(textureView!!.display,cameraCharacteristics!!,SurfaceTexture::class.java,)
                 surfaceTexture.setDefaultBufferSize(previewSize!!.width, previewSize!!.height)
                 surface = Surface(surfaceTexture)
 
+                Log.d(TAG, "屏幕预览尺寸 ： width = ${width}, height = ${height}")
                 Log.d(TAG, "预览尺寸 ： width = ${previewSize!!.width}, height = ${previewSize!!.height}")
             }
             // 获取输出拍照保存的图片的尺寸
@@ -161,12 +164,21 @@ internal class Camera2Provider(private val context: Activity) {
                 logSize(savePicSize, "图片的尺寸")
             }
 
+//            map.getOutputSizes(MediaRecorder.class)//录制的视频支持尺寸
+
             if (map.isOutputSupportedFor(ImageFormat.JPEG)) {
                 imageReader = ImageReader.newInstance(previewSize!!.width, previewSize!!.height, ImageFormat.JPEG, 3)
                 imageReader?.setOnImageAvailableListener(imageAvailableListener, handler)
             }
 
-            configureTextureViewTransform(previewSize!!.width, previewSize!!.height)
+//            val displayRotation: Int = context.windowManager.defaultDisplay.rotation
+//            if (displayRotation == Surface.ROTATION_0 || displayRotation == Surface.ROTATION_180) {
+//                textureView?.setAspectRation(previewSize!!.height, previewSize!!.width);
+//            }else {
+//                textureView?.setAspectRation(previewSize!!.width, previewSize!!.height);
+//            }
+//
+            configureTransform(previewSize!!.width, previewSize!!.height)
             sendOpenMsg()
 
         } catch (e: CameraAccessException) {
@@ -307,9 +319,19 @@ internal class Camera2Provider(private val context: Activity) {
     }
 
     fun startPreview() {
+        /**
+         * templateType 类别 如下几个
+         * TEMPLATE_PREVIEW 预览
+         * TEMPLATE_RECORD 录制视频
+         * TEMPLATE_STILL_CAPTURE 拍照
+         * TEMPLATE_VIDEO_SNAPSHOT //没用到 igonre
+         * TEMPLATE_MANUAL  //手动，貌似需要硬件是full级别才能全支持，没详细了解
+         **/
         val requestBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW)
         requestBuilder.addTarget(surface!!)
         val request = requestBuilder.build()
+        requestBuilder.set(CaptureRequest.STATISTICS_FACE_DETECT_MODE, CameraCharacteristics.STATISTICS_FACE_DETECT_MODE_SIMPLE)
+
         cameraCaptureSession.setRepeatingRequest(request, requestSateCallback, handler)
     }
 
@@ -318,12 +340,34 @@ internal class Camera2Provider(private val context: Activity) {
         requestBuilder.addTarget(imageReader!!.surface)
         // 自动对焦
         requestBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
-//            // 打开闪光灯
+        // 打开闪光灯
         requestBuilder.set(CaptureRequest.CONTROL_AE_MODE, CaptureRequest.CONTROL_AE_MODE_ON_AUTO_FLASH)
+
+        /**
+         * //1. 自动聚焦相关：
+        CaptureRequest.Builder.set(CaptureRequest.CONTROL_AF_MODE,
+                CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
+        //2.自动曝光相关
+        CaptureRequest.Builder.set(CaptureRequest.CONTROL_AE_MODE,
+                CaptureRequest.CONTROL_AE_MODE_ON_AUTO_FLASH);
+        //3.预览放大缩小
+        CaptureRequest.Builder.set(CaptureRequest.SCALER_CROP_REGION, region);
+        //4.自动控制模式
+        CaptureRequest.Builder.set(CaptureRequest.CONTROL_MODE,CameraMetadata.CONTROL_MODE_AUTO);
+        //5.手动触发对焦
+        CaptureRequest.Builder.set(CaptureRequest.CONTROL_AF_TRIGGER,CameraMetadata.CONTROL_AF_TRIGGER_START);
+        //6.手动触发曝光
+        CaptureRequest.Builder.set(CaptureRequest.CONTROL_AE_PRECAPTURE_TRIGGER,CaptureRequest.CONTROL_AE_PRECAPTURE_TRIGGER_START);
+        //7.人脸检测模式
+        captureRequestBuilder.set(CaptureRequest.STATISTICS_FACE_DETECT_MODE, CameraCharacteristics.STATISTICS_FACE_DETECT_MODE_SIMPLE)
+
+         */
         // 根据设备方向计算设置照片的方向
         // 获取手机方向
         val rotation: Int = context.windowManager.defaultDisplay.rotation
         requestBuilder.set(CaptureRequest.JPEG_ORIENTATION, ORIENTATIONS.get(rotation))
+//        requestBuilder.set(CaptureRequest.STATISTICS_FACE_DETECT_MODE, CameraCharacteristics.STATISTICS_FACE_DETECT_MODE_SIMPLE)
+
         cameraCaptureSession.capture(requestBuilder.build(),null,handler)
     }
 
@@ -343,29 +387,60 @@ internal class Camera2Provider(private val context: Activity) {
         cameraManager.openCamera(id, cameraStateCallback, handler)
     }
 
-    private fun configureTextureViewTransform(viewWidth: Int, viewHeight: Int) {
-        if (null == textureView) {
+    /**
+     * Configures the necessary [android.graphics.Matrix] transformation to `textureView`.
+     * This method should be called after the camera preview size is determined in
+     * setUpCameraOutputs and also the size of `textureView` is fixed.
+     *
+     * @param viewWidth  The width of `textureView`
+     * @param viewHeight The height of `textureView`
+     */
+//    private fun configureTransform(viewWidth: Int, viewHeight: Int) {
+//        if (null == textureView || null == previewSize) {
+//            return
+//        }
+//        val rotation: Int = context.windowManager.defaultDisplay.rotation
+//        val matrix = Matrix()
+//        val viewRect = RectF(0f, 0f, viewWidth.toFloat(), viewHeight.toFloat())
+//        val bufferRect = RectF(0f, 0f, previewSize!!.height.toFloat(), previewSize!!.width.toFloat())
+//        val centerX = viewRect.centerX()
+//        val centerY = viewRect.centerY()
+//        if (Surface.ROTATION_90 == rotation || Surface.ROTATION_270 == rotation) {
+//            bufferRect.offset(centerX - bufferRect.centerX(), centerY - bufferRect.centerY())
+//            matrix.setRectToRect(viewRect, bufferRect, Matrix.ScaleToFit.FILL)
+//            val scale: Float = Math.max(
+//                    viewHeight.toFloat() / previewSize!!.getHeight(),
+//                    viewWidth.toFloat() / previewSize!!.getWidth())
+//            matrix.postScale(scale, scale, centerX, centerY)
+//            matrix.postRotate(90 * (rotation - 2).toFloat(), centerX, centerY)
+//        } else if (Surface.ROTATION_180 == rotation) {
+//            matrix.postRotate(180f, centerX, centerY)
+//        }
+//        textureView!!.setTransform(matrix)
+//    }
+
+    private fun configureTransform(viewWidth: Int, viewHeight: Int) {
+        if (null == previewSize ) {
             return
         }
-        val rotation = 0 /*activity.getWindowManager().getDefaultDisplay().getRotation();*/
+        val rotation = context.windowManager.defaultDisplay.rotation
         val matrix = Matrix()
         val viewRect = RectF(0f, 0f, viewWidth.toFloat(), viewHeight.toFloat())
-        val bufferRect = RectF(0f, 0f, previewSize!!.getHeight().toFloat(), previewSize!!.getWidth().toFloat())
-        val centerX: Float = viewRect.centerX()
-        val centerY: Float = viewRect.centerY()
-        if (Surface.ROTATION_90 === rotation || Surface.ROTATION_270 === rotation) {
+        val bufferRect = RectF(0f, 0f, previewSize!!.height.toFloat(), previewSize!!.width.toFloat())
+        val centerX = viewRect.centerX()
+        val centerY = viewRect.centerY()
+        if (Surface.ROTATION_90 == rotation || Surface.ROTATION_270 == rotation) {
             bufferRect.offset(centerX - bufferRect.centerX(), centerY - bufferRect.centerY())
             matrix.setRectToRect(viewRect, bufferRect, Matrix.ScaleToFit.FILL)
             val scale: Float = Math.max(
-                    viewHeight.toFloat() / previewSize!!.getHeight(),
-                    viewWidth.toFloat() / previewSize!!.getWidth())
+                    viewHeight.toFloat() / previewSize!!.height,
+                    viewWidth.toFloat() / previewSize!!.width)
             matrix.postScale(scale, scale, centerX, centerY)
-            matrix.postRotate((90 * (rotation - 2)).toFloat(), centerX, centerY)
-        } else if (Surface.ROTATION_180 === rotation) {
+            matrix.postRotate(90 * (rotation - 2).toFloat(), centerX, centerY)
+        } else if (Surface.ROTATION_180 == rotation) {
             matrix.postRotate(180f, centerX, centerY)
         }
         textureView?.setTransform(matrix)
     }
-
 
 }

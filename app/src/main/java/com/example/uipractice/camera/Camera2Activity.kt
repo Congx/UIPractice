@@ -32,11 +32,24 @@ class Camera2Activity : AppCompatActivity() {
             }
 
         button.setOnClickListener {
+            camera2Provider.takePhoto()
+        }
+
+        btnStopPreview.setOnClickListener {
+            camera2Provider.stopPreview()
+        }
+
+        btnStartPreview.setOnClickListener {
+            camera2Provider.startPreview()
         }
     }
 
+    private val camera2Provider: Camera2Provider by lazy {
+        Camera2Provider(this)
+    }
+
     private fun initCamera() {
-        var provider = Camera2Provider(this)
+        var provider = camera2Provider
         provider.initTexture(textureView)
     }
 

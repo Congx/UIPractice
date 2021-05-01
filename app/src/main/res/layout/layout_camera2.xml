@@ -17,4 +17,18 @@
         android:layout_height="wrap_content"
         android:text="拍照"/>
 
+    <Button
+        android:id="@+id/btnStopPreview"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="80dp"
+        android:layout_height="wrap_content"
+        android:text="停止预览"/>
+
+    <Button
+        android:id="@+id/btnStartPreview"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="130dp"
+        android:layout_height="wrap_content"
+        android:text="开始预览预览"/>
+
 </FrameLayout>

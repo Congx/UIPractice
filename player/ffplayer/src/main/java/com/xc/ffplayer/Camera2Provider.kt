@@ -1,4 +1,4 @@
-package com.example.uipractice.camera
+package com.xc.ffplayer
 
 import android.Manifest
 import android.app.Activity
@@ -26,7 +26,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import java.io.ByteArrayOutputStream
 import java.io.File
-import java.nio.ByteBuffer
 import java.util.concurrent.Executors
 
 /**
@@ -65,6 +64,7 @@ internal class Camera2Provider(private val context: Activity) {
     }
 
     var streamByteCallback: ((ByteArray) -> Unit)? = null
+    var cameraPreviewCallback: CameraPreviewCallback? = null
 
     init {
 
@@ -163,10 +163,10 @@ internal class Camera2Provider(private val context: Activity) {
                 Log.d(TAG, "预览尺寸 ： width = ${previewSize!!.width}, height = ${previewSize!!.height}")
             }
             // 获取输出拍照保存的图片的尺寸
-            val savePicSize = map.getOutputSizes(ImageFormat.JPEG)
-            savePicSize?.let {
-                logSize(savePicSize, "图片的尺寸")
-            }
+//            val savePicSize = map.getOutputSizes(ImageFormat.JPEG)
+//            savePicSize?.let {
+//                logSize(savePicSize, "图片的尺寸")
+//            }
 
 //            map.getOutputSizes(MediaRecorder.class)//录制的视频支持尺寸
 
@@ -180,7 +180,9 @@ internal class Camera2Provider(private val context: Activity) {
                 streamImageReader?.setOnImageAvailableListener(streamImageAvailableListener, handler)
             }
 
-            configureTransform(previewSize!!.width, previewSize!!.height)
+            cameraPreviewCallback?.previewSize(previewSize!!.width,previewSize!!.height)
+
+//            configureTransform(previewSize!!.width, previewSize!!.height)
             sendOpenMsg()
 
         } catch (e: CameraAccessException) {
@@ -254,13 +256,19 @@ internal class Camera2Provider(private val context: Activity) {
         image?.close()
     }
 
+    val buffer by lazy {
+        val size = (previewSize!!.width * previewSize!!.height) * 3 / 2
+        return@lazy ByteArray(size)
+    }
+
     var streamImageAvailableListener = ImageReader.OnImageAvailableListener {
 
         val image = streamImageReader?.acquireNextImage()
         if (image != null) {
-            val size = (image.width * image.height) * 3 / 2
-            var buffer = ByteArray(size)
+//            val size = (image.width * image.height) * 3 / 2
+//            var buffer = ByteArray(size)
             ImageUtil.getBytesFromImageAsType(image,ImageUtil.YUV420SPNV12,buffer)
+//            val rotateYUV420SP = ImageUtil.rotateYUV420SP(buffer, image.height, image.width)
             streamByteCallback?.invoke(buffer)
         }
 
@@ -352,7 +360,6 @@ internal class Camera2Provider(private val context: Activity) {
         requestBuilder.addTarget(surface!!)
         val request = requestBuilder.build()
         requestBuilder.set(CaptureRequest.STATISTICS_FACE_DETECT_MODE, CameraCharacteristics.STATISTICS_FACE_DETECT_MODE_SIMPLE)
-
         cameraCaptureSession.setRepeatingRequest(request, requestSateCallback, handler)
     }
 
@@ -482,4 +489,8 @@ internal class Camera2Provider(private val context: Activity) {
         textureView?.setTransform(matrix)
     }
 
+}
+
+interface CameraPreviewCallback {
+    fun previewSize(width: Int,height: Int)
 }

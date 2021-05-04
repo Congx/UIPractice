@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.uipractice.R
 import com.tbruyelle.rxpermissions2.RxPermissions
 import kotlinx.android.synthetic.main.layout_camera2.*
+import java.io.StringReader
 
 
 class Camera2Activity : AppCompatActivity() {
@@ -28,6 +29,14 @@ class Camera2Activity : AppCompatActivity() {
                 initCamera()
             }
 
+        val heightPixels = resources.displayMetrics.heightPixels
+        val widthPixels = resources.displayMetrics.widthPixels
+
+//        var decoder = StreamDecoder(widthPixels,heightPixels)
+        camera2Provider.streamByteCallback = {
+//            decoder.decco
+        }
+
         button.setOnClickListener {
             camera2Provider.takePhoto()
         }
@@ -38,6 +47,14 @@ class Camera2Activity : AppCompatActivity() {
 
         btnStartPreview.setOnClickListener {
             camera2Provider.startPreview()
+        }
+
+        btnPushStream.setOnClickListener {
+            camera2Provider.startPushStream()
+        }
+
+        btnStopPushStream.setOnClickListener {
+            camera2Provider.stopPushStream()
         }
     }
 

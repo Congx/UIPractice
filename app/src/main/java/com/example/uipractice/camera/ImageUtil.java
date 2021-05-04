@@ -1,10 +1,9 @@
-package com.xc.ffplayer;
+package com.example.uipractice.camera;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.ImageFormat;
 import android.graphics.Rect;
-import android.graphics.YuvImage;
 import android.media.Image;
 import android.util.Log;
 
@@ -838,32 +837,6 @@ public final class ImageUtil {
                 image.close();
             }
         }
-    }
-
-    public static byte[] rotateYUV420SP(byte[] src, int width, int height) {
-        byte[] dst = new byte[src.length];
-        int wh = width * height;
-        //旋转Y
-        int k = 0;
-        for (int i = 0; i < width; i++) {
-            for (int j = height - 1; j >= 0; j--) {
-                dst[k] = src[width * j + i];
-                k++;
-            }
-        }
-
-        int halfWidth = width / 2;
-        int halfHeight = height / 2;
-        for (int colIndex = 0; colIndex < halfWidth; colIndex++) {
-            for (int rowIndex = halfHeight - 1; rowIndex >= 0; rowIndex--) {
-                int index = (halfWidth * rowIndex + colIndex) * 2;
-                dst[k] = src[wh + index];
-                k++;
-                dst[k] = src[wh + index + 1];
-                k++;
-            }
-        }
-        return dst;
     }
 
 

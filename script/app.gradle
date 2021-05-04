@@ -19,7 +19,7 @@ dependencies {
     // maven库依赖
     implementation rootProject.ext.libs.libsAll
     // module依赖
-    implementation project(path: ':rxjavalib')
+//    implementation project(path: ':rxjavalib')
     implementation project(path: ':baselib')
 
 }

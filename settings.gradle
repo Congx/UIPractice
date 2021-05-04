@@ -1,8 +1,8 @@
 include ':player:ffplayer'
 include ':app'
 rootProject.name='UIPractice'
-include "rxjavalib"
-project(":rxjavalib").projectDir = new File("./libs/rxjavalib")
+//include "rxjavalib"
+//project(":rxjavalib").projectDir = new File("./libs/rxjavalib")
 
 include ":libs:baselib"
 //project(":baselib").projectDir = new File("./libs/baselib")

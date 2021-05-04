@@ -16,5 +16,9 @@ class MainActivity : AppCompatActivity() {
         btnMediaRecord.setOnClickListener {
             startActivity(Intent(this,MediaRecordActivity::class.java))
         }
+
+        btnCameraEncode.setOnClickListener {
+            startActivity(Intent(this,CameraEncodeActivity::class.java))
+        }
     }
 }

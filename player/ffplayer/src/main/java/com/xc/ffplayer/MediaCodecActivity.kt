@@ -19,10 +19,10 @@ class MediaCodecActivity : AppCompatActivity() {
             //判断当前屏幕方向
             if(requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
                 //切换竖屏
-                requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+                requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             }else{
                 //切换横屏
-                requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE;
+                requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
             }
         }
 
@@ -33,6 +33,8 @@ class MediaCodecActivity : AppCompatActivity() {
         var path = getExternalFilesDir("video")?.absolutePath + File.separator + "input.mp4"
 //        var path = getExternalFilesDir("video")?.absolutePath + File.separator + "input.mp4"
         Log.e("path:" , path)
+        Log.e("exists:" , File(path).exists().toString())
+
         var player = H264Player(video_surfaceView,path)
     }
 }

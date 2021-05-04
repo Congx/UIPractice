@@ -4,7 +4,9 @@ import android.view.Surface
 
 open interface Decoder {
 
-    fun start(surface: Surface?)
-    fun start()
+    fun decode(surface: Surface?)
+    fun decode()
+    fun decode(byteArray: ByteArray)
 
+    fun stop()
 }

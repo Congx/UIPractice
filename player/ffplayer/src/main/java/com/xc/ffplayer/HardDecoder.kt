@@ -24,15 +24,23 @@ class HardDecoder(var path: String) : Decoder, Runnable {
     var width = 0
     var height = 0
 
-    override fun start(surface: Surface?) {
+    override fun decode(surface: Surface?) {
         this.surface = surface
         if (prepare(surface)) {
             Thread(this).start()
         }
     }
 
-    override fun start() {
-        start(null)
+    override fun decode() {
+        decode(null)
+    }
+
+    override fun decode(byteArray: ByteArray) {
+
+    }
+
+    override fun stop() {
+
     }
 
     fun prepare(surface: Surface?): Boolean {
@@ -76,11 +84,11 @@ class HardDecoder(var path: String) : Decoder, Runnable {
     override fun run() {
         // mediaCodec 是个状态机，一定要先start
         mediaCodec.start()
-        decode()
+        doDecode()
     }
 
     var i = 0
-    private fun decode() {
+    private fun doDecode() {
         var decodeFinish = false
 
         while (!decodeFinish) {
@@ -153,7 +161,7 @@ class HardDecoder(var path: String) : Decoder, Runnable {
                 } catch (e: Exception) {
 
                 }
-                mediaCodec.releaseOutputBuffer(outIndex, if (surface == null) false else false)
+                mediaCodec.releaseOutputBuffer(outIndex, surface != null)
             }
         }
         mediaCodec.release()

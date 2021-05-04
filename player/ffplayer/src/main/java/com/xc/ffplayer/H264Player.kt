@@ -33,8 +33,8 @@ class H264Player(var surfaceView: SurfaceView,var path: String) :
 
     override fun surfaceCreated(holder: SurfaceHolder) {
         surfaceValide = true
-//        decoder.start(holder.surface)
-        decoder.start(null)
+        decoder.decode(holder.surface)
+//        decoder.decode(null)
 
 //        val h264Player2 = H264Player2(null, path, holder.surface)
 //        h264Player2.play()

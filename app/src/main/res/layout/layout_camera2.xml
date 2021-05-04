@@ -31,4 +31,18 @@
         android:layout_height="wrap_content"
         android:text="开始预览预览"/>
 
+    <Button
+        android:id="@+id/btnPushStream"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="180dp"
+        android:layout_height="wrap_content"
+        android:text="推流"/>
+
+    <Button
+        android:id="@+id/btnStopPushStream"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="230dp"
+        android:layout_height="wrap_content"
+        android:text="停止推流"/>
+
 </FrameLayout>

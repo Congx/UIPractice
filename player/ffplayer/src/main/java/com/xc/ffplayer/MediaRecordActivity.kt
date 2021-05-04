@@ -21,7 +21,7 @@ class MediaRecordActivity : AppCompatActivity() {
     lateinit var mediaProjection:MediaProjection
     var recode = true
     private val mediaCodec: MediaCodec by lazy {
-        return@lazy MediaCodec.createEncoderByType("video/avc")
+        return@lazy MediaCodec.createEncoderByType(MediaFormat.MIMETYPE_VIDEO_HEVC)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,7 +58,7 @@ class MediaRecordActivity : AppCompatActivity() {
         val height = resources.displayMetrics.heightPixels
 
         val mediaCodec = mediaCodec
-        val format = MediaFormat.createVideoFormat(MediaFormat.MIMETYPE_VIDEO_AVC, 540, 960)
+        val format = MediaFormat.createVideoFormat(MediaFormat.MIMETYPE_VIDEO_AVC, width, height)
         format.setInteger(MediaFormat.KEY_COLOR_FORMAT,MediaCodecInfo.CodecCapabilities.COLOR_FormatSurface)
         format.setInteger(MediaFormat.KEY_BIT_RATE,400_000)
         format.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL,2)
@@ -68,7 +68,7 @@ class MediaRecordActivity : AppCompatActivity() {
         Thread {
             val inputSurface = mediaCodec.createInputSurface()
             mediaCodec.start()
-            mediaProjection.createVirtualDisplay("screen-recode",540,960,1,
+            mediaProjection.createVirtualDisplay("screen-recode",width,height,1,
                     DisplayManager.VIRTUAL_DISPLAY_FLAG_PUBLIC,inputSurface,null,null)
 
             val bufferInfo = MediaCodec.BufferInfo()

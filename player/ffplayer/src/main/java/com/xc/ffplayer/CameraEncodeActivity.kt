@@ -28,7 +28,7 @@ class CameraEncodeActivity : AppCompatActivity() {
         cameraProvide.cameraPreviewCallback = object :CameraPreviewCallback {
             override fun previewSize(width: Int, height: Int) {
 
-                streamDecoder = StreamDecoder(width,height)
+                streamDecoder = StreamDecoder(height,width)
                 streamDecoder?.prepare()
             }
 

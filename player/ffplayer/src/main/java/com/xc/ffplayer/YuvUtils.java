@@ -24,7 +24,7 @@ public class YuvUtils {
         return nv12;
     }
 
-    public static void portraitData2Raw(byte[] data,byte[] output,int width,int height) {
+    public static void portraitNV21Data2Raw(byte[] data, byte[] output, int width, int height) {
         int y_len = width * height;
         int uvHeight = height >> 1; // uv数据高为y数据高的一半
         int k = 0;

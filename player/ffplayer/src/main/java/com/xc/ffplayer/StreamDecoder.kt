@@ -64,7 +64,9 @@ class StreamDecoder(var width:Int,var height:Int) : Decoder, Runnable {
                 outputBuffer.get(inputBuffer)
 
                 var path = MyApplication.application.getExternalFilesDir("video")?.absolutePath + File.separator + "input.h265"
-                File(path).appendBytes(inputBuffer)
+
+                val file = File(path)
+                file.appendBytes(inputBuffer)
 
                 mediaCodec.releaseOutputBuffer(outIndex,false)
                 outIndex = mediaCodec.dequeueOutputBuffer(bufferInfo, 100_000)

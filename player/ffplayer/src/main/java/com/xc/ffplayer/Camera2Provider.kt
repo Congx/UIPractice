@@ -4,14 +4,12 @@ import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
-import android.graphics.ImageFormat
-import android.graphics.Matrix
-import android.graphics.RectF
-import android.graphics.SurfaceTexture
+import android.graphics.*
 import android.hardware.camera2.*
 import android.hardware.camera2.params.OutputConfiguration
 import android.hardware.camera2.params.SessionConfiguration
 import android.hardware.camera2.params.StreamConfigurationMap
+import android.media.Image
 import android.media.ImageReader
 import android.os.Build
 import android.os.Handler
@@ -26,6 +24,8 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.FileOutputStream
+import java.nio.ByteBuffer
 import java.util.concurrent.Executors
 
 /**
@@ -38,7 +38,8 @@ internal class Camera2Provider(private val context: Activity) {
         private const val TAG = "Camera2Provider"
         private const val MSG_OPEN_CAMERA = 1
         private const val MSG_CLOSE_CAMERA = 2
-        private const val REQUIRED_SUPPORTED_HARDWARE_LEVEL = CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_FULL
+        private const val REQUIRED_SUPPORTED_HARDWARE_LEVEL =
+            CameraCharacteristics.INFO_SUPPORTED_HARDWARE_LEVEL_FULL
 
         private val ORIENTATIONS: SparseIntArray = SparseIntArray()
 
@@ -97,11 +98,19 @@ internal class Camera2Provider(private val context: Activity) {
     fun initTexture(textureView: AutoFitTextureView) {
         this.textureView = textureView
         textureView.surfaceTextureListener = object : SurfaceTextureListener {
-            override fun onSurfaceTextureAvailable(surface: SurfaceTexture, width: Int, height: Int) {
+            override fun onSurfaceTextureAvailable(
+                surface: SurfaceTexture,
+                width: Int,
+                height: Int
+            ) {
                 initInfoCamera(surface, width, height)
             }
 
-            override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture, width: Int, height: Int) {
+            override fun onSurfaceTextureSizeChanged(
+                surface: SurfaceTexture,
+                width: Int,
+                height: Int
+            ) {
                 configureTransform(width, height)
 
             }
@@ -119,14 +128,16 @@ internal class Camera2Provider(private val context: Activity) {
             val cameraIdList = cameraManager.cameraIdList.filter {
                 val characteristics = cameraManager.getCameraCharacteristics(it)
                 val capabilities = characteristics.get(
-                        CameraCharacteristics.REQUEST_AVAILABLE_CAPABILITIES)
+                    CameraCharacteristics.REQUEST_AVAILABLE_CAPABILITIES
+                )
                 capabilities?.contains(
-                        CameraMetadata.REQUEST_AVAILABLE_CAPABILITIES_BACKWARD_COMPATIBLE) ?: false
+                    CameraMetadata.REQUEST_AVAILABLE_CAPABILITIES_BACKWARD_COMPATIBLE
+                ) ?: false
             }
 
             if (cameraIdList == null || cameraIdList.isEmpty()) return
             var map: StreamConfigurationMap? = null
-            var cameraCharacteristics:CameraCharacteristics? = null
+            var cameraCharacteristics: CameraCharacteristics? = null
             for (id in cameraIdList) {
                 // 获取摄像头特性
                 cameraCharacteristics = cameraManager.getCameraCharacteristics(id)
@@ -139,8 +150,10 @@ internal class Camera2Provider(private val context: Activity) {
                 if (integer != null && integer == CameraCharacteristics.LENS_FACING_BACK) {
                     backCameraId = id
                     // 获取配置信息
-                    map = cameraCharacteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP)
-                    var flashUseable = cameraCharacteristics.get(CameraCharacteristics.FLASH_INFO_AVAILABLE)
+                    map =
+                        cameraCharacteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP)
+                    var flashUseable =
+                        cameraCharacteristics.get(CameraCharacteristics.FLASH_INFO_AVAILABLE)
                     Log.d(TAG, "flashUseable: $flashUseable")
                     break
                 } else if (integer != null && integer == CameraCharacteristics.LENS_FACING_FRONT) {
@@ -155,7 +168,11 @@ internal class Camera2Provider(private val context: Activity) {
             previewSizes?.let {
                 logSize(previewSizes, "支持预览尺寸")
 //                previewSize = CameraUtil.getOptimalSize(it, width, height)
-                previewSize = getPreviewOutputSize(textureView!!.display,cameraCharacteristics!!,SurfaceTexture::class.java,)
+                previewSize = getPreviewOutputSize(
+                    textureView!!.display,
+                    cameraCharacteristics!!,
+                    SurfaceTexture::class.java,
+                )
                 surfaceTexture.setDefaultBufferSize(previewSize!!.width, previewSize!!.height)
                 surface = Surface(surfaceTexture)
 
@@ -171,16 +188,29 @@ internal class Camera2Provider(private val context: Activity) {
 //            map.getOutputSizes(MediaRecorder.class)//录制的视频支持尺寸
 
             if (map.isOutputSupportedFor(ImageFormat.JPEG)) {
-                picImageReader = ImageReader.newInstance(previewSize!!.width, previewSize!!.height, ImageFormat.JPEG, 3)
+                picImageReader = ImageReader.newInstance(
+                    previewSize!!.width,
+                    previewSize!!.height,
+                    ImageFormat.JPEG,
+                    3
+                )
                 picImageReader?.setOnImageAvailableListener(imageAvailableListener, handler)
             }
 
             if (map.isOutputSupportedFor(ImageFormat.YUV_420_888)) {
-                streamImageReader = ImageReader.newInstance(previewSize!!.width, previewSize!!.height, ImageFormat.YUV_420_888, 1)
-                streamImageReader?.setOnImageAvailableListener(streamImageAvailableListener, handler)
+                streamImageReader = ImageReader.newInstance(
+                    previewSize!!.width,
+                    previewSize!!.height,
+                    ImageFormat.YUV_420_888,
+                    1
+                )
+                streamImageReader?.setOnImageAvailableListener(
+                    streamImageAvailableListener,
+                    handler
+                )
             }
 
-            cameraPreviewCallback?.previewSize(previewSize!!.width,previewSize!!.height)
+            cameraPreviewCallback?.previewSize(previewSize!!.width, previewSize!!.height)
 
 //            configureTransform(previewSize!!.width, previewSize!!.height)
             sendOpenMsg()
@@ -242,7 +272,8 @@ internal class Camera2Provider(private val context: Activity) {
             var bos = ByteArrayOutputStream()
 //            yuvImage.compressToJpeg(Rect(0, 0, previewSize!!.width, previewSize!!.height), 100, bos)
             val toByteArray = bos.toByteArray()
-            var path = context.getExternalFilesDir("imgs")?.absolutePath + File.separator + "input.jpg"
+            var path =
+                context.getExternalFilesDir("imgs")?.absolutePath + File.separator + "input.jpg"
 //            var os = FileOutputStream(File(path))
 ////            os.write(toByteArray)
 //            os.write(yBuffer.array())
@@ -261,18 +292,65 @@ internal class Camera2Provider(private val context: Activity) {
         return@lazy ByteArray(size)
     }
 
+    val yuv by lazy {
+        val size = (previewSize!!.width * previewSize!!.height) * 3 / 2
+        return@lazy ByteArray(size)
+    }
+
     var streamImageAvailableListener = ImageReader.OnImageAvailableListener {
 
         val image = streamImageReader?.acquireNextImage()
         if (image != null) {
 //            val size = (image.width * image.height) * 3 / 2
 //            var buffer = ByteArray(size)
-            ImageUtil.getBytesFromImageAsType(image,ImageUtil.YUV420SPNV12,buffer)
+            ImageUtil.getBytesFromImageAsType(image, ImageUtil.YUV420SPNV21, buffer)
 //            val rotateYUV420SP = ImageUtil.rotateYUV420SP(buffer, image.height, image.width)
-            streamByteCallback?.invoke(buffer)
+            YuvUtils.portraitNV21Data2Raw(buffer, yuv, image.width, image.height)
+            streamByteCallback?.invoke(yuv)
+
+//            saveImg(image)
+//            saveNv21(context,yuv,image.height,image.width)
+
         }
 
         image?.close()
+    }
+
+    var isSave = false
+    private fun saveImg(image: Image) {
+        if (isSave) return
+        isSave = true
+        val planes = image.planes
+        val yPlane = planes[0]
+        val uPlane = planes[1]
+        val vPlane = planes[2]
+        val yBuffer = yPlane.buffer // Data from Y channel
+        val uBuffer = uPlane.buffer // Data from U channel
+        val vBuffer = vPlane.buffer // Data from V channel
+
+        val allocate = ByteBuffer.allocate(yBuffer.remaining() + uBuffer.remaining() + vBuffer.remaining())
+//        val allocate = ByteBuffer.allocate(yBuffer.remaining())
+
+        allocate.put(yBuffer)
+        allocate.put(vBuffer)
+        allocate.put(uBuffer)
+
+        var yuvImage = YuvImage(
+            allocate.array(),
+            ImageFormat.NV21,
+            previewSize!!.width,
+            previewSize!!.height,
+            null
+        )
+        var bos = ByteArrayOutputStream()
+         yuvImage.compressToJpeg(Rect(0, 0, previewSize!!.width, previewSize!!.height), 100, bos)
+        val toByteArray = bos.toByteArray()
+        var path = context.getExternalFilesDir("imgs")?.absolutePath + File.separator + "inputNV21.jpg"
+            var os = FileOutputStream(File(path))
+            os.write(toByteArray)
+            os.flush()
+            os.close()
+
     }
 
     private var cameraStateCallback = object : CameraDevice.StateCallback() {
@@ -304,7 +382,12 @@ internal class Camera2Provider(private val context: Activity) {
             streamImageReader?.let {
                 listOf.add(OutputConfiguration(it.surface))
             }
-            var config = SessionConfiguration(SessionConfiguration.SESSION_REGULAR, listOf, Executors.newSingleThreadExecutor(), sessionStateCallback)
+            var config = SessionConfiguration(
+                SessionConfiguration.SESSION_REGULAR,
+                listOf,
+                Executors.newSingleThreadExecutor(),
+                sessionStateCallback
+            )
             camera.createCaptureSession(config)
         } else {
             val listOf = mutableListOf(surface)
@@ -320,7 +403,12 @@ internal class Camera2Provider(private val context: Activity) {
 
     var requestSateCallback = object : CameraCaptureSession.CaptureCallback() {
 
-        override fun onCaptureStarted(session: CameraCaptureSession, request: CaptureRequest, timestamp: Long, frameNumber: Long) {
+        override fun onCaptureStarted(
+            session: CameraCaptureSession,
+            request: CaptureRequest,
+            timestamp: Long,
+            frameNumber: Long
+        ) {
 
         }
     }
@@ -359,7 +447,10 @@ internal class Camera2Provider(private val context: Activity) {
         val requestBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW)
         requestBuilder.addTarget(surface!!)
         val request = requestBuilder.build()
-        requestBuilder.set(CaptureRequest.STATISTICS_FACE_DETECT_MODE, CameraCharacteristics.STATISTICS_FACE_DETECT_MODE_SIMPLE)
+        requestBuilder.set(
+            CaptureRequest.STATISTICS_FACE_DETECT_MODE,
+            CameraCharacteristics.STATISTICS_FACE_DETECT_MODE_SIMPLE
+        )
         cameraCaptureSession.setRepeatingRequest(request, requestSateCallback, handler)
     }
 
@@ -385,17 +476,23 @@ internal class Camera2Provider(private val context: Activity) {
         val requestBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE)
         requestBuilder.addTarget(picImageReader!!.surface)
         // 自动对焦
-        requestBuilder.set(CaptureRequest.CONTROL_AF_MODE, CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
+        requestBuilder.set(
+            CaptureRequest.CONTROL_AF_MODE,
+            CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE
+        );
         // 打开闪光灯
-        requestBuilder.set(CaptureRequest.CONTROL_AE_MODE, CaptureRequest.CONTROL_AE_MODE_ON_AUTO_FLASH)
+        requestBuilder.set(
+            CaptureRequest.CONTROL_AE_MODE,
+            CaptureRequest.CONTROL_AE_MODE_ON_AUTO_FLASH
+        )
 
         /**
          * //1. 自动聚焦相关：
         CaptureRequest.Builder.set(CaptureRequest.CONTROL_AF_MODE,
-                CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
+        CaptureRequest.CONTROL_AF_MODE_CONTINUOUS_PICTURE);
         //2.自动曝光相关
         CaptureRequest.Builder.set(CaptureRequest.CONTROL_AE_MODE,
-                CaptureRequest.CONTROL_AE_MODE_ON_AUTO_FLASH);
+        CaptureRequest.CONTROL_AE_MODE_ON_AUTO_FLASH);
         //3.预览放大缩小
         CaptureRequest.Builder.set(CaptureRequest.SCALER_CROP_REGION, region);
         //4.自动控制模式
@@ -414,7 +511,7 @@ internal class Camera2Provider(private val context: Activity) {
         requestBuilder.set(CaptureRequest.JPEG_ORIENTATION, ORIENTATIONS.get(rotation))
 //        requestBuilder.set(CaptureRequest.STATISTICS_FACE_DETECT_MODE, CameraCharacteristics.STATISTICS_FACE_DETECT_MODE_SIMPLE)
 
-        cameraCaptureSession.capture(requestBuilder.build(),null,handler)
+        cameraCaptureSession.capture(requestBuilder.build(), null, handler)
     }
 
     /**
@@ -427,7 +524,11 @@ internal class Camera2Provider(private val context: Activity) {
             return
         }
 
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.CAMERA
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
             ActivityCompat.requestPermissions(context, arrayOf(Manifest.permission.CAMERA), 1)
         }
         cameraManager.openCamera(id, cameraStateCallback, handler)
@@ -466,21 +567,23 @@ internal class Camera2Provider(private val context: Activity) {
 //    }
 
     private fun configureTransform(viewWidth: Int, viewHeight: Int) {
-        if (null == previewSize ) {
+        if (null == previewSize) {
             return
         }
         val rotation = context.windowManager.defaultDisplay.rotation
         val matrix = Matrix()
         val viewRect = RectF(0f, 0f, viewWidth.toFloat(), viewHeight.toFloat())
-        val bufferRect = RectF(0f, 0f, previewSize!!.height.toFloat(), previewSize!!.width.toFloat())
+        val bufferRect =
+            RectF(0f, 0f, previewSize!!.height.toFloat(), previewSize!!.width.toFloat())
         val centerX = viewRect.centerX()
         val centerY = viewRect.centerY()
         if (Surface.ROTATION_90 == rotation || Surface.ROTATION_270 == rotation) {
             bufferRect.offset(centerX - bufferRect.centerX(), centerY - bufferRect.centerY())
             matrix.setRectToRect(viewRect, bufferRect, Matrix.ScaleToFit.FILL)
             val scale: Float = Math.max(
-                    viewHeight.toFloat() / previewSize!!.height,
-                    viewWidth.toFloat() / previewSize!!.width)
+                viewHeight.toFloat() / previewSize!!.height,
+                viewWidth.toFloat() / previewSize!!.width
+            )
             matrix.postScale(scale, scale, centerX, centerY)
             matrix.postRotate(90 * (rotation - 2).toFloat(), centerX, centerY)
         } else if (Surface.ROTATION_180 == rotation) {
@@ -492,5 +595,5 @@ internal class Camera2Provider(private val context: Activity) {
 }
 
 interface CameraPreviewCallback {
-    fun previewSize(width: Int,height: Int)
+    fun previewSize(width: Int, height: Int)
 }

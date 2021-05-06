@@ -17,7 +17,7 @@ class ClipAudioActivity : AppCompatActivity() {
                 var videoInput = getExternalFilesDir("video")?.absolutePath + File.separator + "input1.mp4"
                 var mp3Input = getExternalFilesDir("video")?.absolutePath + File.separator + "music.mp3"
                 var output = getExternalFilesDir("audio")?.absolutePath + File.separator + "output.mp3"
-                MusicProgress().mixAudioTrack(this,videoInput,mp3Input,output,80,50,20_000_000,30_000_000)
+                MusicProgress().mixAudioTrack(this,videoInput,mp3Input,output,60 * 1000 * 1000, 70 * 1000 * 1000,20_000_000,30_000_000)
             }.start()
 
         }

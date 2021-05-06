@@ -75,5 +75,9 @@ class StreamDecoder(var width:Int,var height:Int) : Decoder, Runnable {
         }
     }
 
+    private fun computePresentationTime(frameIndex: Long): Long {
+        return 132 + frameIndex * 1000000 / 15
+    }
+
 
 }

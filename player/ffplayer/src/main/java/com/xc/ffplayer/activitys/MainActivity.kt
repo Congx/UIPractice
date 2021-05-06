@@ -22,5 +22,10 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this,
                 CameraEncodeActivity::class.java))
         }
+
+        btnClip.setOnClickListener {
+            startActivity(Intent(this,
+                ClipAudioActivity::class.java))
+        }
     }
 }

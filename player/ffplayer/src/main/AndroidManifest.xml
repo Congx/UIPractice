@@ -5,19 +5,20 @@
     <uses-permission android:name="android.permission.CAMERA" />
 
     <application
+        android:name=".MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:name=".MyApplication"
         android:theme="@style/Theme.UIPractice">
-        <activity android:name=".CameraEncodeActivity"></activity>
-        <activity android:name=".MediaRecordActivity" />
+        <activity android:name=".activitys.ClipAudioActivity"></activity>
+        <activity android:name=".activitys.CameraEncodeActivity" />
+        <activity android:name=".activitys.MediaRecordActivity" />
         <activity
-            android:name=".MediaCodecActivity"
+            android:name=".activitys.MediaCodecActivity"
             android:configChanges="orientation|keyboardHidden|screenSize" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".activitys.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

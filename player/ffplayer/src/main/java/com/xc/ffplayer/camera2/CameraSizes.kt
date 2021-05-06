@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.xc.ffplayer
+package com.xc.ffplayer.camera2
 
 import android.graphics.Point
 import android.hardware.camera2.CameraCharacteristics
@@ -34,7 +34,8 @@ class SmartSize(width: Int, height: Int) {
 }
 
 /** Standard High Definition size for pictures and video */
-val SIZE_1080P: SmartSize = SmartSize(1920, 1080)
+val SIZE_1080P: SmartSize =
+    SmartSize(1920, 1080)
 
 /** Returns a [SmartSize] object for the given [Display] */
 fun getDisplaySmartSize(display: Display): SmartSize {

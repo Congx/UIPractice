@@ -1,4 +1,4 @@
-package com.xc.ffplayer
+package com.xc.ffplayer.activitys
 
 import android.app.Activity
 import android.content.Context
@@ -12,6 +12,7 @@ import android.media.projection.MediaProjectionManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import com.xc.ffplayer.R
 import kotlinx.android.synthetic.main.activity_media_record.*
 import java.io.*
 

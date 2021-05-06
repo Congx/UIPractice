@@ -1,4 +1,4 @@
-package com.xc.ffplayer
+package com.xc.ffplayer.camera2
 
 import android.Manifest
 import android.app.Activity
@@ -22,6 +22,8 @@ import android.view.Surface
 import android.view.TextureView.SurfaceTextureListener
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.xc.ffplayer.utils.ImageUtil
+import com.xc.ffplayer.utils.YuvUtils
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -166,7 +168,10 @@ internal class Camera2Provider(private val context: Activity) {
             // 获取所支持预览尺寸
             val previewSizes = map.getOutputSizes(SurfaceTexture::class.java) ?: return
             previewSizes?.let {
-                logSize(previewSizes, "支持预览尺寸")
+                logSize(
+                    previewSizes,
+                    "支持预览尺寸"
+                )
 //                previewSize = CameraUtil.getOptimalSize(it, width, height)
                 previewSize = getPreviewOutputSize(
                     textureView!!.display,
@@ -303,9 +308,18 @@ internal class Camera2Provider(private val context: Activity) {
         if (image != null) {
 //            val size = (image.width * image.height) * 3 / 2
 //            var buffer = ByteArray(size)
-            ImageUtil.getBytesFromImageAsType(image, ImageUtil.YUV420SPNV21, buffer)
+            ImageUtil.getBytesFromImageAsType(
+                image,
+                ImageUtil.YUV420SPNV21,
+                buffer
+            )
 //            val rotateYUV420SP = ImageUtil.rotateYUV420SP(buffer, image.height, image.width)
-            YuvUtils.portraitNV21Data2Raw(buffer, yuv, image.width, image.height)
+            YuvUtils.portraitNV21Data2Raw(
+                buffer,
+                yuv,
+                image.width,
+                image.height
+            )
             streamByteCallback?.invoke(yuv)
 
 //            saveImg(image)

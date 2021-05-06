@@ -1,8 +1,11 @@
-package com.xc.ffplayer
+package com.xc.ffplayer.activitys
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import com.xc.ffplayer.camera2.Camera2Provider
+import com.xc.ffplayer.camera2.CameraPreviewCallback
+import com.xc.ffplayer.R
+import com.xc.ffplayer.StreamDecoder
 import kotlinx.android.synthetic.main.activity_camera_encode.*
 
 class CameraEncodeActivity : AppCompatActivity() {
@@ -18,17 +21,18 @@ class CameraEncodeActivity : AppCompatActivity() {
 
         var cameraProvide = Camera2Provider(this)
 
-        var streamDecoder:StreamDecoder? = null
+        var streamDecoder: StreamDecoder? = null
 //        streamDecoder.prepare()
 
         cameraProvide.streamByteCallback = {
             streamDecoder?.decode(it)
         }
 
-        cameraProvide.cameraPreviewCallback = object :CameraPreviewCallback {
+        cameraProvide.cameraPreviewCallback = object :
+            CameraPreviewCallback {
             override fun previewSize(width: Int, height: Int) {
-
-                streamDecoder = StreamDecoder(height,width)
+                // 宽高要替换
+                streamDecoder = StreamDecoder(height, width)
                 streamDecoder?.prepare()
             }
 

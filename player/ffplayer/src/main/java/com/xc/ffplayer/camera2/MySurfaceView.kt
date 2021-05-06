@@ -1,4 +1,4 @@
-package com.xc.ffplayer
+package com.xc.ffplayer.camera2
 
 import android.content.Context
 import android.content.pm.ActivityInfo
@@ -11,7 +11,8 @@ import android.view.ViewGroup
 
 class MySurfaceView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-) : SurfaceView(context, attrs, defStyleAttr), SurfaceHolder.Callback ,Runnable,SurfaceCallback{
+) : SurfaceView(context, attrs, defStyleAttr), SurfaceHolder.Callback ,Runnable,
+    SurfaceCallback {
 
     var isValidate = false
     var callbacks = mutableListOf<SurfaceHolder.Callback>()

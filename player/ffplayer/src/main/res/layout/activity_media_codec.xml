@@ -5,14 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MediaCodecActivity">
+    tools:context=".activitys.MediaCodecActivity">
 
-    <com.xc.ffplayer.PlayContainerView
+    <com.xc.ffplayer.camera2.PlayContainerView
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.xc.ffplayer.MySurfaceView
+        <com.xc.ffplayer.camera2.MySurfaceView
             android:id="@id/video_surfaceView"
             android:layout_width="match_parent"
             android:layout_height="270dp"/>
@@ -24,7 +24,7 @@
             android:textAllCaps="false"
             android:layout_gravity="right|bottom"/>
 
-    </com.xc.ffplayer.PlayContainerView>
+    </com.xc.ffplayer.camera2.PlayContainerView>
 
 
     <FrameLayout

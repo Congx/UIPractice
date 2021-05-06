@@ -1,9 +1,11 @@
-package com.xc.ffplayer
+package com.xc.ffplayer.activitys
 
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.xc.ffplayer.camera2.H264Player
+import com.xc.ffplayer.R
 import kotlinx.android.synthetic.main.activity_media_codec.*
 import java.io.File
 
@@ -35,6 +37,6 @@ class MediaCodecActivity : AppCompatActivity() {
         Log.e("path:" , path)
         Log.e("exists:" , File(path).exists().toString())
 
-        var player = H264Player(video_surfaceView,path)
+        var player = H264Player(video_surfaceView, path)
     }
 }

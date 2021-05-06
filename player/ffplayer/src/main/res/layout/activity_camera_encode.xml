@@ -5,9 +5,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CameraEncodeActivity">
+    tools:context=".activitys.CameraEncodeActivity">
 
-    <com.xc.ffplayer.AutoFitTextureView
+    <com.xc.ffplayer.camera2.AutoFitTextureView
         android:id="@+id/textureView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

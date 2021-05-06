@@ -1,4 +1,4 @@
-package com.xc.ffplayer
+package com.xc.ffplayer.utils
 
 import android.content.Context
 import android.graphics.ImageFormat

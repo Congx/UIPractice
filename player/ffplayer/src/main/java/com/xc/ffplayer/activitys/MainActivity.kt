@@ -1,8 +1,9 @@
-package com.xc.ffplayer
+package com.xc.ffplayer.activitys
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.xc.ffplayer.R
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -10,15 +11,16 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         btnMediaCodec.setOnClickListener {
-            startActivity(Intent(this,MediaCodecActivity::class.java))
+            startActivity(Intent(this, MediaCodecActivity::class.java))
         }
 
         btnMediaRecord.setOnClickListener {
-            startActivity(Intent(this,MediaRecordActivity::class.java))
+            startActivity(Intent(this, MediaRecordActivity::class.java))
         }
 
         btnCameraEncode.setOnClickListener {
-            startActivity(Intent(this,CameraEncodeActivity::class.java))
+            startActivity(Intent(this,
+                CameraEncodeActivity::class.java))
         }
     }
 }

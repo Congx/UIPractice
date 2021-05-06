@@ -1,10 +1,9 @@
-package com.xc.ffplayer;
+package com.xc.ffplayer.utils;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.ImageFormat;
 import android.graphics.Rect;
-import android.graphics.YuvImage;
 import android.media.Image;
 import android.util.Log;
 

@@ -1,15 +1,16 @@
-package com.xc.ffplayer
+package com.xc.ffplayer.camera2
 
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
+import com.xc.ffplayer.Decoder
 
 class H264Player(var surfaceView: SurfaceView,var path: String) :
     SurfaceHolder.Callback ,LifecycleObserver{
 
-    var decoder:Decoder
+    var decoder: Decoder
 
     init {
         surfaceView.holder.addCallback(this)

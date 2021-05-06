@@ -1,4 +1,4 @@
-package com.xc.ffplayer
+package com.xc.ffplayer.camera2
 
 import android.content.Context
 import android.util.AttributeSet

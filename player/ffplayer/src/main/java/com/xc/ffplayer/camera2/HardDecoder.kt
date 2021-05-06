@@ -1,13 +1,12 @@
-package com.xc.ffplayer
+package com.xc.ffplayer.camera2
 
 import android.graphics.*
 import android.media.MediaCodec
-import android.media.MediaCodecInfo
 import android.media.MediaExtractor
 import android.media.MediaFormat
-import android.os.Environment
 import android.util.Log
 import android.view.Surface
+import com.xc.ffplayer.Decoder
 import java.io.BufferedOutputStream
 import java.io.ByteArrayOutputStream
 import java.io.File

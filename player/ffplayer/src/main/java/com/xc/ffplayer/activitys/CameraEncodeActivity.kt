@@ -5,7 +5,7 @@ import android.os.Bundle
 import com.xc.ffplayer.camera2.Camera2Provider
 import com.xc.ffplayer.camera2.CameraPreviewCallback
 import com.xc.ffplayer.R
-import com.xc.ffplayer.StreamDecoder
+import com.xc.ffplayer.camera2.StreamDecoder
 import kotlinx.android.synthetic.main.activity_camera_encode.*
 
 class CameraEncodeActivity : AppCompatActivity() {
@@ -32,7 +32,8 @@ class CameraEncodeActivity : AppCompatActivity() {
             CameraPreviewCallback {
             override fun previewSize(width: Int, height: Int) {
                 // 宽高要替换
-                streamDecoder = StreamDecoder(height, width)
+                streamDecoder =
+                    StreamDecoder(height, width)
                 streamDecoder?.prepare()
             }
 

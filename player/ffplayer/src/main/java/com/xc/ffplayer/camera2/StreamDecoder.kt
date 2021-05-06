@@ -1,9 +1,11 @@
-package com.xc.ffplayer
+package com.xc.ffplayer.camera2
 
 import android.media.MediaCodec
 import android.media.MediaCodecInfo
 import android.media.MediaFormat
 import android.view.Surface
+import com.xc.ffplayer.Decoder
+import com.xc.ffplayer.MyApplication
 import java.io.File
 import java.util.concurrent.ArrayBlockingQueue
 

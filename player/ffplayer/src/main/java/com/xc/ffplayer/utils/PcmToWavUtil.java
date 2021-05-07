@@ -1,5 +1,9 @@
 package com.xc.ffplayer.utils;
 
+import android.media.AudioFormat;
+import android.media.AudioRecord;
+import android.util.Log;
+
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -11,15 +15,19 @@ public class PcmToWavUtil {
      *
      * @param inFilename  源文件路径
      * @param outFilename 目标文件路径
+     * @param sampleRate  采样率
+     * @param channelConfig  采样配置 {{@link AudioFormat#CHANNEL_IN_STEREO}}
+     * @param channelCount   通道数，左声道、右声道
+     * @param encoding      采样位数
      */
-    public static void pcmToWav(String inFilename, String outFilename,int sampleRate,int bufferSize) {
+    public static void pcmToWav(String inFilename, String outFilename,int sampleRate, int channelConfig, int channelCount, int encoding) {
         FileInputStream in;
         FileOutputStream out;
         long totalAudioLen;
         long totalDataLen;
         long longSampleRate = sampleRate;
-        int channels = 2;
-        long byteRate = 16 * sampleRate * channels / 8;
+        long byteRate = 16 * sampleRate * channelCount / 8;
+        int bufferSize = AudioRecord.getMinBufferSize(sampleRate, channelConfig, encoding);
         byte[] data = new byte[bufferSize];
         try {
             in = new FileInputStream(inFilename);
@@ -28,7 +36,7 @@ public class PcmToWavUtil {
             totalDataLen = totalAudioLen + 36;
 
             writeWaveFileHeader(out, totalAudioLen, totalDataLen,
-                    longSampleRate, channels, byteRate);
+                    longSampleRate, channelCount, byteRate);
             while (in.read(data) != -1) {
                 out.write(data);
             }

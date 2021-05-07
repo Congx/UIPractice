@@ -3,8 +3,12 @@ package com.xc.ffplayer.clip
 import android.content.Context
 import android.media.*
 import android.util.Log
-import java.io.*
+import com.xc.ffplayer.utils.PcmToWavUtil
+import java.io.BufferedInputStream
+import java.io.BufferedOutputStream
 import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
 import java.nio.ByteBuffer
 
 class MusicProcess {
@@ -21,29 +25,37 @@ class MusicProcess {
     ) {
         var tempOutPath1 = context.getExternalFilesDir("output")?.absolutePath + File.separator + "temp1.pcm"
         var tempPath2 = context.getExternalFilesDir("output")?.absolutePath + File.separator + "temp2.pcm"
-        decodeToPCM(context, inputPath1, tempOutPath1, startTimeUs, endTimeUs, volume1, volume2)
-        decodeToPCM(context,inputPath2,tempPath2,startTimeUs,endTimeUs,volume1,volume2)
+        decodeToPCM(inputPath1, tempOutPath1, startTimeUs, endTimeUs)
+        decodeToPCM(inputPath2,tempPath2,startTimeUs,endTimeUs)
 
         var mixPath = context.getExternalFilesDir("output")?.absolutePath + File.separator + "mix.pcm"
+        var mixOutPath = context.getExternalFilesDir("output")?.absolutePath + File.separator + "mixOut.mp3"
         mixPcm(tempOutPath1,tempPath2,mixPath,volume1,volume2)
         Log.d("MusicProgress", "合成PCM完成")
+        PcmToWavUtil.pcmToWav(mixPath,mixOutPath,44100,AudioFormat.CHANNEL_IN_STEREO,2,AudioFormat.ENCODING_PCM_16BIT)
+//        PcmToWavUtil2(
+//            44100, AudioFormat.CHANNEL_IN_STEREO,
+//            2, AudioFormat.ENCODING_PCM_16BIT).pcmToWav(mixPath,mixOutPath,44100,AudioFormat.CHANNEL_IN_STEREO,2,16)
+        Log.d("MusicProgress", "合成mp3完成")
+
+        var mixVidewPath = context.getExternalFilesDir("output")?.absolutePath + File.separator + "mixOut.mp4"
+        mixVideoAndMusic(inputPath1,mixVidewPath,startTimeUs,endTimeUs,File(mixOutPath))
+
+        Log.d("MusicProgress", "合成mp4完成")
     }
 
     fun decodeToPCM(
-        context: Context,
         intputPath: String,
         outputPath: String,
         startTime: Long,
         endTime: Long,
-        volume1: Int,
-        volume2: Int
     ) {
         val file = File(outputPath)
 //        var channel = FileOutputStream(file,true).channel
         if(file.exists()) file.delete()
 
         val mediaExtractor = MediaExtractor().also {
-            Log.d("MusicProgress", "intputPath = $intputPath")
+//            Log.d("MusicProgress", "intputPath = $intputPath")
             it.setDataSource(intputPath)
         }
 
@@ -107,12 +119,11 @@ class MusicProcess {
         var sampleTime: Long
 
         var bufferInfo = MediaCodec.BufferInfo()
-        var buffer = ByteBuffer.allocateDirect(maxBufferSize)
 
         mediaCodec.start()
         var decodeFinish = false
         while (!decodeFinish) {
-            sampleTime = mediaExtractor.sampleTime - startTime
+            sampleTime = mediaExtractor.sampleTime
 //            Log.d("MusicProgress", "sampleTime = $sampleTime")
             if (sampleTime < startTime) {
                 mediaExtractor.advance()
@@ -246,8 +257,8 @@ class MusicProcess {
     private fun mixVideoAndMusic(
         videoInput: String,
         output: String,
-        startTimeUs: Int,
-        endTimeUs: Int?,
+        startTimeUs: Long,
+        endTimeUs: Long?,
         wavFile: File
     ) {
 
@@ -284,17 +295,17 @@ class MusicProcess {
 //音频的wav
         val pcmExtrator = MediaExtractor()
         pcmExtrator.setDataSource(wavFile.absolutePath)
-        val audioTrack: Int = selectTrack(pcmExtrator, true)
+        val audioTrack = selectTrack(pcmExtrator, true)
         pcmExtrator.selectTrack(audioTrack)
         val pcmTrackFormat = pcmExtrator.getTrackFormat(audioTrack)
 
-
         //最大一帧的 大小
         var maxBufferSize = 0
-        maxBufferSize = if (audioFormat.containsKey(MediaFormat.KEY_MAX_INPUT_SIZE)) {
-            pcmTrackFormat.getInteger(MediaFormat.KEY_MAX_INPUT_SIZE)
+        if (pcmTrackFormat.containsKey(MediaFormat.KEY_MAX_INPUT_SIZE)) {
+            maxBufferSize = pcmTrackFormat.getInteger(MediaFormat.KEY_MAX_INPUT_SIZE)
+            Log.d("MusicProgress", "maxBufferSize = $maxBufferSize")
         } else {
-            100 * 1000
+            maxBufferSize = 100 * 1000
         }
 
 
@@ -357,8 +368,7 @@ class MusicProcess {
                     encodeDone = true
                     break
                 }
-                val encodeOutputBuffer =
-                    encoder.getOutputBuffer(outputBufferIndex)
+                val encodeOutputBuffer = encoder.getOutputBuffer(outputBufferIndex)
                 //                    将编码好的数据  压缩 1     aac
                 mediaMuxer.writeSampleData(muxerAudioIndex, encodeOutputBuffer!!, info)
                 encodeOutputBuffer.clear()

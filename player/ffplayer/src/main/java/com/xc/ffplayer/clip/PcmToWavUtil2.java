@@ -2,6 +2,7 @@ package com.xc.ffplayer.clip;
 
 import android.media.AudioFormat;
 import android.media.AudioRecord;
+import android.util.Log;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;

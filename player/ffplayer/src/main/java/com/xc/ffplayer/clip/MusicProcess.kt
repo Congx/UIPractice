@@ -3,16 +3,11 @@ package com.xc.ffplayer.clip
 import android.content.Context
 import android.media.*
 import android.util.Log
-import com.xc.ffplayer.utils.PcmToWavUtil
-import java.io.File
-import java.io.IOException
-import com.xc.ffplayer.utils.byte2String
 import java.io.*
+import java.io.File
 import java.nio.ByteBuffer
-import kotlin.experimental.and
-import kotlin.experimental.or
 
-class MusicProgress {
+class MusicProcess {
 
     fun mixAudioTrack(
         context: Context,
@@ -248,7 +243,6 @@ class MusicProgress {
         bos.close()
     }
 
-    @Throws(IOException::class)
     private fun mixVideoAndMusic(
         videoInput: String,
         output: String,
@@ -256,7 +250,6 @@ class MusicProgress {
         endTimeUs: Int?,
         wavFile: File
     ) {
-
 
         //        初始化一个视频封装容器
         val mediaMuxer = MediaMuxer(output, MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4)

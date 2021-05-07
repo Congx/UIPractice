@@ -119,7 +119,7 @@ class HardDecoder(var path: String) : Decoder, Runnable {
                 if (bufferInfo.size == 0) {
                     break
                 }
-                bufferInfo.flags = 0;
+                bufferInfo.flags = 0
             }
             if (outIndex >= 0) {
                 var outputBuffer = mediaCodec.getOutputBuffer(outIndex)!!

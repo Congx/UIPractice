@@ -71,6 +71,9 @@ class MusicProcess {
         mediaExtractor.seekTo(startTime, MediaExtractor.SEEK_TO_CLOSEST_SYNC)
 
         val mime = trackFormat.getString(MediaFormat.KEY_MIME) ?: return
+
+        // 视频总时长
+        val duration = trackFormat.getLong(MediaFormat.KEY_DURATION)
         Log.d("MusicProgress", "mime = $mime")
         // 通道数
         val channelCount = trackFormat.getInteger(MediaFormat.KEY_CHANNEL_COUNT)
@@ -115,7 +118,7 @@ class MusicProcess {
         mediaCodec.start()
         var decodeFinish = false
         while (!decodeFinish) {
-            sampleTime = mediaExtractor.sampleTime
+            sampleTime = mediaExtractor.sampleTime - startTime
 //            Log.d("MusicProgress", "sampleTime = $sampleTime")
             if (sampleTime < startTime) {
                 mediaExtractor.advance()
@@ -125,7 +128,7 @@ class MusicProcess {
             } else if (sampleTime == -1L) {
                 break
             }else {
-                val iIndex = mediaCodec.dequeueInputBuffer(100_000)
+                val iIndex = mediaCodec.dequeueInputBuffer(10_000)
                 if (iIndex >= 0) {
 
                     bufferInfo.flags = mediaExtractor.sampleFlags
@@ -144,7 +147,7 @@ class MusicProcess {
                 }
             }
 
-            var outIndex = mediaCodec.dequeueOutputBuffer(bufferInfo, 100_000)
+            var outIndex = mediaCodec.dequeueOutputBuffer(bufferInfo, 10_000)
 
             while (outIndex >= 0) {
                 val outputBuffer = mediaCodec.getOutputBuffer(outIndex) ?: break
@@ -152,7 +155,7 @@ class MusicProcess {
                 outputBuffer.get(outBuffer)
                 file.appendBytes(outBuffer)
                 mediaCodec.releaseOutputBuffer(outIndex, false)
-                outIndex = mediaCodec.dequeueOutputBuffer(bufferInfo, 100_000)
+                outIndex = mediaCodec.dequeueOutputBuffer(bufferInfo, 10_000)
             }
 
         }
@@ -224,8 +227,6 @@ class MusicProcess {
                 }
 
                 temp = ((temp1 * vol1) + (temp2 * vol2)).toInt()
-//                temp = ((temp1.toInt() * 0.5f)).toInt()
-//                temp = temp2.toInt()
 
                 if (temp > 32767) {
                     temp = 32767
@@ -233,20 +234,10 @@ class MusicProcess {
                     temp = -32767
                 }
 
-//                Thread.sleep(2)
-
                 // 低八位
                 tempBuffer3[i] = (temp and 0xff).toByte()
                 // 高八位
                 tempBuffer3[i+1] = (((temp shr 8 and 0xff)).toByte())
-
-//                Log.d("MusicProgress", "tempBuffer3[i] = ${tempBuffer3[i].toString(16)}")
-//                Log.d("MusicProgress", "tempBuffer3[i+1] = ${tempBuffer3[i+1].toString(16)}")
-
-//                 低八位
-//                tempBuffer3[i] = (temp2.toInt() and 0xff).toByte()
-//                // 高八位
-//                tempBuffer3[i+1] = (((temp2.toInt() shr 8 and 0xff)).toByte())
 
             }
 

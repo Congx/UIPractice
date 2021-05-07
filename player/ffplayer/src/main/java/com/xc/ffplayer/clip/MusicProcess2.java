@@ -82,15 +82,16 @@ public class MusicProcess2 {
                                 final String videoInput,
                                 final String audioInput,
                                 final String output,
-                                final Integer startTimeUs, final Integer endTimeUs,
+                                final Integer startTimeUs,
+                                final Integer endTimeUs,
                                 int videoVolume,//视频声音大小
                                 int aacVolume//音频声音大小
     ) throws Exception {
 
         this.context = context;
 
-        final File videoPcmFile = new File(context.getExternalFilesDir("audio").getAbsolutePath() + File.separator + "video.pcm");
-        final File musicPcmFile = new File(context.getExternalFilesDir("audio").getAbsolutePath() + File.separator + "music.pcm");
+        final File videoPcmFile = new File(context.getExternalFilesDir("output").getAbsolutePath() + File.separator + "temp1.pcm");
+        final File musicPcmFile = new File(context.getExternalFilesDir("output").getAbsolutePath() + File.separator + "music.pcm");
 
 //        final File videoPcmFile = new File(Environment.getExternalStorageDirectory(), "video.pcm");
 //        final File musicPcmFile = new File(Environment.getExternalStorageDirectory(), "music.pcm");
@@ -112,9 +113,9 @@ public class MusicProcess2 {
 //    MP3  （zip  rar    ） ----> aac   封装个事 1   编码格式
 //        jie  MediaExtractor = 360 解压 工具
         MediaExtractor mediaExtractor = new MediaExtractor();
-
         mediaExtractor.setDataSource(musicPath);
         int audioTrack =selectTrack(mediaExtractor );
+        Log.i("MusicProgress", "TrackIndex= " + audioTrack);
         mediaExtractor.selectTrack(audioTrack);
 // 视频 和音频
         mediaExtractor.seekTo(startTime, MediaExtractor.SEEK_TO_CLOSEST_SYNC);
@@ -123,12 +124,15 @@ public class MusicProcess2 {
         int maxBufferSize = 100 * 1000;
         if (oriAudioFormat.containsKey(MediaFormat.KEY_MAX_INPUT_SIZE)) {
             maxBufferSize = oriAudioFormat.getInteger(MediaFormat.KEY_MAX_INPUT_SIZE);
+            Log.i("MusicProgress", "maxBufferSize= " + maxBufferSize);
         } else {
             maxBufferSize = 100 * 1000;
         }
         ByteBuffer buffer = ByteBuffer.allocateDirect(maxBufferSize);
 //        h264   H265  音频
-        MediaCodec mediaCodec = MediaCodec.createDecoderByType(oriAudioFormat.getString((MediaFormat.KEY_MIME)));
+        String mime = oriAudioFormat.getString((MediaFormat.KEY_MIME));
+        Log.i("MusicProgress", "mime= " + mime);
+        MediaCodec mediaCodec = MediaCodec.createDecoderByType(mime);
 //        设置解码器信息    直接从 音频文件
         mediaCodec.configure(oriAudioFormat, null, null, 0);
         File pcmFile = new File(outPath);
@@ -140,7 +144,6 @@ public class MusicProcess2 {
             int decodeInputIndex = mediaCodec.dequeueInputBuffer(100000);
             if (decodeInputIndex >= 0) {
                 long sampleTimeUs = mediaExtractor.getSampleTime();
-                Log.i("David", "sampleTimeUs = "  + sampleTimeUs);
                 if (sampleTimeUs == -1) {
                     break;
                 } else if (sampleTimeUs < startTime) {
@@ -182,12 +185,12 @@ public class MusicProcess2 {
         mediaCodec.release();
 //        转换MP3    pcm数据转换成mp3封装格式
 //
-        String videoPath = context.getExternalFilesDir("output").getAbsolutePath() + File.separator + "output.mp3";
+        String videoPath = context.getExternalFilesDir("output").getAbsolutePath() + File.separator + "temp.mp3";
         File wavFile = new File(videoPath);
         new PcmToWavUtil2(44100,  AudioFormat.CHANNEL_IN_STEREO,
                 2, AudioFormat.ENCODING_PCM_16BIT).pcmToWav(pcmFile.getAbsolutePath()
                 , wavFile.getAbsolutePath());
-        Log.i("David", "mixAudioTrack: 转换完毕");
+        Log.i("MusicProgress", "mixAudioTrack: 转换完毕");
     }
     private int selectTrack(MediaExtractor mediaExtractor) {
 //获取每条轨道

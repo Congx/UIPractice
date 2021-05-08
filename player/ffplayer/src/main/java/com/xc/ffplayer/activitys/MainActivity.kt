@@ -27,5 +27,10 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this,
                 ClipAudioActivity::class.java))
         }
+
+        btnMediaMuxre.setOnClickListener {
+            startActivity(Intent(this,
+                MediaMuxreActivity::class.java))
+        }
     }
 }

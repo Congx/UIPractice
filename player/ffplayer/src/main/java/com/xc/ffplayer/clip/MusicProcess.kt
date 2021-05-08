@@ -265,15 +265,11 @@ class MusicProcess {
         //        初始化一个视频封装容器
         val mediaMuxer = MediaMuxer(output, MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4)
 
-//            一个轨道    既可以装音频 又视频   是 1 不是2
-//            取音频轨道  wav文件取配置信息
-//            先取视频
         val mediaExtractor = MediaExtractor()
         mediaExtractor.setDataSource(videoInput)
         //            拿到视频轨道的索引
         val videoIndex: Int = selectTrack(mediaExtractor, false)
         val audioIndex: Int = selectTrack(mediaExtractor, true)
-
 
 //            视频配置 文件
         val videoFormat = mediaExtractor.getTrackFormat(videoIndex)
@@ -289,7 +285,7 @@ class MusicProcess {
         val muxerAudioIndex = mediaMuxer.addTrack(audioFormat)
 
 
-//            音频轨道开辟好了  输出开始工作
+//      音频轨道开辟好了  输出开始工作
         mediaMuxer.start()
 
 //音频的wav
@@ -307,7 +303,6 @@ class MusicProcess {
         } else {
             maxBufferSize = 100 * 1000
         }
-
 
 //    最终输出   后面   混音   -----》     重采样   混音     这个下节课讲
         val encodeFormat = MediaFormat.createAudioFormat(
@@ -359,10 +354,7 @@ class MusicProcess {
                 }
             }
             //                获取编码完的数据
-            var outputBufferIndex = encoder.dequeueOutputBuffer(
-                info,
-                1000
-            )
+            var outputBufferIndex = encoder.dequeueOutputBuffer(info, 1000)
             while (outputBufferIndex >= 0) {
                 if (info.flags == MediaCodec.BUFFER_FLAG_END_OF_STREAM) {
                     encodeDone = true
@@ -373,10 +365,7 @@ class MusicProcess {
                 mediaMuxer.writeSampleData(muxerAudioIndex, encodeOutputBuffer!!, info)
                 encodeOutputBuffer.clear()
                 encoder.releaseOutputBuffer(outputBufferIndex, false)
-                outputBufferIndex = encoder.dequeueOutputBuffer(
-                    info,
-                    1000
-                )
+                outputBufferIndex = encoder.dequeueOutputBuffer(info, 1000)
             }
         }
         //    把音频添加好了

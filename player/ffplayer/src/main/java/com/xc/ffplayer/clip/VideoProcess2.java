@@ -5,6 +5,7 @@ import android.media.MediaExtractor;
 import android.media.MediaFormat;
 import android.media.MediaMuxer;
 import android.os.FileUtils;
+import android.util.Log;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -31,10 +32,12 @@ public class VideoProcess2 {
             file1_duration = format.getLong(MediaFormat.KEY_DURATION);
             if (mime.startsWith("video/")) {
                 sourceVideoTrack1 = index;
-                videoTrackIndex = mediaMuxer.addTrack(format);
+                videoTrackIndex = mediaMuxer.addTrack(format);//0
+                Log.d("VideoProcess2","videoTrackIndex = " + videoTrackIndex);
             } else if (mime.startsWith("audio/")) {
                 sourceAudioTrack1 = index;
-                audioTrackIndex = mediaMuxer.addTrack(format);
+                audioTrackIndex = mediaMuxer.addTrack(format);//1
+                Log.d("VideoProcess2","audioTrackIndex = " + audioTrackIndex);
             }
         }
 
@@ -90,7 +93,7 @@ public class VideoProcess2 {
 //            FileUtils.writeBytes(data);
 //            FileUtils.writeContent(data);
             info.presentationTimeUs = videoExtractor1.getSampleTime();
-//            mediaMuxer.writeSampleData(audioTrackIndex, buffer, info);
+            mediaMuxer.writeSampleData(audioTrackIndex, buffer, info);
             videoExtractor1.advance();
         }
 
@@ -112,6 +115,8 @@ public class VideoProcess2 {
         //4.write second audio track into muxer.
         videoExtractor2.unselectTrack(sourceVideoTrack2);
         videoExtractor2.selectTrack(sourceAudioTrack2);
+        Log.d("VideoProcess2","sourceVideoTrack2 = " + sourceVideoTrack2);//1
+        Log.d("VideoProcess2","sourceAudioTrack2 = " + sourceAudioTrack2);//0
         info = new MediaCodec.BufferInfo();
         info.presentationTimeUs = 0;
         buffer = ByteBuffer.allocate(500 * 1024);

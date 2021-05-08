@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.xc.ffplayer.R
 import com.xc.ffplayer.clip.MediaProcess
+import com.xc.ffplayer.clip.VideoProcess2
 import kotlinx.android.synthetic.main.activity_media_mexure.*
 import java.io.File
 
@@ -18,6 +19,8 @@ class MediaMuxreActivity : AppCompatActivity() {
         btnStart.setOnClickListener {
 
             Thread{
+//                VideoProcess2.appendVideo(videoPath1,videoPath2,outPut)
+//                MediaProcess.start2(videoPath1,videoPath2,outPut)
                 MediaProcess.start(videoPath1,videoPath2,outPut)
             }.start()
         }

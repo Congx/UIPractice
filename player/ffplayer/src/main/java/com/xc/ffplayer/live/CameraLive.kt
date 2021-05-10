@@ -4,6 +4,7 @@ import android.app.Activity
 import android.util.Log
 import com.xc.ffplayer.Decoder
 import com.xc.ffplayer.camera2.*
+import com.xc.ffplayer.utils.append2File
 
 open class CameraLive(var context: Activity) {
 

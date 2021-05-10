@@ -4,13 +4,243 @@
 #include "jni.h"
 #include "../log/log.h"
 #include "rtmp.h"
+#include <cstdlib>
+#include <cstring>
+#include <cstdio>
+#include <fstream>
+
+using namespace std;
+
+const int TYPE_SHEFT = 0x1f;
+const int SPS_TYPE = 7;
+const int PPS_TYPE = 8;
+const int DIR_TYPE = 5;
+const int NOIDIR_TYPE = 1;
+
+
+typedef struct {
+    RTMP *rtmp;
+    int8_t *sps;
+    int16_t sps_len;
+    int8_t *pps;
+    int16_t pps_len;
+    bool isConnected;
+} Live;
+
+Live *live = NULL;
+
+void sendData(jbyte *data, jint size, jlong stamp);
+void prepareData(jbyte *data, jint size);
+
+bool isDIR(jbyte data) {
+    return (data & 0x1f) == DIR_TYPE;
+}
+
+bool isSPS(jbyte data) {
+    return (data & 0x1f) == SPS_TYPE;
+}
+
+bool isPPS(jbyte data) {
+    return (data & 0x1f) == PPS_TYPE;
+}
+int sendPacket(RTMPPacket *pPacket);
 
 extern "C"
-JNIEXPORT void JNICALL
+JNIEXPORT jboolean JNICALL
 Java_com_xc_ffplayer_live_LivePush_connect(JNIEnv *env, jobject thiz,jstring url) {
 
     char *str_url = const_cast<char *>(env->GetStringUTFChars(url, NULL));
     RTMP *rtmp = RTMP_Alloc();
+    RTMP_Init(rtmp);
+    rtmp->Link.timeout = 10;
+    LOGI("url:%s",url);
 
+    live = static_cast<Live *>(malloc(sizeof(Live)));
+    live->rtmp = rtmp;
 
+    if(!RTMP_SetupURL(rtmp,str_url)) {
+        LOGI("rtmp RTMP_SetupURL failure");
+        return false;
+    }
+
+    RTMP_EnableWrite(rtmp);
+
+    if(!RTMP_Connect(rtmp,0)) {
+        LOGI("rtmp RTMP_Connect failure");
+        return false;
+    }
+    if(!RTMP_ConnectStream(rtmp,0)) {
+        LOGI("rtmp RTMP_Connect failure");
+        return false;
+    }
+
+    LOGI("rtmp RTMP_Connect success");
+
+    env->ReleaseStringUTFChars(url,str_url);
+
+    live->isConnected = true;
+    return true;
+}
+
+/**
+ * sps/pps 数据包
+ * @param data
+ * @return
+ */
+RTMPPacket * createVideoPacket(Live *live) {
+    int body_size = 16 + live->pps_len + live->pps_len;
+    RTMPPacket *packet = static_cast<RTMPPacket *>(malloc(sizeof(RTMPPacket)));
+    RTMPPacket_Alloc(packet,body_size);
+
+    int index = 0;
+    packet->m_body[index++] = 0x17;
+    packet->m_body[index++] = 0x00;
+    packet->m_body[index++] = 0x00;
+    packet->m_body[index++] = 0x00;
+    packet->m_body[index++] = 0x01; // 版本
+
+    packet->m_body[index++] = live->sps[1]; // 编码规格 sps[1]+sps[2]+sps[3]
+    packet->m_body[index++] = live->sps[2];
+    packet->m_body[index++] = live->sps[3];
+
+    packet->m_body[index++] = 0xFF;
+    packet->m_body[index++] = 0xE1; // sps个数： 1 ，0xE1 & 0x1F
+
+    packet->m_body[index++] = live->sps_len >> 8 & 0xFF; // sps 长度 2个字节  , 高八位
+    packet->m_body[index++] = live->sps_len & 0xFF; // sps 长度  低八位
+
+    // sps 内容
+    memcpy(&packet->m_body[index],live->sps,live->sps_len);
+    index += live->sps_len;
+
+    packet->m_body[index++] = 0x01; // pps 个数
+    packet->m_body[index++] = live->pps_len >> 8 & 0xFF;; // pps 长度 高八位
+    packet->m_body[index++] = live->pps_len & 0xFF;; // pps 长度 低八位
+
+    // sps 内容
+    memcpy(&packet->m_body[index],live->pps,live->pps_len);
+    // ----- 数据填充完毕
+
+    // 设置属性
+    packet->m_nBodySize = body_size; // 数据总长度
+
+    packet->m_packetType = RTMP_PACKET_TYPE_VIDEO;
+    packet->m_nChannel = 0x04; // 视频04
+    packet->m_hasAbsTimestamp = 0;
+    packet->m_headerType = RTMP_PACKET_SIZE_LARGE;
+    packet->m_nInfoField2 = live->rtmp->m_stream_id;
+
+    return packet;
+}
+
+/**
+ * 数据包
+ * @param data
+ * @return
+ */
+RTMPPacket * createVideoPacket(jbyte *data, jint size, jlong stamp) {
+    int body_size = size + 9;
+    RTMPPacket *packet = static_cast<RTMPPacket *>(malloc(sizeof(RTMPPacket)));
+    RTMPPacket_Alloc(packet,body_size);
+    int index = 0;
+    if (isDIR(data[0])) {
+        packet->m_body[index++] = 0x17;
+    }else {
+        packet->m_body[index++] = 0x27;
+    }
+    packet->m_body[index++] = 0x01;
+    packet->m_body[index++] = 0x00;
+    packet->m_body[index++] = 0x00;
+    packet->m_body[index++] = 0x00;
+
+    // 长度  4字节
+    packet->m_body[index++] = size >> 24 & 0xFF;
+    packet->m_body[index++] = size >> 16 & 0xFF;
+    packet->m_body[index++] = size >> 8 & 0xFF;
+    packet->m_body[index++] = size & 0xFF;
+
+    // 数据
+    memcpy(&packet->m_body[index],data,size);
+
+    // 设置其他属性
+    packet->m_nBodySize = body_size; // 数据总长度
+    packet->m_packetType = RTMP_PACKET_TYPE_VIDEO;
+    packet->m_nChannel = 0x04; // 视频04
+    packet->m_hasAbsTimestamp = 0;
+    packet->m_nTimeStamp = stamp;
+    packet->m_headerType = RTMP_PACKET_SIZE_LARGE;
+    packet->m_nInfoField2 = live->rtmp->m_stream_id;
+
+    return packet;
+}
+
+static bool aaa = true;
+void sendData(jbyte *data, jint size, jlong stamp) {
+    // 保存sps、pps数据
+    if (isSPS(data[4]) && live != nullptr && live->pps != nullptr && live->sps != nullptr) {
+        LOGI("sps data prepare");
+        prepareData(data, size);
+//        if(aaa) {
+//            ofstream out("/sdcard/Android/data/com.xc.ffplayer/files/output/liveData.h264");
+//            out.write(reinterpret_cast<const char *>(data), size);
+//            aaa = false;
+//        }
+        return;
+    }
+
+    // I 帧
+    if (isDIR(data[3]) || isDIR(data[4])) {
+        LOGI("i 帧数据，发送sps、pps");
+        RTMPPacket *packet = createVideoPacket(live);
+        sendPacket(packet);
+    }
+    // 非I帧
+    RTMPPacket *packet = createVideoPacket(data,size,stamp);
+    sendPacket(packet);
+    LOGI("帧数据包发送");
+}
+
+int sendPacket(RTMPPacket *pPacket) {
+    int ret = 0;
+    if (live->isConnected) {
+        ret = RTMP_SendPacket(live->rtmp,pPacket,0);
+    }
+    RTMPPacket_Free(pPacket);
+    free(pPacket);
+    return ret;
+}
+
+void prepareData(jbyte *data, jint size) {
+    // 00000001 6742C01F DA02D028 48078402 15000000 0168CE3C 80
+    for (int i = 0; i < size-4; ++i) {
+        if (data[i] == 0x00 && data[i + 1] == 0x00 && data[i + 2] == 0x01 && isPPS(data[i + 3])) {
+            live->sps_len = i-4;
+            live->pps_len = size-i-4;
+            live->sps = static_cast<int8_t *>(malloc(live->sps_len));
+            live->pps = static_cast<int8_t *>(malloc(live->pps_len));
+            memcpy(live->sps, data+4, live->sps_len);
+            memcpy(live->pps, data+4+live->sps_len+4, live->pps_len);
+        }
+    }
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_xc_ffplayer_live_LivePush_close(JNIEnv *env, jobject thiz) {
+    if (live != NULL) {
+        live->isConnected = false;
+        RTMP_Close(live->rtmp);
+        RTMP_Free(live->rtmp);
+        LOGI("rtmp close");
+    }
+
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_xc_ffplayer_live_LivePush_sendData(JNIEnv *env, jobject thiz, jbyteArray bytes, jint size,
+                                            jlong time_stamp) {
+    jbyte *data = env->GetByteArrayElements(bytes, NULL);
+    sendData(data,size,time_stamp);
+    env->ReleaseByteArrayElements(bytes,data,0);
 }

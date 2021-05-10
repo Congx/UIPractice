@@ -6,8 +6,6 @@
 #include <string>
 #include <iostream>
 
-#include "android/bitmap.h"
-
 using namespace std;
 
 

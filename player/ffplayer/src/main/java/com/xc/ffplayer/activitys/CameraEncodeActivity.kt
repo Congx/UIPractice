@@ -16,13 +16,11 @@ class CameraEncodeActivity : AppCompatActivity() {
 //        val heightPixels = resources.displayMetrics.heightPixels
 //        val widthPixels = resources.displayMetrics.widthPixels
 
-        val heightPixels = 720
-        val widthPixels = 1280
+        val height = 1280
+        val width = 720
 
         var cameraProvide = Camera2Provider(this)
-
         var streamDecoder: StreamDecoder? = null
-//        streamDecoder.prepare()
 
         cameraProvide.streamByteCallback = {
             streamDecoder?.decode(it)
@@ -32,14 +30,23 @@ class CameraEncodeActivity : AppCompatActivity() {
             CameraPreviewCallback {
             override fun previewSize(width: Int, height: Int) {
                 // 宽高要替换
-                streamDecoder =
-                    StreamDecoder(height, width)
+//                streamDecoder = StreamDecoder(height, width)
+//                streamDecoder?.prepare()
+            }
+
+            override fun streamSize(width: Int, height: Int) {
+                // 宽高要替换
+                streamDecoder = StreamDecoder(height, width)
                 streamDecoder?.prepare()
+            }
+
+            override fun cameraInited() {
+
             }
 
         }
 
-        cameraProvide.initTexture(textureView)
+        cameraProvide.startPreview(textureView)
 
         btnPush.setOnClickListener {
             cameraProvide.startPushStream()

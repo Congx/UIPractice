@@ -13,8 +13,8 @@ class MediaMuxreActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_media_mexure)
 
-        var videoPath1 = getExternalFilesDir("video")?.absolutePath + File.separator + "input1.mp4"
-        var videoPath2 = getExternalFilesDir("video")?.absolutePath + File.separator + "input.mp4"
+        var videoPath1 = getExternalFilesDir("video")?.absolutePath + File.separator + "input.mp4"
+        var videoPath2 = getExternalFilesDir("video")?.absolutePath + File.separator + "input1.mp4"
         var outPut = getExternalFilesDir("output")?.absolutePath + File.separator + "output.mp4"
         btnStart.setOnClickListener {
 

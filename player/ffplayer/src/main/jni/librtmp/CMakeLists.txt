@@ -3,16 +3,19 @@
 
 # Sets the minimum version of CMake required to build the native library.
 
-cmake_minimum_required(VERSION 3.4.1)
+ADD_DEFINITIONS(-DNO_CRYPTO)
 
-add_subdirectory(librtmp)
+AUX_SOURCE_DIRECTORY(. SRC_LIST)
 
-add_library( native-lib
+include_directories(../log)
+
+add_library( rtmpdump
              SHARED
-             native-lib.cpp)
+            ${SRC_LIST}
+            rtmpdump-lib.cpp)
 
 
 find_library(log-lib log)
 
-target_link_libraries( native-lib
+target_link_libraries( rtmpdump
                        ${log-lib} )

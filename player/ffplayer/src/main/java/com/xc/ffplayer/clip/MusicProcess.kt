@@ -133,7 +133,7 @@ class MusicProcess {
             } else if (sampleTime == -1L) {
                 break
             }else {
-                val iIndex = mediaCodec.dequeueInputBuffer(10_000)
+                val iIndex = mediaCodec.dequeueInputBuffer(1_000)
                 if (iIndex >= 0) {
 
                     bufferInfo.flags = mediaExtractor.sampleFlags
@@ -152,7 +152,7 @@ class MusicProcess {
                 }
             }
 
-            var outIndex = mediaCodec.dequeueOutputBuffer(bufferInfo, 10_000)
+            var outIndex = mediaCodec.dequeueOutputBuffer(bufferInfo, 1_000)
 
             while (outIndex >= 0) {
                 val outputBuffer = mediaCodec.getOutputBuffer(outIndex) ?: break

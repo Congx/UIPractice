@@ -23,6 +23,10 @@ class HardDecoder(var path: String) : Decoder, Runnable {
     var width = 0
     var height = 0
 
+    override fun prepare() {
+
+    }
+
     override fun decode(surface: Surface?) {
         this.surface = surface
         if (prepare(surface)) {

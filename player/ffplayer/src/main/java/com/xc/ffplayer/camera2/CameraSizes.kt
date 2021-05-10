@@ -62,8 +62,7 @@ fun <T>getPreviewOutputSize(
     val maxSize = if (hdScreen) SIZE_1080P else screenSize
 
     // If image format is provided, use it to determine supported sizes; else use target class
-    val config = characteristics.get(
-            CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP)!!
+    val config = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP)!!
     if (format == null)
         assert(StreamConfigurationMap.isOutputSupportedFor(targetClass))
     else

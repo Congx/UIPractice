@@ -3,6 +3,7 @@ package com.xc.ffplayer.camera2
 import android.media.MediaCodec
 import android.media.MediaCodecInfo
 import android.media.MediaFormat
+import android.os.Bundle
 import android.util.Log
 import android.view.Surface
 import com.xc.ffplayer.Decoder
@@ -12,13 +13,13 @@ import java.io.File
 import java.lang.Exception
 import java.util.concurrent.ArrayBlockingQueue
 
-class StreamDecoder(
+class LiveStreamDecoder(
     var width: Int,
     var height: Int,
-    var callback: ((byteArray: ByteArray) -> Unit)? = null
+    var callback: ((byteArray: ByteArray,time:Long) -> Unit)? = null
 ) : Decoder, Runnable {
 
-    var TAG = "StreamDecoder"
+    var TAG = "LiveStreamDecoder"
 
     var array: ArrayBlockingQueue<ByteArray> = ArrayBlockingQueue(10)
     var start = true
@@ -26,9 +27,12 @@ class StreamDecoder(
     private lateinit var mediaCodec: MediaCodec
     var thread: Thread? = null
 
+    var timeStamp = 0L
+    var startTime = 0L
+
     override fun prepare() {
-        mediaCodec = MediaCodec.createEncoderByType(MediaFormat.MIMETYPE_VIDEO_HEVC)
         Log.d(TAG,"width = $width,height = $height")
+        mediaCodec = MediaCodec.createEncoderByType(MediaFormat.MIMETYPE_VIDEO_AVC)
         var format = MediaFormat.createVideoFormat(MediaFormat.MIMETYPE_VIDEO_HEVC, width, height)
         format.setInteger(
             MediaFormat.KEY_COLOR_FORMAT,
@@ -50,7 +54,9 @@ class StreamDecoder(
     }
 
     override fun decode(byteArray: ByteArray) {
-        array.offer(byteArray)
+        if(!array.add(byteArray)) {
+            array.poll()
+        }
     }
 
     override fun stop() {
@@ -80,12 +86,25 @@ class StreamDecoder(
                     }
                 }
 
+                // 两秒一个I帧
+                if (System.currentTimeMillis() - timeStamp > 2000) {
+                    var bundle = Bundle()
+                    bundle.putInt(MediaCodec.PARAMETER_KEY_REQUEST_SYNC_FRAME,0)
+                    mediaCodec.setParameters(bundle)
+                    timeStamp = System.currentTimeMillis()
+                }
+
                 var bufferInfo = MediaCodec.BufferInfo()
                 var outIndex = mediaCodec.dequeueOutputBuffer(bufferInfo, 1_000)
                 while (outIndex >= 0) {
+
                     val outputBuffer = mediaCodec.getOutputBuffer(outIndex) ?: break
                     val inputBuffer = ByteArray(outputBuffer.remaining())
                     outputBuffer.get(inputBuffer)
+
+                    if (startTime == 0L) {
+                        startTime = bufferInfo.presentationTimeUs / 1000
+                    }
 
                     if (callback == null) {
                         var path =
@@ -93,11 +112,11 @@ class StreamDecoder(
                         val file = File(path)
                         file.appendBytes(inputBuffer)
                     } else {
-                        callback?.invoke(inputBuffer)
+                        callback?.invoke(inputBuffer,bufferInfo.presentationTimeUs/1000 - startTime)
                     }
 
                     mediaCodec.releaseOutputBuffer(outIndex, false)
-                    outIndex = mediaCodec.dequeueOutputBuffer(bufferInfo, 100_000)
+                    outIndex = mediaCodec.dequeueOutputBuffer(bufferInfo, 1_000)
                 }
 
             }

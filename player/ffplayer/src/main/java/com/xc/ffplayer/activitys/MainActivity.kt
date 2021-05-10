@@ -32,5 +32,10 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this,
                 MediaMuxreActivity::class.java))
         }
+
+        btnLive.setOnClickListener {
+            startActivity(Intent(this,
+                LivePushActivity::class.java))
+        }
     }
 }

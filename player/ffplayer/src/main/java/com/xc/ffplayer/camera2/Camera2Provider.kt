@@ -21,7 +21,7 @@ import android.util.SparseIntArray
 import android.view.Surface
 import android.view.TextureView.SurfaceTextureListener
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
+import com.xc.ffplayer.utils.CameraUtil
 import com.xc.ffplayer.utils.ImageUtil
 import com.xc.ffplayer.utils.YuvUtils
 import java.io.ByteArrayOutputStream
@@ -33,7 +33,11 @@ import java.util.concurrent.Executors
 /**
  * https://www.jianshu.com/p/df3c8683bb90
  */
-internal class Camera2Provider(private val context: Activity) {
+open class Camera2Provider(
+    private val context: Activity,
+    private var width: Int = 0,
+    private var height: Int = 0
+) {
 
     companion object {
 
@@ -69,6 +73,8 @@ internal class Camera2Provider(private val context: Activity) {
     var streamByteCallback: ((ByteArray) -> Unit)? = null
     var cameraPreviewCallback: CameraPreviewCallback? = null
 
+    var streamSize:Size? = null
+
     init {
 
         ORIENTATIONS.append(Surface.ROTATION_0, 90)
@@ -94,10 +100,11 @@ internal class Camera2Provider(private val context: Activity) {
     }
 
     fun release() {
+        closeCamera()
         handler.looper.quit()
     }
 
-    fun initTexture(textureView: AutoFitTextureView) {
+    fun startPreview(textureView: AutoFitTextureView) {
         this.textureView = textureView
         textureView.surfaceTextureListener = object : SurfaceTextureListener {
             override fun onSurfaceTextureAvailable(
@@ -105,7 +112,9 @@ internal class Camera2Provider(private val context: Activity) {
                 width: Int,
                 height: Int
             ) {
-                initInfoCamera(surface, width, height)
+                var w = if (this@Camera2Provider.width > 0) this@Camera2Provider.width else width
+                var h = if (this@Camera2Provider.height > 0) this@Camera2Provider.height else height
+                initInfoCamera(surface, w, h)
             }
 
             override fun onSurfaceTextureSizeChanged(
@@ -126,6 +135,7 @@ internal class Camera2Provider(private val context: Activity) {
     }
 
     private fun initInfoCamera(surfaceTexture: SurfaceTexture, width: Int, height: Int) {
+
         try {
             val cameraIdList = cameraManager.cameraIdList.filter {
                 val characteristics = cameraManager.getCameraCharacteristics(it)
@@ -152,10 +162,8 @@ internal class Camera2Provider(private val context: Activity) {
                 if (integer != null && integer == CameraCharacteristics.LENS_FACING_BACK) {
                     backCameraId = id
                     // 获取配置信息
-                    map =
-                        cameraCharacteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP)
-                    var flashUseable =
-                        cameraCharacteristics.get(CameraCharacteristics.FLASH_INFO_AVAILABLE)
+                    map = cameraCharacteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP)
+                    var flashUseable = cameraCharacteristics.get(CameraCharacteristics.FLASH_INFO_AVAILABLE)
                     Log.d(TAG, "flashUseable: $flashUseable")
                     break
                 } else if (integer != null && integer == CameraCharacteristics.LENS_FACING_FRONT) {
@@ -168,10 +176,7 @@ internal class Camera2Provider(private val context: Activity) {
             // 获取所支持预览尺寸
             val previewSizes = map.getOutputSizes(SurfaceTexture::class.java) ?: return
             previewSizes?.let {
-                logSize(
-                    previewSizes,
-                    "支持预览尺寸"
-                )
+                logSize(previewSizes, "支持预览尺寸")
 //                previewSize = CameraUtil.getOptimalSize(it, width, height)
                 previewSize = getPreviewOutputSize(
                     textureView!!.display,
@@ -202,22 +207,30 @@ internal class Camera2Provider(private val context: Activity) {
                 picImageReader?.setOnImageAvailableListener(imageAvailableListener, handler)
             }
 
+
             if (map.isOutputSupportedFor(ImageFormat.YUV_420_888)) {
-                streamImageReader = ImageReader.newInstance(
-                    previewSize!!.width,
-                    previewSize!!.height,
-                    ImageFormat.YUV_420_888,
-                    1
-                )
-                streamImageReader?.setOnImageAvailableListener(
-                    streamImageAvailableListener,
-                    handler
-                )
+                val outputSizes = map.getOutputSizes(ImageFormat.YUV_420_888)
+                streamSize = CameraUtil.getPerfectSize(outputSizes, width, height)
+                Log.d(TAG, "流尺寸 ： width = ${width}, height = ${height}")
+                streamSize?.let {
+                    cameraPreviewCallback?.streamSize(streamSize!!.width,streamSize!!.height)
+                    streamImageReader = ImageReader.newInstance(
+                        streamSize!!.width,
+                        streamSize!!.height,
+                        ImageFormat.YUV_420_888,
+                        1
+                    )
+                    streamImageReader?.setOnImageAvailableListener(
+                        streamImageAvailableListener,
+                        handler
+                    )
+                }
             }
 
             cameraPreviewCallback?.previewSize(previewSize!!.width, previewSize!!.height)
 
-//            configureTransform(previewSize!!.width, previewSize!!.height)
+            configureTransform(previewSize!!.height, previewSize!!.width)
+
             sendOpenMsg()
 
         } catch (e: CameraAccessException) {
@@ -298,7 +311,7 @@ internal class Camera2Provider(private val context: Activity) {
     }
 
     val yuv by lazy {
-        val size = (previewSize!!.width * previewSize!!.height) * 3 / 2
+        val size = (streamSize!!.width * streamSize!!.height) * 3 / 2
         return@lazy ByteArray(size)
     }
 
@@ -306,6 +319,7 @@ internal class Camera2Provider(private val context: Activity) {
 
         val image = streamImageReader?.acquireNextImage()
         if (image != null) {
+//            Log.d(TAG, "yuv ： width = ${image.width}, height = ${image.height}")
 //            val size = (image.width * image.height) * 3 / 2
 //            var buffer = ByteArray(size)
             ImageUtil.getBytesFromImageAsType(
@@ -438,6 +452,7 @@ internal class Camera2Provider(private val context: Activity) {
         override fun onConfigured(session: CameraCaptureSession) {
             cameraCaptureSession = session
             startPreview()
+            cameraPreviewCallback?.cameraInited()
         }
 
         override fun onClosed(session: CameraCaptureSession) {
@@ -466,6 +481,7 @@ internal class Camera2Provider(private val context: Activity) {
             CameraCharacteristics.STATISTICS_FACE_DETECT_MODE_SIMPLE
         )
         cameraCaptureSession.setRepeatingRequest(request, requestSateCallback, handler)
+
     }
 
     /**
@@ -538,13 +554,11 @@ internal class Camera2Provider(private val context: Activity) {
             return
         }
 
-        if (ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.CAMERA
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(context, arrayOf(Manifest.permission.CAMERA), 1)
+            return
         }
+
         cameraManager.openCamera(id, cameraStateCallback, handler)
     }
 
@@ -610,4 +624,6 @@ internal class Camera2Provider(private val context: Activity) {
 
 interface CameraPreviewCallback {
     fun previewSize(width: Int, height: Int)
+    fun streamSize(width: Int, height: Int)
+    fun cameraInited()
 }

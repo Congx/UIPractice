@@ -26,7 +26,7 @@ fun saveNv21(context:Context,byteArray: ByteArray,width:Int,height:Int) {
     os.flush()
     os.close()
 //    var path = context.getExternalFilesDir("imgs")?.absolutePath + File.separator + "inputNV21.jpg"
-//    File(path).writeBytes(byteArray)
+//    File(path).writeBytes(bytes)
 }
 
 fun byte2String(byte: Byte): String? {

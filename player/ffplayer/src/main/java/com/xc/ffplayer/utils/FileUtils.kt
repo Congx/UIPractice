@@ -6,6 +6,7 @@ import android.graphics.Rect
 import android.graphics.YuvImage
 import android.os.Environment
 import android.util.Log
+import com.xc.ffplayer.MyApplication
 import okhttp3.internal.and
 import java.io.*
 
@@ -66,4 +67,10 @@ fun writeContent(array: ByteArray): String? {
 //        }
 //    }
     return sb.toString()
+}
+
+fun ByteArray.append2File(fileName:String) {
+    var path = MyApplication.application.getExternalFilesDir("output")?.absolutePath + File.separator + fileName
+    val file = File(path)
+    file.appendBytes(this)
 }

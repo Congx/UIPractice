@@ -33,7 +33,7 @@ class LiveStreamDecoder(
     override fun prepare() {
         Log.d(TAG,"width = $width,height = $height")
         mediaCodec = MediaCodec.createEncoderByType(MediaFormat.MIMETYPE_VIDEO_AVC)
-        var format = MediaFormat.createVideoFormat(MediaFormat.MIMETYPE_VIDEO_HEVC, width, height)
+        var format = MediaFormat.createVideoFormat(MediaFormat.MIMETYPE_VIDEO_AVC, width, height)
         format.setInteger(
             MediaFormat.KEY_COLOR_FORMAT,
             MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Flexible
@@ -107,8 +107,7 @@ class LiveStreamDecoder(
                     }
 
                     if (callback == null) {
-                        var path =
-                            MyApplication.application.getExternalFilesDir("video")?.absolutePath + File.separator + "input.h265"
+                        var path = MyApplication.application.getExternalFilesDir("video")?.absolutePath + File.separator + "input.h265"
                         val file = File(path)
                         file.appendBytes(inputBuffer)
                     } else {

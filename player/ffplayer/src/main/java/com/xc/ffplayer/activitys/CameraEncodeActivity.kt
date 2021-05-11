@@ -41,15 +41,15 @@ class CameraEncodeActivity : AppCompatActivity() {
             }
 
             override fun cameraInited() {
-
+//                cameraProvide.startPreview()
             }
 
         }
 
-        cameraProvide.startPreview(textureView)
+        cameraProvide.inintPreview(textureView)
 
         btnPush.setOnClickListener {
-            cameraProvide.startPushStream()
+            cameraProvide.startStream()
         }
     }
 }

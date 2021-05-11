@@ -8,6 +8,8 @@ import android.util.Log
 import android.view.Surface
 import com.xc.ffplayer.Decoder
 import com.xc.ffplayer.MyApplication
+import com.xc.ffplayer.live.LiveTaskManager
+import com.xc.ffplayer.live.Releaseable
 import okhttp3.Interceptor
 import java.io.File
 import java.lang.Exception
@@ -17,18 +19,18 @@ class LiveStreamDecoder(
     var width: Int,
     var height: Int,
     var callback: ((byteArray: ByteArray,time:Long) -> Unit)? = null
-) : Decoder, Runnable {
+) : Decoder, Runnable , Releaseable{
 
-    var TAG = "LiveStreamDecoder"
+    private var TAG = "LiveStreamDecoder"
 
-    var array: ArrayBlockingQueue<ByteArray> = ArrayBlockingQueue(10)
+    private var array: ArrayBlockingQueue<ByteArray> = ArrayBlockingQueue(10)
     var start = true
 
     private lateinit var mediaCodec: MediaCodec
-    var thread: Thread? = null
+    private var thread: Thread? = null
 
-    var timeStamp = 0L
-    var startTime = 0L
+    private var timeStamp = 0L
+    private var startTime = 0L
 
     override fun prepare() {
         Log.d(TAG,"width = $width,height = $height")
@@ -42,8 +44,7 @@ class LiveStreamDecoder(
         format.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, 2)
         format.setInteger(MediaFormat.KEY_FRAME_RATE, 15)
         mediaCodec.configure(format, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE)
-        thread = Thread(this)
-        thread?.start()
+        LiveTaskManager.execute(this)
     }
 
     override fun decode(surface: Surface?) {
@@ -51,18 +52,26 @@ class LiveStreamDecoder(
     }
 
     override fun decode() {
+
     }
 
     override fun decode(byteArray: ByteArray) {
-        if(!array.add(byteArray)) {
-            array.poll()
+        if (!start) {
+            return
+        }
+        if(!array.offer(byteArray)) {
+            array.clear()
         }
     }
 
     override fun stop() {
         start = false
-        if (this::mediaCodec.isInitialized) mediaCodec?.stop()
+        if (this::mediaCodec.isInitialized) mediaCodec.stop()
         thread?.interrupt()
+    }
+
+    override fun release() {
+
     }
 
     override fun run() {
@@ -70,7 +79,7 @@ class LiveStreamDecoder(
         try {
             while (!Thread.currentThread().isInterrupted && start) {
                 var byteArray = array.take()
-                if (byteArray != null) {
+                if (byteArray != null && start) {
                     val outIndex = mediaCodec.dequeueInputBuffer(1_000)
                     if (outIndex >= 0) {
                         val inputBuffer = mediaCodec.getInputBuffer(outIndex)

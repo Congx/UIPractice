@@ -3,7 +3,7 @@ package com.xc.ffplayer.live
 import com.xc.ffplayer.utils.append2File
 import java.util.concurrent.LinkedBlockingDeque
 
-open class LivePush : Thread(){
+open class DataPush : Runnable,Releaseable {
 
     var TAG = "LivePush"
 
@@ -22,26 +22,17 @@ open class LivePush : Thread(){
     fun startPush(url: String) {
         isLiveing = true
         this.url = url
-        start()
+        LiveTaskManager.execute(this)
     }
 
-    fun release() {
-        isLiveing = false
-        close()
-    }
-
-    var ssss = true
     override fun run() {
 //        if (!connect(url)) return
         connect(url)
         try {
-            while (!(currentThread().isInterrupted) && isLiveing) {
+            while (!(Thread.currentThread().isInterrupted) && isLiveing) {
                 val rtmpPackage = queue.take()
                 rtmpPackage?.let {
-                    if (ssss) {
-                        it.bytes.append2File("liveData2.h264")
-                        ssss = false
-                    }
+                    it.bytes.append2File("livedata.h264")
                     sendData(it.bytes,it.bytes.size,it.timeStamp)
                 }
 
@@ -52,6 +43,12 @@ open class LivePush : Thread(){
 
         }
 
+    }
+
+    override fun release() {
+        isLiveing = false
+        Thread.currentThread().interrupt()
+        close()
     }
 
 

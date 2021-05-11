@@ -104,7 +104,7 @@ open class Camera2Provider(
         handler.looper.quit()
     }
 
-    fun startPreview(textureView: AutoFitTextureView) {
+    fun inintPreview(textureView: AutoFitTextureView) {
         this.textureView = textureView
         textureView.surfaceTextureListener = object : SurfaceTextureListener {
             override fun onSurfaceTextureAvailable(
@@ -451,7 +451,7 @@ open class Camera2Provider(
 
         override fun onConfigured(session: CameraCaptureSession) {
             cameraCaptureSession = session
-            startPreview()
+//            startPreview()
             cameraPreviewCallback?.cameraInited()
         }
 
@@ -487,18 +487,22 @@ open class Camera2Provider(
     /**
      * 推流
      */
-    fun startPushStream() {
+    fun startStream() {
         val requestBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW)
         requestBuilder.addTarget(surface!!)
         requestBuilder.addTarget(streamImageReader!!.surface)
         val request = requestBuilder.build()
+        requestBuilder.set(
+            CaptureRequest.STATISTICS_FACE_DETECT_MODE,
+            CameraCharacteristics.STATISTICS_FACE_DETECT_MODE_SIMPLE
+        )
         cameraCaptureSession.setRepeatingRequest(request, requestSateCallback, handler)
     }
 
     /**
-     * 停止推流
+     * 停止流
      */
-    fun stopPushStream() {
+    fun stopStream() {
         startPreview()
     }
 

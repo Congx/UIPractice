@@ -47,7 +47,7 @@ int sendPacket(RTMPPacket *pPacket);
 
 extern "C"
 JNIEXPORT jboolean JNICALL
-Java_com_xc_ffplayer_live_LivePush_connect(JNIEnv *env, jobject thiz,jstring url) {
+Java_com_xc_ffplayer_live_DataPush_connect(JNIEnv *env, jobject thiz, jstring url) {
 
     char *str_url = const_cast<char *>(env->GetStringUTFChars(url, NULL));
     RTMP *rtmp = RTMP_Alloc();
@@ -139,6 +139,10 @@ RTMPPacket * createVideoPacket(Live *live) {
  * @return
  */
 RTMPPacket * createVideoPacket(jbyte *data, jint size, jlong stamp) {
+    // 这里注意去掉分隔符
+    data += 4;
+    size -= 4;
+
     int body_size = size + 9;
     RTMPPacket *packet = static_cast<RTMPPacket *>(malloc(sizeof(RTMPPacket)));
     RTMPPacket_Alloc(packet,body_size);
@@ -174,7 +178,7 @@ RTMPPacket * createVideoPacket(jbyte *data, jint size, jlong stamp) {
     return packet;
 }
 
-static bool aaa = true;
+//static bool aaa = true;
 void sendData(jbyte *data, jint size, jlong stamp) {
     // 保存sps、pps数据
     if (isSPS(data[4]) && live != nullptr && live->pps != nullptr && live->sps != nullptr) {
@@ -226,7 +230,7 @@ void prepareData(jbyte *data, jint size) {
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_xc_ffplayer_live_LivePush_close(JNIEnv *env, jobject thiz) {
+Java_com_xc_ffplayer_live_DataPush_close(JNIEnv *env, jobject thiz) {
     if (live != NULL) {
         live->isConnected = false;
         RTMP_Close(live->rtmp);
@@ -238,7 +242,7 @@ Java_com_xc_ffplayer_live_LivePush_close(JNIEnv *env, jobject thiz) {
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_xc_ffplayer_live_LivePush_sendData(JNIEnv *env, jobject thiz, jbyteArray bytes, jint size,
+Java_com_xc_ffplayer_live_DataPush_sendData(JNIEnv *env, jobject thiz, jbyteArray bytes, jint size,
                                             jlong time_stamp) {
     jbyte *data = env->GetByteArrayElements(bytes, NULL);
     sendData(data,size,time_stamp);

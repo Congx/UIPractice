@@ -3,7 +3,7 @@ package com.xc.ffplayer.live
 import android.app.Activity
 import com.xc.ffplayer.camera2.*
 
-open class Live(var context: Activity) {
+open class Live(var context: Activity):Releaseable {
 
     private lateinit var url: String
     private var TAG = "CameraLive"
@@ -16,6 +16,10 @@ open class Live(var context: Activity) {
         VideoLive(context,dataPush)
     }
 
+    private val audioLive:AudioLive by lazy {
+        AudioLive(context,dataPush)
+    }
+
     fun initPreview(autoFitTextureView: AutoFitTextureView) {
         videoLive.inintPreview(autoFitTextureView)
     }
@@ -23,14 +27,19 @@ open class Live(var context: Activity) {
     fun startPush(url:String) {
         this.url = url
         dataPush.startPush(url)
+        audioLive.startRecode()
+        videoLive.startPush()
     }
 
-    fun stopPush() {
-        videoLive.stopStream()
+    override fun stop() {
+        videoLive.stop()
+        audioLive.stopRecode()
+        dataPush.stop()
     }
 
-    fun release() {
+    override fun release() {
         videoLive.release()
+        audioLive.release()
         dataPush.release()
     }
 }

@@ -44,45 +44,6 @@ class MediaProcess {
             val videoAddTrack = mediaMuxer.addTrack(videoTrackFormat1)
             val audioAddTrack = mediaMuxer.addTrack(audioTrackFormat1)
 
-//            val mediaMuxer = MediaMuxer(outputPath, MUXER_OUTPUT_MPEG_4)
-//
-//            val mediaExtractor1 = MediaExtractor()
-//            mediaExtractor1.setDataSource(videoPath1)
-//
-//            val mediaExtractor2 = MediaExtractor()
-//            mediaExtractor2.setDataSource(videoPath2)
-//
-////            var videoAddTrack = -1
-////            var audioAddTrack = -1
-////            var duration = 0L
-//
-//            var videoTrackIndex1 = selectTrackIndex(mediaExtractor1)
-//            var audioTrackIndex1 = selectTrackIndex(mediaExtractor1,false)
-//
-//
-//            var videoTrackFormat1 = mediaExtractor1.getTrackFormat(videoTrackIndex1)
-//            var audioTrackFormat1 = mediaExtractor1.getTrackFormat(audioTrackIndex1)
-//            var duration = audioTrackFormat1.getLong(MediaFormat.KEY_DURATION)
-//            Log.d("MediaProcess","duration1 = $duration")
-//
-//            var videoAddTrack = mediaMuxer.addTrack(videoTrackFormat1!!)
-//            var audioAddTrack = mediaMuxer.addTrack(audioTrackFormat1!!)
-//
-//            var videoTrackIndex2 = -1
-//            var audioTrackIndex2 = -1
-//            for (index in 0 until mediaExtractor2.trackCount) {
-//                val format = mediaExtractor2.getTrackFormat(index)
-//                val mime = format.getString(MediaFormat.KEY_MIME)
-//                if (mime!!.startsWith("video/")) {
-//                    videoTrackIndex2 = index
-//                } else if (mime!!.startsWith("audio/")) {
-//                    audioTrackIndex2 = index
-//                }
-//            }
-//
-//            if (mediaMuxer == null) return
-
-
             mediaMuxer.start()
 
             // 选择第一个视频

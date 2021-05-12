@@ -17,6 +17,9 @@ const int PPS_TYPE = 8;
 const int DIR_TYPE = 5;
 const int NOIDIR_TYPE = 1;
 
+const int RTMP_PKG_VIDEO = 0; // type
+const int RTMP_PKG_AUDIO = 1;
+const int RTMP_PKG_AUDIO_HEAD = 2;
 
 typedef struct {
     RTMP *rtmp;
@@ -29,7 +32,7 @@ typedef struct {
 
 Live *live = NULL;
 
-void sendData(jbyte *data, jint size, jlong stamp);
+void sendVideo(jbyte *data, jint size, jlong stamp);
 void prepareData(jbyte *data, jint size);
 
 bool isDIR(jbyte data) {
@@ -44,6 +47,8 @@ bool isPPS(jbyte data) {
     return (data & 0x1f) == PPS_TYPE;
 }
 int sendPacket(RTMPPacket *pPacket);
+
+void sendAudio(jbyte *data, jint size, jlong stamp, jint type);
 
 extern "C"
 JNIEXPORT jboolean JNICALL
@@ -179,10 +184,10 @@ RTMPPacket * createVideoPacket(jbyte *data, jint size, jlong stamp) {
 }
 
 //static bool aaa = true;
-void sendData(jbyte *data, jint size, jlong stamp) {
+void sendVideo(jbyte *data, jint size, jlong stamp) {
     // 保存sps、pps数据
     if (isSPS(data[4]) && live != nullptr && live->pps != nullptr && live->sps != nullptr) {
-        LOGI("sps data prepare");
+        LOGI("sps、pps data prepare");
         prepareData(data, size);
 //        if(aaa) {
 //            ofstream out("/sdcard/Android/data/com.xc.ffplayer/files/output/liveData.h264");
@@ -192,16 +197,23 @@ void sendData(jbyte *data, jint size, jlong stamp) {
         return;
     }
 
+    if(live->pps == nullptr && live->sps == nullptr) {
+        LOGI("sps、pps 帧数据正在准备...");
+        return;
+    }
+
     // I 帧
-    if (isDIR(data[3]) || isDIR(data[4])) {
+    if (isDIR(data[4])) {
         LOGI("i 帧数据，发送sps、pps");
         RTMPPacket *packet = createVideoPacket(live);
         sendPacket(packet);
+        LOGI("i 帧数据，发送sps、pps finish");
     }
     // 非I帧
     RTMPPacket *packet = createVideoPacket(data,size,stamp);
     sendPacket(packet);
-    LOGI("帧数据包发送");
+
+    LOGI("rtmp send video packet finish");
 }
 
 int sendPacket(RTMPPacket *pPacket) {
@@ -240,11 +252,53 @@ Java_com_xc_ffplayer_live_DataPush_close(JNIEnv *env, jobject thiz) {
 
 }
 
+RTMPPacket * createAudioPackate(jbyte *data, jint size, jlong stamp, jint type) {
+    int body_size = size + 2;
+
+    RTMPPacket *packet = static_cast<RTMPPacket *>(malloc(sizeof(RTMPPacket)));
+    RTMPPacket_Alloc(packet,body_size);
+    packet->m_body[0] = 0xAF;
+    if(type == RTMP_PKG_AUDIO_HEAD) {
+        packet->m_body[1] = 0x00;
+    }else {
+        packet->m_body[1] = 0x01;
+    }
+    memcpy(&packet->m_body[2],data,size);
+    // 设置其他属性
+    packet->m_nBodySize = body_size; // 数据总长度
+    packet->m_packetType = RTMP_PACKET_TYPE_AUDIO;
+    packet->m_nChannel = 0x05; // 音频04
+    packet->m_hasAbsTimestamp = 0;
+    packet->m_nTimeStamp = stamp;
+    packet->m_headerType = RTMP_PACKET_SIZE_LARGE;
+    packet->m_nInfoField2 = live->rtmp->m_stream_id;
+
+    return packet;
+}
+
+void sendAudio(jbyte *data, jint size, jlong stamp, jint type) {
+    RTMPPacket *packet =  createAudioPackate(data,size,stamp,type);
+    sendPacket(packet);
+    LOGI("rtmp send audio packet finish");
+}
+
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_xc_ffplayer_live_DataPush_sendData(JNIEnv *env, jobject thiz, jbyteArray bytes, jint size,
-                                            jlong time_stamp) {
+                                            jlong time_stamp,jint type) {
     jbyte *data = env->GetByteArrayElements(bytes, NULL);
-    sendData(data,size,time_stamp);
+
+    switch (type) {
+        case RTMP_PKG_VIDEO:
+            LOGI("rtmp send vidio packet");
+            sendVideo(data, size, time_stamp);
+            break;
+        case RTMP_PKG_AUDIO:
+        case RTMP_PKG_AUDIO_HEAD:
+            LOGI("rtmp send audio packet");
+            sendAudio(data, size, time_stamp,type);
+            break;
+    }
+
     env->ReleaseByteArrayElements(bytes,data,0);
 }

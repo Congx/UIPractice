@@ -2,17 +2,16 @@ package com.xc.ffplayer.live
 
 import android.app.Activity
 import android.util.Log
-import com.xc.ffplayer.Decoder
 import com.xc.ffplayer.camera2.AutoFitTextureView
 import com.xc.ffplayer.camera2.Camera2Provider
 import com.xc.ffplayer.camera2.CameraPreviewCallback
-import com.xc.ffplayer.camera2.LiveStreamDecoder
+import com.xc.ffplayer.camera2.VideoStreamEncoder
 
 open class VideoLive(var context: Activity, var dataPush: DataPush):Releaseable{
 
     private var TAG = "CameraLive"
 
-    lateinit var decoder: Decoder
+    lateinit var decoder: VideoStreamEncoder
 
     private val camera2Provider: Camera2Provider by lazy {
         val height = 1280
@@ -21,10 +20,10 @@ open class VideoLive(var context: Activity, var dataPush: DataPush):Releaseable{
         Camera2Provider(context,width,height)
     }
 
-    var decodeCallback:((byteArray:ByteArray, timeStamp:Long)-> Unit)? = { bytes: ByteArray, timeStamp: Long ->
+    var decodeCallback:((packate:RTMPPackage) -> Unit)? = {
         // 解码成功
-//        Log.d(TAG,"bytes---------${bytes.size}")
-        dataPush.addData(bytes,timeStamp)
+//        Log.d(TAG,"vidio 解码成功 bytes---------${it.bytes.size}")
+        dataPush.addData(it)
     }
 
     init {
@@ -33,16 +32,16 @@ open class VideoLive(var context: Activity, var dataPush: DataPush):Releaseable{
 
             }
             override fun streamSize(width: Int, height: Int) {
-                // 解码
 //                Log.d(TAG,"streamSize---------$width,$height")
                 // 1920,1080
-                decoder = LiveStreamDecoder(height,width,decodeCallback)
+                decoder = VideoStreamEncoder(height,width,decodeCallback)
                 decoder.prepare()
             }
 
             // 详解初始化成功
             override fun cameraInited() {
                 startStream()
+//                startPreview()
             }
 
         }
@@ -55,6 +54,10 @@ open class VideoLive(var context: Activity, var dataPush: DataPush):Releaseable{
 
     fun inintPreview(autoFitTextureView: AutoFitTextureView) {
         camera2Provider.inintPreview(autoFitTextureView)
+    }
+
+    fun startPush() {
+        decoder.start()
     }
 
     fun startPreview() {
@@ -73,8 +76,14 @@ open class VideoLive(var context: Activity, var dataPush: DataPush):Releaseable{
         camera2Provider.stopStream()
     }
 
-    override fun release() {
+    override fun stop() {
+        stopStream()
         decoder.stop()
+    }
+
+    override fun release() {
+        camera2Provider.release()
+        decoder.release()
     }
 
 }

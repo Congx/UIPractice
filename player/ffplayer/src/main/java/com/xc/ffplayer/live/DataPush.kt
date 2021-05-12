@@ -1,6 +1,6 @@
 package com.xc.ffplayer.live
 
-import com.xc.ffplayer.utils.append2File
+import android.util.Log
 import java.util.concurrent.LinkedBlockingDeque
 
 open class DataPush : Runnable,Releaseable {
@@ -8,18 +8,29 @@ open class DataPush : Runnable,Releaseable {
     var TAG = "LivePush"
 
     private lateinit var url: String
+    @Volatile
     var isLiveing = false
     var queue = LinkedBlockingDeque<RTMPPackage>(100)
 
-    fun addData(bytes: ByteArray, timeStamp: Long) {
+    fun addData(bytes: ByteArray, timeStamp: Long,type:Int) {
         if (!isLiveing) return
-        if (!queue.offer(RTMPPackage(bytes,timeStamp))) {
+        if (!queue.offer(RTMPPackage(bytes,timeStamp,type))) {
+            queue.pollLast()
+        }
+    }
+
+    fun addData(packge:RTMPPackage) {
+        if (!isLiveing) {
+            return
+        }
+        if (!queue.offer(packge)) {
             queue.pollLast()
         }
 
     }
 
     fun startPush(url: String) {
+        Log.d(TAG,"startPush")
         isLiveing = true
         this.url = url
         LiveTaskManager.execute(this)
@@ -32,8 +43,8 @@ open class DataPush : Runnable,Releaseable {
             while (!(Thread.currentThread().isInterrupted) && isLiveing) {
                 val rtmpPackage = queue.take()
                 rtmpPackage?.let {
-                    it.bytes.append2File("livedata.h264")
-                    sendData(it.bytes,it.bytes.size,it.timeStamp)
+//                    it.bytes.append2File("livedata.h264")
+                    sendData(it.bytes,it.bytes.size,it.timeStamp,it.type)
                 }
 
             }
@@ -45,18 +56,22 @@ open class DataPush : Runnable,Releaseable {
 
     }
 
-    override fun release() {
+    override fun stop() {
         isLiveing = false
+    }
+
+    override fun release() {
         Thread.currentThread().interrupt()
         close()
     }
 
 
-    private external fun sendData(bytes: ByteArray,size :Int,timeStamp: Long)
+    private external fun sendData(bytes: ByteArray,size :Int,timeStamp: Long,type:Int)
     private external fun connect(url: String):Boolean
     private external fun close()
 
     companion object {
+
         init {
             System.loadLibrary("rtmpdump")
         }

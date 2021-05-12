@@ -9,31 +9,34 @@ import android.view.Surface
 import com.xc.ffplayer.Decoder
 import com.xc.ffplayer.MyApplication
 import com.xc.ffplayer.live.LiveTaskManager
+import com.xc.ffplayer.live.RTMPPackage
+import com.xc.ffplayer.live.RTMP_PKG_VIDEO
 import com.xc.ffplayer.live.Releaseable
 import okhttp3.Interceptor
 import java.io.File
 import java.lang.Exception
 import java.util.concurrent.ArrayBlockingQueue
 
-class LiveStreamDecoder(
+class VideoStreamEncoder(
     var width: Int,
     var height: Int,
-    var callback: ((byteArray: ByteArray,time:Long) -> Unit)? = null
+    var callback: ((packate: RTMPPackage) -> Unit)? = null
 ) : Decoder, Runnable , Releaseable{
 
     private var TAG = "LiveStreamDecoder"
 
     private var array: ArrayBlockingQueue<ByteArray> = ArrayBlockingQueue(10)
-    var start = true
+
+    @Volatile
+    var start = false
 
     private lateinit var mediaCodec: MediaCodec
-    private var thread: Thread? = null
 
     private var timeStamp = 0L
     private var startTime = 0L
 
     override fun prepare() {
-        Log.d(TAG,"width = $width,height = $height")
+//        Log.d(TAG,"width = $width,height = $height")
         mediaCodec = MediaCodec.createEncoderByType(MediaFormat.MIMETYPE_VIDEO_AVC)
         var format = MediaFormat.createVideoFormat(MediaFormat.MIMETYPE_VIDEO_AVC, width, height)
         format.setInteger(
@@ -44,7 +47,6 @@ class LiveStreamDecoder(
         format.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, 2)
         format.setInteger(MediaFormat.KEY_FRAME_RATE, 15)
         mediaCodec.configure(format, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE)
-        LiveTaskManager.execute(this)
     }
 
     override fun decode(surface: Surface?) {
@@ -64,14 +66,21 @@ class LiveStreamDecoder(
         }
     }
 
+    fun start() {
+        // todo
+        start = true
+        LiveTaskManager.execute(this)
+    }
+
     override fun stop() {
         start = false
-        if (this::mediaCodec.isInitialized) mediaCodec.stop()
-        thread?.interrupt()
     }
 
     override fun release() {
-
+        mediaCodec.stop()
+        mediaCodec.release()
+        Thread.currentThread().interrupt()
+        startTime = 0L
     }
 
     override fun run() {
@@ -120,7 +129,9 @@ class LiveStreamDecoder(
                         val file = File(path)
                         file.appendBytes(inputBuffer)
                     } else {
-                        callback?.invoke(inputBuffer,bufferInfo.presentationTimeUs/1000 - startTime)
+                        var pkg = RTMPPackage(inputBuffer,bufferInfo.presentationTimeUs/1000 - startTime,
+                            RTMP_PKG_VIDEO)
+                        callback?.invoke(pkg)
                     }
 
                     mediaCodec.releaseOutputBuffer(outIndex, false)
@@ -138,6 +149,5 @@ class LiveStreamDecoder(
     private fun computePresentationTime(frameIndex: Long): Long {
         return 132 + frameIndex * 1000000 / 15
     }
-
 
 }

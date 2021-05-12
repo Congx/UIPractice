@@ -21,6 +21,7 @@ import android.util.SparseIntArray
 import android.view.Surface
 import android.view.TextureView.SurfaceTextureListener
 import androidx.core.app.ActivityCompat
+import com.xc.ffplayer.live.Releaseable
 import com.xc.ffplayer.utils.CameraUtil
 import com.xc.ffplayer.utils.ImageUtil
 import com.xc.ffplayer.utils.YuvUtils
@@ -37,7 +38,7 @@ open class Camera2Provider(
     private val context: Activity,
     private var width: Int = 0,
     private var height: Int = 0
-) {
+) :Releaseable{
 
     companion object {
 
@@ -99,7 +100,7 @@ open class Camera2Provider(
         cameraDevice.close()
     }
 
-    fun release() {
+    override fun release() {
         closeCamera()
         handler.looper.quit()
     }
@@ -451,7 +452,7 @@ open class Camera2Provider(
 
         override fun onConfigured(session: CameraCaptureSession) {
             cameraCaptureSession = session
-//            startPreview()
+            startPreview()
             cameraPreviewCallback?.cameraInited()
         }
 

@@ -37,7 +37,7 @@ open class Live(var context: Activity):Releaseable {
 
     override fun stop() {
         videoLive.stop()
-        audioLive.stopRecode()
+        audioLive.stop()
         dataPush.stop()
     }
 

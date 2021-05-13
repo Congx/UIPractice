@@ -15,7 +15,7 @@ class AudioStreamEncoder(var callback: ((packate:RTMPPackage) -> Unit)? = null,v
 
     var TAG = "AudioStreamDecoder"
 
-    private var array: ArrayBlockingQueue<ByteArray> = ArrayBlockingQueue(20)
+    private var array: ArrayBlockingQueue<AudioData> = ArrayBlockingQueue(20)
 
     @Volatile
     var start = false
@@ -34,7 +34,7 @@ class AudioStreamEncoder(var callback: ((packate:RTMPPackage) -> Unit)? = null,v
                 MediaCodecInfo.CodecProfileLevel.AACObjectLC
             )
             format.setInteger(MediaFormat.KEY_BIT_RATE, 64_000)
-            var bufferSizeInBytes = AudioRecord.getMinBufferSize(44100, AudioFormat.CHANNEL_IN_STEREO, AudioFormat.ENCODING_PCM_16BIT)
+            var bufferSizeInBytes = AudioRecord.getMinBufferSize(44100, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT)
             format.setInteger(MediaFormat.KEY_MAX_INPUT_SIZE,bufferSizeInBytes*2)
             mediaCodec.configure(format, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE)
             LiveTaskManager.execute(this)
@@ -53,10 +53,14 @@ class AudioStreamEncoder(var callback: ((packate:RTMPPackage) -> Unit)? = null,v
     }
 
     override fun decode(byteArray: ByteArray) {
+
+    }
+
+    fun addData(byteArray: ByteArray,len:Int) {
         if (!start) {
             return
         }
-        if(!array.offer(byteArray)) {
+        if(!array.offer(AudioData(byteArray,len))) {
             Log.e(TAG,"丢失音频数据")
             array.clear()
         }
@@ -88,17 +92,17 @@ class AudioStreamEncoder(var callback: ((packate:RTMPPackage) -> Unit)? = null,v
         try {
             sendHead()
             while (!Thread.currentThread().isInterrupted && start) {
-                var byteArray = array.take()
+                var audioData = array.take()
 //                Log.d(TAG,"byteArray  ${byteArray.size}")
                 val stamp = System.currentTimeMillis() * 1000
-                if (byteArray != null && start) {
+                if (audioData != null && start) {
                     val outIndex = mediaCodec.dequeueInputBuffer(1_000)
                     if (outIndex >= 0) {
                         val inputBuffer = mediaCodec.getInputBuffer(outIndex)
 //                        Log.d(TAG,"inputBuffer  ${inputBuffer?.remaining()}")
                         inputBuffer?.clear()
-                        inputBuffer?.put(byteArray)
-                        mediaCodec.queueInputBuffer(outIndex, 0, byteArray.size, stamp, 0)
+                        inputBuffer?.put(audioData.byteArray)
+                        mediaCodec.queueInputBuffer(outIndex, 0, audioData.len, stamp, 0)
                     }
                 }
 
@@ -128,6 +132,8 @@ class AudioStreamEncoder(var callback: ((packate:RTMPPackage) -> Unit)? = null,v
             e.printStackTrace()
         }
     }
+
+    data class AudioData(var byteArray: ByteArray,var len:Int)
 
     private fun sendHead() {
         var byte:ByteArray = byteArrayOf(0x12,0x08)

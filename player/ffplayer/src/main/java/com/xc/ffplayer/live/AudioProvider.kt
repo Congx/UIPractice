@@ -12,7 +12,7 @@ class AudioProvider :StreamProvider,Releaseable,Runnable {
     private var bufferSizeInBytes = 0
     private var isStart = false
 
-    override var dataRecived:((ByteArray:ByteArray)->Unit)? = null
+    override var dataRecived:((byteArray:ByteArray,len:Int)->Unit)? = null
 
     private val audioRecoder by lazy {
         bufferSizeInBytes = AudioRecord.getMinBufferSize(sampleRate,
@@ -21,7 +21,7 @@ class AudioProvider :StreamProvider,Releaseable,Runnable {
         return@lazy AudioRecord(
             MediaRecorder.AudioSource.MIC,
             sampleRate,                     // 采样频率
-            AudioFormat.CHANNEL_IN_STEREO,  // 通道数
+            AudioFormat.CHANNEL_IN_MONO,  // 通道数
             AudioFormat.ENCODING_PCM_16BIT, // 采样位数
             bufferSizeInBytes)
     }
@@ -54,15 +54,16 @@ class AudioProvider :StreamProvider,Releaseable,Runnable {
             && isStart) {
             var byteArray = ByteArray(bufferSizeInBytes)
             val ret = audioRecoder.read(byteArray, 0, bufferSizeInBytes)
+//            Log.e(TAG ,"AudioRecord ret = $ret")
             when(ret) {
                 AudioRecord.ERROR,
                 AudioRecord.ERROR_BAD_VALUE,
                 AudioRecord.ERROR_DEAD_OBJECT,
                 AudioRecord.ERROR_INVALID_OPERATION-> {
-                    Log.d(TAG ,"AudioRecord error")
+                    Log.e(TAG ,"AudioRecord error")
                 }
                 in 0..Int.MAX_VALUE -> {
-                    dataRecived?.invoke(byteArray)
+                    dataRecived?.invoke(byteArray,ret)
                 }
             }
 

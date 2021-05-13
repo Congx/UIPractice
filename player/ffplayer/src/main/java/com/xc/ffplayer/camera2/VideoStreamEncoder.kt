@@ -134,93 +134,18 @@ class VideoStreamEncoder(
                         startTime = bufferInfo.presentationTimeUs / 1000
                     }
 
-                    if (callback == null) {
-                        var path =
-                            MyApplication.application.getExternalFilesDir("video")?.absolutePath + File.separator + "input.h265"
-                        val file = File(path)
-                        file.appendBytes(inputBuffer)
-                    } else {
-                        var pkg = RTMPPackage(
-                            inputBuffer, bufferInfo.presentationTimeUs / 1000 - startTime,
-                            RTMP_PKG_VIDEO
-                        )
-                        callback?.invoke(pkg)
-                    }
-
-                    mediaCodec.releaseOutputBuffer(outIndex, false)
-                    outIndex = mediaCodec.dequeueOutputBuffer(bufferInfo, 1_000)
-                }
-
-            }
-
-        } catch (e: InterruptedException) {
-
-        }
-    }
-
-    private fun encode() {
-        mediaCodec.start()
-        try {
-            // 等待rtmp 链接
-            if (countDownLatch.count > 0) {
-                Log.e(TAG, "等待rtmp 链接...")
-                countDownLatch.await()
-            }
-
-            start = true
-
-            Log.e(TAG, "开始视频解码")
-
-            while (!Thread.currentThread().isInterrupted && start) {
-                var byteArray = array.take()
-                if (byteArray != null && start) {
-                    val outIndex = mediaCodec.dequeueInputBuffer(1_000)
-                    if (outIndex >= 0) {
-                        val inputBuffer = mediaCodec.getInputBuffer(outIndex)
-                        inputBuffer?.clear()
-                        inputBuffer?.put(byteArray)
-                        mediaCodec.queueInputBuffer(
-                            outIndex,
-                            0,
-                            byteArray.size,
-                            System.currentTimeMillis() * 1000 + 138,
-                            0
-                        )
-                    }
-                }
-
-                // 两秒一个I帧
-                if (System.currentTimeMillis() - timeStamp > 2000) {
-                    var bundle = Bundle()
-                    bundle.putInt(MediaCodec.PARAMETER_KEY_REQUEST_SYNC_FRAME, 0)
-                    mediaCodec.setParameters(bundle)
-                    timeStamp = System.currentTimeMillis()
-                }
-
-                var bufferInfo = MediaCodec.BufferInfo()
-                var outIndex = mediaCodec.dequeueOutputBuffer(bufferInfo, 1_000)
-                while (outIndex >= 0) {
-
-                    val outputBuffer = mediaCodec.getOutputBuffer(outIndex) ?: break
-                    val inputBuffer = ByteArray(outputBuffer.remaining())
-                    outputBuffer.get(inputBuffer)
-
-                    if (startTime == 0L) {
-                        startTime = bufferInfo.presentationTimeUs / 1000
-                    }
-
-                    if (callback == null) {
-                        var path =
-                            MyApplication.application.getExternalFilesDir("video")?.absolutePath + File.separator + "input.h265"
-                        val file = File(path)
-                        file.appendBytes(inputBuffer)
-                    } else {
-                        var pkg = RTMPPackage(
-                            inputBuffer, bufferInfo.presentationTimeUs / 1000 - startTime,
-                            RTMP_PKG_VIDEO
-                        )
-                        callback?.invoke(pkg)
-                    }
+//                    if (callback == null) {
+//                        var path =
+//                            MyApplication.application.getExternalFilesDir("video")?.absolutePath + File.separator + "input.h265"
+//                        val file = File(path)
+//                        file.appendBytes(inputBuffer)
+//                    } else {
+                    var pkg = RTMPPackage(
+                        inputBuffer, bufferInfo.presentationTimeUs / 1000 - startTime,
+                        RTMP_PKG_VIDEO
+                    )
+                    callback?.invoke(pkg)
+//                    }
 
                     mediaCodec.releaseOutputBuffer(outIndex, false)
                     outIndex = mediaCodec.dequeueOutputBuffer(bufferInfo, 1_000)

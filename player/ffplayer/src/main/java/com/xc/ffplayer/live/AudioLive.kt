@@ -1,6 +1,8 @@
 package com.xc.ffplayer.live
 
 import android.app.Activity
+import android.util.Log
+import com.xc.ffplayer.utils.append2File
 import java.util.concurrent.CountDownLatch
 
 
@@ -24,15 +26,15 @@ class AudioLive(
 
     init {
         audioDecoder.callback = {
-//            Log.d(TAG,"解码成功")
+//            Log.e(TAG,"音频 解码成功")
 //            it.bytes.append2File("audio.aac")
             dataPush.addData(it)
         }
 
-        audioProvider.dataRecived = {
-//            Log.d(TAG ,"byteArray size ${it.size}")
-//            it.append2File("audio.pcm")
-            audioDecoder.decode(it)
+        audioProvider.dataRecived = { bytes: ByteArray, len: Int ->
+//            Log.e(TAG ,"音频 回调byteArray size ${bytes.size}")
+//            bytes.append2File("audio.pcm")
+            audioDecoder.addData(bytes,len)
         }
     }
 
@@ -42,7 +44,7 @@ class AudioLive(
         audioProvider.startRecord()
     }
 
-    fun stopRecode() {
+    override fun stop() {
         if (!start) return
         audioProvider.stop()
         audioDecoder.stop()

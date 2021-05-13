@@ -22,7 +22,7 @@ open class DataPush(var countDownLatch: CountDownLatch) : Runnable,Releaseable {
     }
 
     fun addData(packge:RTMPPackage) {
-        Log.e(TAG,"add RTMPPackage")
+//        Log.e(TAG,"add RTMPPackage")
         if (!connected) {
             Log.e(TAG,"add no connect")
             return

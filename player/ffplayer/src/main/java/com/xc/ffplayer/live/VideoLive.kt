@@ -6,23 +6,31 @@ import com.xc.ffplayer.camera2.AutoFitTextureView
 import com.xc.ffplayer.camera2.Camera2Provider
 import com.xc.ffplayer.camera2.CameraPreviewCallback
 import com.xc.ffplayer.camera2.VideoStreamEncoder
+import java.util.concurrent.CountDownLatch
 
-open class VideoLive(var context: Activity, var dataPush: DataPush):Releaseable{
+open class VideoLive(
+    var context: Activity,
+    var dataPush: DataPush,
+    var countDownLatch: CountDownLatch
+):Releaseable{
 
-    private var TAG = "CameraLive"
+    private var TAG = "VideoLive"
 
-    lateinit var decoder: VideoStreamEncoder
+    lateinit var encoder: VideoStreamEncoder
 
     private val camera2Provider: Camera2Provider by lazy {
-        val height = 1280
-        val width = 720
+//        val height = 1280
+//        val width = 720
+        val height = 960
+        val width = 540
 //        Camera2Provider(context)
         Camera2Provider(context,width,height)
     }
 
     var decodeCallback:((packate:RTMPPackage) -> Unit)? = {
         // 解码成功
-//        Log.d(TAG,"vidio 解码成功 bytes---------${it.bytes.size}")
+//        Log.e(TAG,"vidio 解码成功 bytes---------${it.bytes.size}")
+//        it.bytes.append2File("output.h264")
         dataPush.addData(it)
     }
 
@@ -32,10 +40,9 @@ open class VideoLive(var context: Activity, var dataPush: DataPush):Releaseable{
 
             }
             override fun streamSize(width: Int, height: Int) {
-//                Log.d(TAG,"streamSize---------$width,$height")
                 // 1920,1080
-                decoder = VideoStreamEncoder(height,width,decodeCallback)
-                decoder.prepare()
+                encoder = VideoStreamEncoder(height,width,decodeCallback,countDownLatch)
+                encoder.prepare()
             }
 
             // 详解初始化成功
@@ -46,7 +53,8 @@ open class VideoLive(var context: Activity, var dataPush: DataPush):Releaseable{
 
         }
         camera2Provider.streamByteCallback = {
-            decoder.decode(it)
+//            Log.e(TAG,"stream 回调")
+            encoder.decode(it)
             // 3110400
 //            Log.d(TAG,"streamByteCallback---------${it.size}")
         }
@@ -56,9 +64,10 @@ open class VideoLive(var context: Activity, var dataPush: DataPush):Releaseable{
         camera2Provider.inintPreview(autoFitTextureView)
     }
 
-    fun startPush() {
-        decoder.start()
-    }
+//    fun startEncode() {
+//        Log.e(TAG,"startEncode")
+//        encoder.start()
+//    }
 
     fun startPreview() {
         camera2Provider.startPreview()
@@ -78,12 +87,12 @@ open class VideoLive(var context: Activity, var dataPush: DataPush):Releaseable{
 
     override fun stop() {
         stopStream()
-        decoder.stop()
+        encoder.stop()
     }
 
     override fun release() {
         camera2Provider.release()
-        decoder.release()
+        encoder.release()
     }
 
 }

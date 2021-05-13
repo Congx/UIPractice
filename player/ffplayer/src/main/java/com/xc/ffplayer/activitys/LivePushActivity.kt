@@ -24,7 +24,7 @@ class LivePushActivity : AppCompatActivity() {
         live.initPreview(textureView)
 
         btnStart.setOnClickListener {
-            live.startPush("")
+            live.startPush("rtmp://192.168.1.2:1935/xucong/room")
         }
     }
 

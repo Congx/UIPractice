@@ -5,11 +5,12 @@ import android.util.Log
 import android.view.Surface
 import com.xc.ffplayer.Decoder
 import java.util.concurrent.ArrayBlockingQueue
+import java.util.concurrent.CountDownLatch
 
 /**
  * pcm to aac
  */
-class AudioStreamEncoder(var callback: ((packate:RTMPPackage) -> Unit)? = null):
+class AudioStreamEncoder(var callback: ((packate:RTMPPackage) -> Unit)? = null,var countDownLatch: CountDownLatch):
     Decoder,Releaseable,Runnable{
 
     var TAG = "AudioStreamDecoder"
@@ -25,7 +26,7 @@ class AudioStreamEncoder(var callback: ((packate:RTMPPackage) -> Unit)? = null):
 
     override fun prepare() {
         try {
-            start = true
+
             mediaCodec = MediaCodec.createEncoderByType(MediaFormat.MIMETYPE_AUDIO_AAC)
             var format = MediaFormat.createAudioFormat(MediaFormat.MIMETYPE_AUDIO_AAC,44100,1)
             format.setInteger(
@@ -56,13 +57,12 @@ class AudioStreamEncoder(var callback: ((packate:RTMPPackage) -> Unit)? = null):
             return
         }
         if(!array.offer(byteArray)) {
-            Log.d(TAG,"丢失音频数据")
+            Log.e(TAG,"丢失音频数据")
             array.clear()
         }
     }
 
     override fun stop() {
-        // todo
         start = false
     }
 
@@ -75,6 +75,16 @@ class AudioStreamEncoder(var callback: ((packate:RTMPPackage) -> Unit)? = null):
 
     override fun run() {
         mediaCodec.start()
+        // 等待rtmp 链接
+        if (countDownLatch.count > 0) {
+            Log.e(TAG,"等待rtmp 链接...")
+            countDownLatch.await()
+        }
+
+        start = true
+
+        Log.e(TAG,"开始音频解码")
+
         try {
             sendHead()
             while (!Thread.currentThread().isInterrupted && start) {

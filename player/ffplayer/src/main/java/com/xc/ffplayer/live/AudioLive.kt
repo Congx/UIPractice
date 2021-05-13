@@ -1,16 +1,21 @@
 package com.xc.ffplayer.live
 
 import android.app.Activity
-import android.util.Log
-import com.xc.ffplayer.utils.append2File
+import java.util.concurrent.CountDownLatch
 
 
-class AudioLive(var context: Activity, var dataPush: DataPush) : Releaseable{
+class AudioLive(
+    var context: Activity,
+    var dataPush: DataPush,
+    var countDownLatch: CountDownLatch
+) : Releaseable{
 
     private var TAG = "AudioLive"
 
+    private var start = false
+
     private val audioDecoder by lazy {
-        AudioStreamEncoder()
+        AudioStreamEncoder(countDownLatch = countDownLatch)
     }
 
     private val audioProvider by lazy {
@@ -32,18 +37,23 @@ class AudioLive(var context: Activity, var dataPush: DataPush) : Releaseable{
     }
 
     fun startRecode() {
+        start = true
         audioDecoder.prepare()
         audioProvider.startRecord()
     }
 
     fun stopRecode() {
+        if (!start) return
         audioProvider.stop()
         audioDecoder.stop()
+        start = false
     }
 
     override fun release() {
+        if (!start) return
         audioDecoder.release()
         audioProvider.release()
+        start = false
     }
 
 }

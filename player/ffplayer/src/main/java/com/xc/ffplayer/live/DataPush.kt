@@ -1,46 +1,55 @@
 package com.xc.ffplayer.live
 
 import android.util.Log
+import java.util.concurrent.CountDownLatch
 import java.util.concurrent.LinkedBlockingDeque
 
-open class DataPush : Runnable,Releaseable {
+open class DataPush(var countDownLatch: CountDownLatch) : Runnable,Releaseable {
 
     var TAG = "LivePush"
 
     private lateinit var url: String
     @Volatile
-    var isLiveing = false
+    var connected = false
+
     var queue = LinkedBlockingDeque<RTMPPackage>(100)
 
     fun addData(bytes: ByteArray, timeStamp: Long,type:Int) {
-        if (!isLiveing) return
+        if (!connected) return
         if (!queue.offer(RTMPPackage(bytes,timeStamp,type))) {
             queue.pollLast()
         }
     }
 
     fun addData(packge:RTMPPackage) {
-        if (!isLiveing) {
+        Log.e(TAG,"add RTMPPackage")
+        if (!connected) {
+            Log.e(TAG,"add no connect")
             return
         }
         if (!queue.offer(packge)) {
-            queue.pollLast()
+            Log.e(TAG,"RTMPPackage 丢弃")
+            queue.clear()
         }
 
     }
 
     fun startPush(url: String) {
-        Log.d(TAG,"startPush")
-        isLiveing = true
         this.url = url
         LiveTaskManager.execute(this)
     }
 
     override fun run() {
-//        if (!connect(url)) return
-        connect(url)
+        if (connect(url)){
+            Log.e(TAG,"rtmp  链接成功")
+            connected = true
+            countDownLatch.countDown()
+        }else {
+            Log.e(TAG,"rtmp  链接失败")
+            connected = false
+        }
         try {
-            while (!(Thread.currentThread().isInterrupted) && isLiveing) {
+            while (!(Thread.currentThread().isInterrupted) && connected) {
                 val rtmpPackage = queue.take()
                 rtmpPackage?.let {
 //                    it.bytes.append2File("livedata.h264")
@@ -57,7 +66,7 @@ open class DataPush : Runnable,Releaseable {
     }
 
     override fun stop() {
-        isLiveing = false
+        connected = false
     }
 
     override fun release() {

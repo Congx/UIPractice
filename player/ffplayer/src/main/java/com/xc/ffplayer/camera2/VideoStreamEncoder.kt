@@ -8,30 +8,35 @@ import android.util.Log
 import android.view.Surface
 import com.xc.ffplayer.Decoder
 import com.xc.ffplayer.MyApplication
-import okhttp3.Interceptor
+import com.xc.ffplayer.live.LiveTaskManager
+import com.xc.ffplayer.live.RTMPPackage
+import com.xc.ffplayer.live.RTMP_PKG_VIDEO
+import com.xc.ffplayer.live.Releaseable
 import java.io.File
-import java.lang.Exception
 import java.util.concurrent.ArrayBlockingQueue
+import java.util.concurrent.CountDownLatch
 
-class LiveStreamDecoder(
+class VideoStreamEncoder(
     var width: Int,
     var height: Int,
-    var callback: ((byteArray: ByteArray,time:Long) -> Unit)? = null
-) : Decoder, Runnable {
+    var callback: ((packate: RTMPPackage) -> Unit)? = null,
+    var countDownLatch: CountDownLatch
+) : Decoder, Runnable , Releaseable{
 
-    var TAG = "LiveStreamDecoder"
+    private var TAG = "LiveStreamDecoder"
 
-    var array: ArrayBlockingQueue<ByteArray> = ArrayBlockingQueue(10)
-    var start = true
+    private var array: ArrayBlockingQueue<ByteArray> = ArrayBlockingQueue(10)
+
+    @Volatile
+    var start = false
 
     private lateinit var mediaCodec: MediaCodec
-    var thread: Thread? = null
 
-    var timeStamp = 0L
-    var startTime = 0L
+    private var timeStamp = 0L
+    private var startTime = 0L
 
     override fun prepare() {
-        Log.d(TAG,"width = $width,height = $height")
+//        Log.d(TAG,"width = $width,height = $height")
         mediaCodec = MediaCodec.createEncoderByType(MediaFormat.MIMETYPE_VIDEO_AVC)
         var format = MediaFormat.createVideoFormat(MediaFormat.MIMETYPE_VIDEO_AVC, width, height)
         format.setInteger(
@@ -42,8 +47,7 @@ class LiveStreamDecoder(
         format.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, 2)
         format.setInteger(MediaFormat.KEY_FRAME_RATE, 15)
         mediaCodec.configure(format, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE)
-        thread = Thread(this)
-        thread?.start()
+        LiveTaskManager.execute(this)
     }
 
     override fun decode(surface: Surface?) {
@@ -51,26 +55,50 @@ class LiveStreamDecoder(
     }
 
     override fun decode() {
+
     }
 
     override fun decode(byteArray: ByteArray) {
-        if(!array.add(byteArray)) {
-            array.poll()
+        if (!start) {
+            return
+        }
+        if(!array.offer(byteArray)) {
+            array.clear()
         }
     }
 
+//    fun start() {
+//        LiveTaskManager.execute(this)
+//    }
+
     override fun stop() {
         start = false
-        if (this::mediaCodec.isInitialized) mediaCodec?.stop()
-        thread?.interrupt()
+    }
+
+    override fun release() {
+        start = false
+        mediaCodec.stop()
+        mediaCodec.release()
+        Thread.currentThread().interrupt()
+        startTime = 0L
     }
 
     override fun run() {
         mediaCodec.start()
         try {
+            // 等待rtmp 链接
+            if (countDownLatch.count > 0) {
+                Log.e(TAG, "等待rtmp 链接...")
+                countDownLatch.await()
+            }
+
+            start = true
+
+            Log.e(TAG, "开始视频解码")
+
             while (!Thread.currentThread().isInterrupted && start) {
                 var byteArray = array.take()
-                if (byteArray != null) {
+                if (byteArray != null && start) {
                     val outIndex = mediaCodec.dequeueInputBuffer(1_000)
                     if (outIndex >= 0) {
                         val inputBuffer = mediaCodec.getInputBuffer(outIndex)
@@ -89,7 +117,7 @@ class LiveStreamDecoder(
                 // 两秒一个I帧
                 if (System.currentTimeMillis() - timeStamp > 2000) {
                     var bundle = Bundle()
-                    bundle.putInt(MediaCodec.PARAMETER_KEY_REQUEST_SYNC_FRAME,0)
+                    bundle.putInt(MediaCodec.PARAMETER_KEY_REQUEST_SYNC_FRAME, 0)
                     mediaCodec.setParameters(bundle)
                     timeStamp = System.currentTimeMillis()
                 }
@@ -106,13 +134,18 @@ class LiveStreamDecoder(
                         startTime = bufferInfo.presentationTimeUs / 1000
                     }
 
-                    if (callback == null) {
-                        var path = MyApplication.application.getExternalFilesDir("video")?.absolutePath + File.separator + "input.h265"
-                        val file = File(path)
-                        file.appendBytes(inputBuffer)
-                    } else {
-                        callback?.invoke(inputBuffer,bufferInfo.presentationTimeUs/1000 - startTime)
-                    }
+//                    if (callback == null) {
+//                        var path =
+//                            MyApplication.application.getExternalFilesDir("video")?.absolutePath + File.separator + "input.h265"
+//                        val file = File(path)
+//                        file.appendBytes(inputBuffer)
+//                    } else {
+                    var pkg = RTMPPackage(
+                        inputBuffer, bufferInfo.presentationTimeUs / 1000 - startTime,
+                        RTMP_PKG_VIDEO
+                    )
+                    callback?.invoke(pkg)
+//                    }
 
                     mediaCodec.releaseOutputBuffer(outIndex, false)
                     outIndex = mediaCodec.dequeueOutputBuffer(bufferInfo, 1_000)
@@ -123,12 +156,10 @@ class LiveStreamDecoder(
         } catch (e: InterruptedException) {
 
         }
-
     }
 
     private fun computePresentationTime(frameIndex: Long): Long {
         return 132 + frameIndex * 1000000 / 15
     }
-
 
 }

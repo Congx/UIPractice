@@ -21,6 +21,7 @@ import android.util.SparseIntArray
 import android.view.Surface
 import android.view.TextureView.SurfaceTextureListener
 import androidx.core.app.ActivityCompat
+import com.xc.ffplayer.live.Releaseable
 import com.xc.ffplayer.utils.CameraUtil
 import com.xc.ffplayer.utils.ImageUtil
 import com.xc.ffplayer.utils.YuvUtils
@@ -37,7 +38,7 @@ open class Camera2Provider(
     private val context: Activity,
     private var width: Int = 0,
     private var height: Int = 0
-) {
+) :Releaseable{
 
     companion object {
 
@@ -99,12 +100,12 @@ open class Camera2Provider(
         cameraDevice.close()
     }
 
-    fun release() {
+    override fun release() {
         closeCamera()
         handler.looper.quit()
     }
 
-    fun startPreview(textureView: AutoFitTextureView) {
+    fun inintPreview(textureView: AutoFitTextureView) {
         this.textureView = textureView
         textureView.surfaceTextureListener = object : SurfaceTextureListener {
             override fun onSurfaceTextureAvailable(
@@ -164,7 +165,7 @@ open class Camera2Provider(
                     // 获取配置信息
                     map = cameraCharacteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP)
                     var flashUseable = cameraCharacteristics.get(CameraCharacteristics.FLASH_INFO_AVAILABLE)
-                    Log.d(TAG, "flashUseable: $flashUseable")
+//                    Log.e(TAG, "flashUseable: $flashUseable")
                     break
                 } else if (integer != null && integer == CameraCharacteristics.LENS_FACING_FRONT) {
                     frontCameraId = id
@@ -186,7 +187,7 @@ open class Camera2Provider(
                 surfaceTexture.setDefaultBufferSize(previewSize!!.width, previewSize!!.height)
                 surface = Surface(surfaceTexture)
 
-                Log.d(TAG, "屏幕预览尺寸 ： width = ${width}, height = ${height}")
+//                Log.d(TAG, "要求尺寸 ： width = ${width}, height = ${height}")
                 Log.d(TAG, "预览尺寸 ： width = ${previewSize!!.width}, height = ${previewSize!!.height}")
             }
             // 获取输出拍照保存的图片的尺寸
@@ -211,7 +212,8 @@ open class Camera2Provider(
             if (map.isOutputSupportedFor(ImageFormat.YUV_420_888)) {
                 val outputSizes = map.getOutputSizes(ImageFormat.YUV_420_888)
                 streamSize = CameraUtil.getPerfectSize(outputSizes, width, height)
-                Log.d(TAG, "流尺寸 ： width = ${width}, height = ${height}")
+                Log.e(TAG, "设定流尺寸 ： width = ${width}, height = ${height}")
+                Log.e(TAG, "实际流尺寸 ： width = ${streamSize!!.width}, height = ${streamSize!!.height}")
                 streamSize?.let {
                     cameraPreviewCallback?.streamSize(streamSize!!.width,streamSize!!.height)
                     streamImageReader = ImageReader.newInstance(
@@ -319,7 +321,7 @@ open class Camera2Provider(
 
         val image = streamImageReader?.acquireNextImage()
         if (image != null) {
-//            Log.d(TAG, "yuv ： width = ${image.width}, height = ${image.height}")
+//            Log.d(TAG, "yuv 得到的流尺寸： width = ${image.width}, height = ${image.height}")
 //            val size = (image.width * image.height) * 3 / 2
 //            var buffer = ByteArray(size)
             ImageUtil.getBytesFromImageAsType(
@@ -487,18 +489,22 @@ open class Camera2Provider(
     /**
      * 推流
      */
-    fun startPushStream() {
+    fun startStream() {
         val requestBuilder = cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW)
         requestBuilder.addTarget(surface!!)
         requestBuilder.addTarget(streamImageReader!!.surface)
         val request = requestBuilder.build()
+        requestBuilder.set(
+            CaptureRequest.STATISTICS_FACE_DETECT_MODE,
+            CameraCharacteristics.STATISTICS_FACE_DETECT_MODE_SIMPLE
+        )
         cameraCaptureSession.setRepeatingRequest(request, requestSateCallback, handler)
     }
 
     /**
-     * 停止推流
+     * 停止流
      */
-    fun stopPushStream() {
+    fun stopStream() {
         startPreview()
     }
 

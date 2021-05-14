@@ -839,8 +839,7 @@ public final class ImageUtil {
         }
     }
 
-    public static byte[] rotateYUV420SP(byte[] src, int width, int height) {
-        byte[] dst = new byte[src.length];
+    public static void rotateYUV420SP(byte[] src, byte[] dst,int width, int height) {
         int wh = width * height;
         //旋转Y
         int k = 0;
@@ -862,7 +861,6 @@ public final class ImageUtil {
                 k++;
             }
         }
-        return dst;
     }
 
 

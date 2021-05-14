@@ -326,16 +326,16 @@ open class Camera2Provider(
 //            var buffer = ByteArray(size)
             ImageUtil.getBytesFromImageAsType(
                 image,
-                ImageUtil.YUV420SPNV21,
+                ImageUtil.YUV420SPNV12, // 在视频解码端只能支持 nv12,包括mediaCodec、x264
                 buffer
             )
-//            val rotateYUV420SP = ImageUtil.rotateYUV420SP(buffer, image.height, image.width)
-            YuvUtils.portraitNV21Data2Raw(
-                buffer,
-                yuv,
-                image.width,
-                image.height
-            )
+            ImageUtil.rotateYUV420SP(buffer, yuv,image.width, image.height)
+//            YuvUtils.portraitNV21Data2Raw(
+//                buffer,
+//                yuv,
+//                image.width,
+//                image.height
+//            )
             streamByteCallback?.invoke(yuv)
 
 //            saveImg(image)

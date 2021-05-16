@@ -25,10 +25,10 @@ set_target_properties(
         ${CMAKE_SOURCE_DIR}/${JNI_LIBS_DIR}/${CMAKE_ANDROID_ARCH_ABI}/libx264.a
 )
 
+
 add_library( x264
              SHARED
-            ${SRC_LIST}
-            h264-lib.cpp)
+            ${SRC_LIST})
 
 
 find_library(log-lib log)

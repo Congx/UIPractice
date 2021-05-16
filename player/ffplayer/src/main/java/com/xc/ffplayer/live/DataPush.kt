@@ -17,7 +17,7 @@ open class DataPush(var countDownLatch: CountDownLatch) : Runnable,Releaseable {
     fun addData(bytes: ByteArray, timeStamp: Long,type:Int) {
         if (!connected) return
         if (!queue.offer(RTMPPackage(bytes,timeStamp,type))) {
-            queue.pollLast()
+            queue.clear()
         }
     }
 

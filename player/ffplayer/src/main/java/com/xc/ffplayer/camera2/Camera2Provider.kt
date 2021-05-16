@@ -19,12 +19,12 @@ import android.util.Log
 import android.util.Size
 import android.util.SparseIntArray
 import android.view.Surface
+import android.view.TextureView
 import android.view.TextureView.SurfaceTextureListener
 import androidx.core.app.ActivityCompat
 import com.xc.ffplayer.live.Releaseable
 import com.xc.ffplayer.utils.CameraUtil
 import com.xc.ffplayer.utils.ImageUtil
-import com.xc.ffplayer.utils.YuvUtils
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -60,7 +60,7 @@ open class Camera2Provider(
 
     private lateinit var cameraDevice: CameraDevice
     private val handler: Handler
-    private var textureView: AutoFitTextureView? = null
+    private var textureView: TextureView? = null
     private var backCameraId: String? = null
     private var frontCameraId: String? = null
     private var previewSize: Size? = null
@@ -105,7 +105,7 @@ open class Camera2Provider(
         handler.looper.quit()
     }
 
-    fun inintPreview(textureView: AutoFitTextureView) {
+    fun inintPreview(textureView: TextureView) {
         this.textureView = textureView
         textureView.surfaceTextureListener = object : SurfaceTextureListener {
             override fun onSurfaceTextureAvailable(
@@ -123,7 +123,7 @@ open class Camera2Provider(
                 width: Int,
                 height: Int
             ) {
-                configureTransform(width, height)
+                configureTransform(textureView, width, height)
 
             }
 
@@ -231,7 +231,7 @@ open class Camera2Provider(
 
             cameraPreviewCallback?.previewSize(previewSize!!.width, previewSize!!.height)
 
-            configureTransform(previewSize!!.height, previewSize!!.width)
+            configureTransform(textureView,previewSize!!.height, previewSize!!.width)
 
             sendOpenMsg()
 
@@ -326,16 +326,16 @@ open class Camera2Provider(
 //            var buffer = ByteArray(size)
             ImageUtil.getBytesFromImageAsType(
                 image,
-                ImageUtil.YUV420SPNV21,
+                ImageUtil.YUV420SPNV12, // 在视频解码端只能支持 nv12,包括mediaCodec、x264
                 buffer
             )
-//            val rotateYUV420SP = ImageUtil.rotateYUV420SP(buffer, image.height, image.width)
-            YuvUtils.portraitNV21Data2Raw(
-                buffer,
-                yuv,
-                image.width,
-                image.height
-            )
+            ImageUtil.rotateYUV420SP(buffer, yuv,image.width, image.height)
+//            YuvUtils.portraitNV21Data2Raw(
+//                buffer,
+//                yuv,
+//                image.width,
+//                image.height
+//            )
             streamByteCallback?.invoke(yuv)
 
 //            saveImg(image)
@@ -600,7 +600,11 @@ open class Camera2Provider(
 //        textureView!!.setTransform(matrix)
 //    }
 
-    private fun configureTransform(viewWidth: Int, viewHeight: Int) {
+    private fun configureTransform(
+        textureView: TextureView?,
+        viewWidth: Int,
+        viewHeight: Int
+    ) {
         if (null == previewSize) {
             return
         }

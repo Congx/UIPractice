@@ -1,11 +1,12 @@
 package com.xc.ffplayer.live
 
-import android.app.Activity
 import android.util.Log
-import com.xc.ffplayer.camera2.*
+import android.view.TextureView
+import androidx.camera.view.PreviewView
+import androidx.fragment.app.FragmentActivity
 import java.util.concurrent.CountDownLatch
 
-open class Live(var context: Activity):Releaseable {
+open class Live(var context: FragmentActivity):Releaseable {
 
     private lateinit var url: String
     private var TAG = "CameraLive"
@@ -24,8 +25,12 @@ open class Live(var context: Activity):Releaseable {
         AudioLive(context,dataPush,countDownLatch)
     }
 
-    fun initPreview(autoFitTextureView: AutoFitTextureView) {
-        videoLive.inintPreview(autoFitTextureView)
+    fun initPreview(previewView: PreviewView) {
+        videoLive.initPreview(previewView)
+    }
+
+    fun initPreview(textureView: TextureView) {
+        videoLive.initPreview(textureView)
     }
 
     fun startPush(url:String) {
@@ -33,6 +38,7 @@ open class Live(var context: Activity):Releaseable {
         this.url = url
         dataPush.startPush(url)
         audioLive.startRecode()
+        videoLive.startPush()
     }
 
     override fun stop() {

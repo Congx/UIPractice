@@ -36,6 +36,7 @@ ext {
                 "coordinatorlayout": "1.1.0-beta01",
                 "navigation"       : "2.3.0-alpha01",
                 "viewpager2"       : "1.0.0",
+                "camera2"          : "1.0.0-rc05",
                 "activitykt"       : "1.2.1"
         ]
     }
@@ -71,7 +72,12 @@ ext {
                 "lifecycle-kt"     : "androidx.lifecycle:lifecycle-viewmodel-ktx:${rootProject.ext.libVersion.androidx.lifecycle}",
                 "activity-kt"      : "androidx.activity:activity-ktx:${rootProject.ext.libVersion.androidx.activitykt}",
                 "livedata-kt"      : "androidx.lifecycle:lifecycle-livedata-ktx:${rootProject.ext.libVersion.androidx.lifecycle}",
-                "lifecycle-runtime": "androidx.lifecycle:lifecycle-runtime-ktx:${rootProject.ext.libVersion.androidx.lifecycle}"
+                "lifecycle-runtime": "androidx.lifecycle:lifecycle-runtime-ktx:${rootProject.ext.libVersion.androidx.lifecycle}",
+                "camera-core"      : "androidx.camera:camera-core:${rootProject.ext.libVersion.androidx.camera2}",
+                "camera-camera2"   : "androidx.camera:camera-camera2:${rootProject.ext.libVersion.androidx.camera2}",
+                "camera-lifecycle" : "androidx.camera:camera-lifecycle:${rootProject.ext.libVersion.androidx.camera2}",
+                "camera-view"      : "androidx.camera:camera-view:1.0.0-alpha24",
+                "camera-extensions": "androidx.camera:camera-extensions:1.0.0-alpha24"
         ]
 
         net = [

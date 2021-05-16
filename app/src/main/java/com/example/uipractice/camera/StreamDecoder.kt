@@ -1,22 +1,21 @@
-package com.xc.ffplayer.camera2
+package com.example.uipractice.camera
 
 import android.media.MediaCodec
 import android.media.MediaCodecInfo
 import android.media.MediaFormat
 import android.util.Log
 import android.view.Surface
-import com.xc.ffplayer.Decoder
-import com.xc.ffplayer.MyApplication
-import okhttp3.Interceptor
+import com.base.context.ApplicationContextProvider
+import com.base.context.ContextProvider
+import com.example.uipractice.MyApp
 import java.io.File
-import java.lang.Exception
 import java.util.concurrent.ArrayBlockingQueue
 
 class StreamDecoder(
     var width: Int,
     var height: Int,
     var callback: ((byteArray: ByteArray) -> Unit)? = null
-) : Decoder, Runnable {
+) :  Runnable {
 
     var TAG = "StreamDecoder"
 
@@ -26,7 +25,7 @@ class StreamDecoder(
     private lateinit var mediaCodec: MediaCodec
     var thread: Thread? = null
 
-    override fun prepare() {
+    fun prepare() {
         mediaCodec = MediaCodec.createEncoderByType(MediaFormat.MIMETYPE_VIDEO_AVC)
         Log.d(TAG,"width = $width,height = $height")
         var format = MediaFormat.createVideoFormat(MediaFormat.MIMETYPE_VIDEO_AVC, width, height)
@@ -42,18 +41,11 @@ class StreamDecoder(
         thread?.start()
     }
 
-    override fun decode(surface: Surface?) {
-
-    }
-
-    override fun decode() {
-    }
-
-    override fun decode(byteArray: ByteArray) {
+    fun decode(byteArray: ByteArray) {
         array.offer(byteArray)
     }
 
-    override fun stop() {
+    fun stop() {
         start = false
         if (this::mediaCodec.isInitialized) mediaCodec?.stop()
         thread?.interrupt()
@@ -89,7 +81,7 @@ class StreamDecoder(
 
                     if (callback == null) {
                         var path =
-                            MyApplication.application.getExternalFilesDir("video")?.absolutePath + File.separator + "input.h265"
+                            ContextProvider.getContext()?.getExternalFilesDir("output")?.absolutePath + File.separator + "output.h264"
                         val file = File(path)
                         file.appendBytes(inputBuffer)
                     } else {

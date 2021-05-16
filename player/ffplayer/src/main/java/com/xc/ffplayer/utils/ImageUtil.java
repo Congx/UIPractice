@@ -7,6 +7,8 @@ import android.graphics.Rect;
 import android.media.Image;
 import android.util.Log;
 
+import androidx.camera.core.ImageProxy;
+
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -839,8 +841,7 @@ public final class ImageUtil {
         }
     }
 
-    public static byte[] rotateYUV420SP(byte[] src, int width, int height) {
-        byte[] dst = new byte[src.length];
+    public static void rotateYUV420SP(byte[] src, byte[] dst,int width, int height) {
         int wh = width * height;
         //旋转Y
         int k = 0;
@@ -862,9 +863,19 @@ public final class ImageUtil {
                 k++;
             }
         }
-        return dst;
     }
 
+
+    public static void yuvArr2NV12(ImageProxy imageProxy, byte[] nv12) {
+        int width = imageProxy.getWidth();
+        int height = imageProxy.getHeight();
+        long size = (width * height) * 3 / 2; // 图片的总大小
+
+
+        Image image = imageProxy.getImage();
+        ImageProxy.PlaneProxy[] planes = imageProxy.getPlanes();
+        // 拷贝y 通道数据
+    }
 
 
 }

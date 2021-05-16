@@ -41,7 +41,7 @@ class VideoStreamEncoder(
         var format = MediaFormat.createVideoFormat(MediaFormat.MIMETYPE_VIDEO_AVC, width, height)
         format.setInteger(
             MediaFormat.KEY_COLOR_FORMAT,
-            MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Flexible
+            MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Flexible // nv12
         )
         format.setInteger(MediaFormat.KEY_BIT_RATE, width * height)
         format.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, 2)

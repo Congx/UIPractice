@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.autofocus" />
@@ -21,7 +22,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".image.GlideActivity"></activity>
+        <activity android:name=".camera.CameraXActivity"></activity>
+        <activity android:name=".image.GlideActivity" />
         <activity android:name=".plugin.PluginTestActivity" /> <!-- <activity android:name=".plugin.PluginActivity"></activity> -->
         <activity android:name=".recyclerview.layoutmanger.LayoutManagerActivity" />
         <activity android:name=".ndk.NDKActivity" />
@@ -36,8 +38,9 @@
         <activity android:name=".anim.AnimTestActivity" />
         <activity android:name=".anim.AnimListActivity" />
         <activity android:name=".camera.CameraActivity" />
-        <activity android:name=".camera.Camera2Activity"
-            android:configChanges="orientation|screenSize"/>
+        <activity
+            android:name=".camera.Camera2Activity"
+            android:configChanges="orientation|screenSize" />
         <activity android:name=".fragment.FragmentLiveActivity" />
         <activity android:name=".fragment.FragmentLifecyclerActivity" />
         <activity android:name=".fragment.FragmentViewpager2Activity" />
@@ -89,7 +92,7 @@
 
         <activity android:name=".plugin.StubActivity" />
 
-        <service android:name=".plugin.service.ProxyService"></service>
+        <service android:name=".plugin.service.ProxyService" />
     </application>
 
 </manifest>

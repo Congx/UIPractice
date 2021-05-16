@@ -555,6 +555,30 @@ public final class ImageUtil {
         }
     }
 
+    public static void rotateYUV420SP(byte[] src, byte[] dst,int width, int height) {
+        int wh = width * height;
+        //旋转Y
+        int k = 0;
+        for (int i = 0; i < width; i++) {
+            for (int j = height - 1; j >= 0; j--) {
+                dst[k] = src[width * j + i];
+                k++;
+            }
+        }
+
+        int halfWidth = width / 2;
+        int halfHeight = height / 2;
+        for (int colIndex = 0; colIndex < halfWidth; colIndex++) {
+            for (int rowIndex = halfHeight - 1; rowIndex >= 0; rowIndex--) {
+                int index = (halfWidth * rowIndex + colIndex) * 2;
+                dst[k] = src[wh + index];
+                k++;
+                dst[k] = src[wh + index + 1];
+                k++;
+            }
+        }
+    }
+
     //bitmap
     @SuppressWarnings("unused")
     public static Bitmap getOriBitmap(byte[] jpgArray){

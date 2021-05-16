@@ -35,7 +35,7 @@ public class MyApp extends Application {
 
         try{
 //            HookHelper.hookInstrumentation(this);
-            HookHelper.hookAMS();
+//            HookHelper.hookAMS();
         }catch (Exception e) {
             e.printStackTrace();
             Log.e("MyApp",e.getMessage());

@@ -21,12 +21,12 @@ import android.util.Log
 import android.util.Size
 import android.util.SparseIntArray
 import android.view.Surface
+import android.view.TextureView
 import android.view.TextureView.SurfaceTextureListener
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import java.io.ByteArrayOutputStream
 import java.io.File
-import java.nio.ByteBuffer
 import java.util.concurrent.Executors
 
 /**
@@ -53,7 +53,7 @@ internal class Camera2Provider(private val context: Activity) {
 
     private lateinit var cameraDevice: CameraDevice
     private val handler: Handler
-    private var textureView: AutoFitTextureView? = null
+    private var textureView: TextureView? = null
     private var backCameraId: String? = null
     private var frontCameraId: String? = null
     private var previewSize: Size? = null
@@ -94,7 +94,7 @@ internal class Camera2Provider(private val context: Activity) {
         handler.looper.quit()
     }
 
-    fun initTexture(textureView: AutoFitTextureView) {
+    fun initTexture(textureView: TextureView) {
         this.textureView = textureView
         textureView.surfaceTextureListener = object : SurfaceTextureListener {
             override fun onSurfaceTextureAvailable(surface: SurfaceTexture, width: Int, height: Int) {
@@ -102,7 +102,7 @@ internal class Camera2Provider(private val context: Activity) {
             }
 
             override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture, width: Int, height: Int) {
-                configureTransform(width, height)
+                configureTransform(textureView, width, height)
 
             }
 
@@ -180,7 +180,7 @@ internal class Camera2Provider(private val context: Activity) {
                 streamImageReader?.setOnImageAvailableListener(streamImageAvailableListener, handler)
             }
 
-            configureTransform(previewSize!!.width, previewSize!!.height)
+            configureTransform(textureView,previewSize!!.width, previewSize!!.height)
             sendOpenMsg()
 
         } catch (e: CameraAccessException) {
@@ -458,11 +458,15 @@ internal class Camera2Provider(private val context: Activity) {
 //        textureView!!.setTransform(matrix)
 //    }
 
-    private fun configureTransform(viewWidth: Int, viewHeight: Int) {
+    fun configureTransform(
+        textureView : TextureView?,
+        viewWidth: Int,
+        viewHeight: Int,
+    ) {
         if (null == previewSize ) {
             return
         }
-        val rotation = context.windowManager.defaultDisplay.rotation
+        val rotation = textureView?.display?.rotation
         val matrix = Matrix()
         val viewRect = RectF(0f, 0f, viewWidth.toFloat(), viewHeight.toFloat())
         val bufferRect = RectF(0f, 0f, previewSize!!.height.toFloat(), previewSize!!.width.toFloat())

@@ -26,7 +26,7 @@ class LivePushActivity : AppCompatActivity() {
             ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.RECORD_AUDIO,Manifest.permission.CAMERA),100)
         }
 
-        live.initPreview(textureView)
+        live.initPreview(view_finder)
 
         btnStart.setOnClickListener {
             live.startPush("rtmp://192.168.1.2:1935/xucong/room")

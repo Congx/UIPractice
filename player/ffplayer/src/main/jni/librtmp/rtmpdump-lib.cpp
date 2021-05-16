@@ -341,7 +341,7 @@ Java_com_xc_ffplayer_live_DataPush_sendData(JNIEnv *env, jobject thiz, jbyteArra
             break;
         case RTMP_PKG_AUDIO:
         case RTMP_PKG_AUDIO_HEAD:
-            LOGI("rtmp send audio packet");
+//            LOGI("rtmp send audio packet");
             sendAudio(data, size, time_stamp,type);
             break;
     }

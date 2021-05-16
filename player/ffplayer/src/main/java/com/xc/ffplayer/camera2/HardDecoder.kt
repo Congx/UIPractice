@@ -46,6 +46,10 @@ class HardDecoder(var path: String) : Decoder, Runnable {
 
     }
 
+    override fun release() {
+
+    }
+
     fun prepare(surface: Surface?): Boolean {
 
         var trackFormat: MediaFormat? = null

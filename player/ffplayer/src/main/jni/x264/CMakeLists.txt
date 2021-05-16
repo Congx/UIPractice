@@ -8,31 +8,26 @@ AUX_SOURCE_DIRECTORY(. SRC_LIST)
 
 include_directories(../log include)
 
-set(JNI_LIBS_DIR src/main/jniLibs)
-
 add_library(
-        h264
+        x264lib
         STATIC
         IMPORTED
 )
 
-#set(path ${CMAKE_SOURCE_DIR}/${JNI_LIBS_DIR}/${CMAKE_ANDROID_ARCH_ABI}/libx264.so)
-#message("path = ${path}")
-
 set_target_properties(
-        h264
+        x264lib
         PROPERTIES IMPORTED_LOCATION
-        ${CMAKE_SOURCE_DIR}/${JNI_LIBS_DIR}/${CMAKE_ANDROID_ARCH_ABI}/libx264.a
+        ${CMAKE_SOURCE_DIR}/../jniLibs/${CMAKE_ANDROID_ARCH_ABI}/libx264.a
 )
 
 
-add_library( x264
-             SHARED
+add_library(x264
+            STATIC
             ${SRC_LIST})
 
 
 find_library(log-lib log)
 
 target_link_libraries( x264
-#                        h264
+#                        x264lib
                        ${log-lib} )

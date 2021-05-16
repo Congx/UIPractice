@@ -59,6 +59,10 @@ class StreamDecoder(
         thread?.interrupt()
     }
 
+    override fun release() {
+
+    }
+
     override fun run() {
         mediaCodec.start()
         try {

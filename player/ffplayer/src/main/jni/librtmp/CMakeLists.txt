@@ -11,8 +11,7 @@ include_directories(../log)
 
 add_library( rtmpdump
              SHARED
-            ${SRC_LIST}
-            rtmpdump-lib.cpp)
+            ${SRC_LIST})
 
 
 find_library(log-lib log)

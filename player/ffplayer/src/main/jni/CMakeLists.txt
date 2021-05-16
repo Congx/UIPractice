@@ -5,15 +5,31 @@
 
 cmake_minimum_required(VERSION 3.4.1)
 
-add_subdirectory(librtmp)
-add_subdirectory(x264)
+include_directories(./log librtmp ./x264/include)
 
-add_library( native-lib
+add_subdirectory(librtmp)
+#add_subdirectory(x264)
+
+add_library( ffplayer
              SHARED
              native-lib.cpp)
+
+add_library(
+        x264
+        STATIC
+        IMPORTED
+)
+
+set_target_properties(
+        x264
+        PROPERTIES IMPORTED_LOCATION
+        ${CMAKE_SOURCE_DIR}/../jniLibs/${CMAKE_ANDROID_ARCH_ABI}/libx264.a
+)
 
 
 find_library(log-lib log)
 
-target_link_libraries( native-lib
+target_link_libraries( ffplayer
+                        rtmpdump
+                        x264
                        ${log-lib} )

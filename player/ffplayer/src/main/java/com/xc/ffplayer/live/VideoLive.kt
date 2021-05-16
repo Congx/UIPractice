@@ -6,10 +6,12 @@ import android.util.Size
 import android.view.TextureView
 import androidx.camera.view.PreviewView
 import androidx.fragment.app.FragmentActivity
+import com.xc.ffplayer.Decoder
 import com.xc.ffplayer.camera2.AutoFitTextureView
 import com.xc.ffplayer.camera2.Camera2Provider
 import com.xc.ffplayer.camera2.CameraPreviewCallback
 import com.xc.ffplayer.camera2.VideoStreamEncoder
+import java.lang.Exception
 import java.util.concurrent.CountDownLatch
 
 open class VideoLive(
@@ -20,7 +22,8 @@ open class VideoLive(
 
     private var TAG = "VideoLive"
 
-    lateinit var encoder: VideoStreamEncoder
+    var encoder: Decoder? = null
+    var isHardDecoder = true // 硬编、软编
 
 //    private val camera2Provider: Camera2Provider by lazy {
 ////        val height = 1280
@@ -52,12 +55,33 @@ open class VideoLive(
             }
 
             override fun onStreamSize(size: Size) {
-                encoder = VideoStreamEncoder(size.width,size.height,decodeCallback,countDownLatch)
-                encoder.prepare()
+//                try {
+//                    encoder = VideoStreamEncoder(size.width,size.height,decodeCallback,countDownLatch)
+//                    encoder.prepare()
+//                    isHardDecoder = true
+//                }catch ( e: Exception) {
+//                    Log.e(TAG,"不支持硬编")
+//                    isHardDecoder = false
+//                }
+                if (!isHardDecoder) {
+                    // 初始化x264解码器
+//                    dataPush?.
+                }else {
+                    encoder = VideoStreamEncoder(size.width,size.height,decodeCallback,countDownLatch)
+                    encoder?.prepare()
+                }
+
             }
 
             override fun onStreamPreperaed(byteArray: ByteArray, len: Int) {
-                encoder.decode(byteArray)
+                if (isHardDecoder) {
+                    // 硬解码
+                    encoder?.decode(byteArray)
+                }else {
+                    // 软解
+//                    dataPush
+                }
+
             }
 
         }
@@ -117,12 +141,12 @@ open class VideoLive(
     override fun stop() {
 //        stopStream()
         liveStream.stopPush()
-        encoder.stop()
+        encoder?.stop()
     }
 
     override fun release() {
         liveStream.stopPush()
-        encoder.release()
+        encoder?.release()
     }
 
 }

@@ -11,7 +11,7 @@ import java.util.concurrent.CountDownLatch
  * pcm to aac
  */
 class AudioStreamEncoder(var callback: ((packate:RTMPPackage) -> Unit)? = null,var countDownLatch: CountDownLatch):
-    Decoder,Releaseable,Runnable{
+    Decoder,Runnable{
 
     var TAG = "AudioStreamDecoder"
 

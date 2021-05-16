@@ -21,7 +21,7 @@ class VideoStreamEncoder(
     var height: Int,
     var callback: ((packate: RTMPPackage) -> Unit)? = null,
     var countDownLatch: CountDownLatch
-) : Decoder, Runnable , Releaseable{
+) : Decoder, Runnable{
 
     private var TAG = "LiveStreamDecoder"
 

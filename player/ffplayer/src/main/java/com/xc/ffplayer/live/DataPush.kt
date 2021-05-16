@@ -82,7 +82,7 @@ open class DataPush(var countDownLatch: CountDownLatch) : Runnable,Releaseable {
     companion object {
 
         init {
-            System.loadLibrary("rtmpdump")
+            System.loadLibrary("ffplayer")
         }
     }
 }

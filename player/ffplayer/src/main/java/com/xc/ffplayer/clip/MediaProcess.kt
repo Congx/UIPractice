@@ -25,7 +25,7 @@ class MediaProcess {
 
             val videoTrackFormat1 = mediaExtractor1.getTrackFormat(videoTrackIndex1)
             val audioTrackFormat1 = mediaExtractor1.getTrackFormat(audioTrackIndex1)
-            val duration1 = audioTrackFormat1.getLong(MediaFormat.KEY_DURATION)
+            val duration1 = videoTrackFormat1.getLong(MediaFormat.KEY_DURATION)
             val duration = audioTrackFormat1.getLong(MediaFormat.KEY_DURATION)
 
             Log.d("MediaProcess","duration1 = $duration1")

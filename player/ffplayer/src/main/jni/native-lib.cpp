@@ -216,16 +216,16 @@ RTMPPacket *createVideoPacket(Live *live) {
  */
 RTMPPacket *createVideoPacket(jbyte *data, jint size, jlong stamp) {
     // 这里注意去掉分隔符
-    data += 4;
-    size -= 4;
+//    data += 4;
+//    size -= 4;
 
-//    if (data[2] == 0x00){
-//        size -= 4;
-//        data += 4;
-//    } else if(data[2] == 0x01){
-//        size -= 3;
-//        data += 3;
-//    }
+    if (data[2] == 0x00){
+        size -= 4;
+        data += 4;
+    } else if(data[2] == 0x01){
+        size -= 3;
+        data += 3;
+    }
 
     int body_size = size + 9;
     RTMPPacket *packet = static_cast<RTMPPacket *>(malloc(sizeof(RTMPPacket)));

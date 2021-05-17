@@ -5,7 +5,7 @@
 
 cmake_minimum_required(VERSION 3.4.1)
 
-include_directories(./log librtmp ./x264/include .)
+include_directories(. ./log librtmp ./x264/include ./faac/include)
 
 aux_source_directory(. SRC_DIR)
 
@@ -17,15 +17,27 @@ add_library( ffplayer
              ${SRC_DIR})
 
 add_library(
-        x264
+        x264-lib
         STATIC
         IMPORTED
 )
 
 set_target_properties(
-        x264
+        x264-lib
         PROPERTIES IMPORTED_LOCATION
-        ${CMAKE_SOURCE_DIR}/../jniLibs/${CMAKE_ANDROID_ARCH_ABI}/libx264.a
+        ${CMAKE_SOURCE_DIR}/../libs/${CMAKE_ANDROID_ARCH_ABI}/libx264.a
+)
+
+add_library(
+        faac-lib
+        STATIC
+        IMPORTED
+)
+
+set_target_properties(
+        faac-lib
+        PROPERTIES IMPORTED_LOCATION
+        ${CMAKE_SOURCE_DIR}/../libs/${CMAKE_ANDROID_ARCH_ABI}/libfaac.a
 )
 
 
@@ -33,5 +45,6 @@ find_library(log-lib log)
 
 target_link_libraries( ffplayer
                         rtmpdump
-                        x264
+                        x264-lib
+#                        faac-lib
                        ${log-lib} )

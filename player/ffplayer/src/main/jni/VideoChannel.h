@@ -23,10 +23,10 @@ public:
     void sendFrame(int type,int len,uint8_t *data);
 
 private:
-    int width;
-    int height;
-    int fps;
-    int bitrate;
+    int mWidth;
+    int mHeight;
+    int mFps;
+    int mBitrate;
     int ySize;
     int uvSize;
     x264_t *videoCodec;

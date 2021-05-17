@@ -11,14 +11,9 @@
 #include "safe_queue.h"
 #include "VideoChannel.h"
 #include "JavaCallbackHelper.h"
+#include "utils.h"
 
 using namespace std;
-
-const int TYPE_SHEFT = 0x1f;
-const int SPS_TYPE = 7;
-const int PPS_TYPE = 8;
-const int DIR_TYPE = 5;
-const int NOIDIR_TYPE = 1;
 
 const int RTMP_PKG_VIDEO = 0; // type
 const int RTMP_PKG_AUDIO = 1;
@@ -28,9 +23,9 @@ SafeQueue<RTMPPacket *> packetQueue;
 
 typedef struct {
     RTMP *rtmp;
-    int8_t *sps = NULL;
+    uint8_t *sps = NULL;
     int16_t sps_len;
-    int8_t *pps = NULL;
+    uint8_t *pps = NULL;
     int16_t pps_len;
     bool isConnected;
 } Live;
@@ -45,19 +40,7 @@ void sendVideo(jbyte *data, jint size, jlong stamp);
 
 void prepareData(jbyte *data, jint size);
 
-bool isDIR(jbyte data) {
-    return (data & 0x1f) == DIR_TYPE;
-}
-
-bool isSPS(jbyte data) {
-    return (data & 0x1f) == SPS_TYPE;
-}
-
-bool isPPS(jbyte data) {
-    return (data & 0x1f) == PPS_TYPE;
-}
-
-int addPacket(RTMPPacket *pPacket);
+int pushPacket(RTMPPacket *pPacket);
 
 void sendAudio(jbyte *data, jint size, jlong stamp, jint type);
 
@@ -86,7 +69,7 @@ void releaseRtmpPacket(RTMPPacket * rtmpPacket) {
 void videoCallback(RTMPPacket *packet) {
     if(packet) {
         packet->m_nTimeStamp = RTMP_GetTime() - start_time;
-        addPacket(packet);
+        pushPacket(packet);
     }
 }
 
@@ -124,6 +107,7 @@ void *rtmpStart(void *arg) {
         return 0;
     }
     live->isConnected = true;
+    // 回调java
     callbackHelper->rtmpConnected();
     LOGI("rtmp RTMP_Connect success");
 
@@ -133,7 +117,7 @@ void *rtmpStart(void *arg) {
     packetQueue.setWork(1);
     int ret;
     while (live->isConnected) {
-        LOGI("rtmp take...");
+//        LOGI("rtmp take...");
         packetQueue.pop(rtmpPacket);
         if(!rtmpPacket) continue;
         rtmpPacket->m_nInfoField2 = live->rtmp->m_stream_id;
@@ -289,19 +273,23 @@ void sendVideo(jbyte *data, jint size, jlong stamp) {
     if (isDIR(data[4])) {
         LOGI("i 帧数据，发送sps、pps");
         RTMPPacket *packet = createVideoPacket(live);
-        addPacket(packet);
+        pushPacket(packet);
+//        videoChannel->sendSpsPps(live->sps,live->pps,live->sps_len,live->pps_len);
     }
 
+
     RTMPPacket *packet = createVideoPacket(data, size, stamp);
-    addPacket(packet);
+    pushPacket(packet);
+//    videoChannel->sendFrame(data, size);
 }
 
-int addPacket(RTMPPacket *pPacket) {
+int pushPacket(RTMPPacket *pPacket) {
     if (packetQueue.size() > 50) {
+        LOGI("queue 太大丢弃数据");
         packetQueue.clear();
     }
     packetQueue.push(pPacket);
-    LOGI("rtmp added...");
+//    LOGI("rtmp added...");
     return 0;
 }
 
@@ -312,8 +300,8 @@ void prepareData(jbyte *data, jint size) {
             isPPS(data[i + 4])) {
             live->sps_len = i - 4;
             live->pps_len = size - i - 4;
-            live->sps = static_cast<int8_t *>(malloc(live->sps_len));
-            live->pps = static_cast<int8_t *>(malloc(live->pps_len));
+            live->sps = static_cast<uint8_t *>(malloc(live->sps_len));
+            live->pps = static_cast<uint8_t *>(malloc(live->pps_len));
             memcpy(live->sps, data + 4, live->sps_len);
             memcpy(live->pps, data + 4 + live->sps_len + 4, live->pps_len);
 //            LOGI("rtmp sps  pps already");
@@ -347,7 +335,7 @@ RTMPPacket *createAudioPackate(jbyte *data, jint size, jlong stamp, jint type) {
 
 void sendAudio(jbyte *data, jint size, jlong stamp, jint type) {
     RTMPPacket *packet = createAudioPackate(data, size, stamp, type);
-    addPacket(packet);
+    pushPacket(packet);
 }
 
 /**
@@ -399,7 +387,6 @@ Java_com_xc_ffplayer_live_DataPush_nativeSetVideoEncodeInfo(JNIEnv *env, jobject
     if (videoChannel) {
         videoChannel->setVideoEncodeInfo(width,height,fps,bitrate);
     }
-
 }
 
 /**
@@ -407,9 +394,12 @@ Java_com_xc_ffplayer_live_DataPush_nativeSetVideoEncodeInfo(JNIEnv *env, jobject
  */
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_xc_ffplayer_live_DataPush_nativeSendNV21Data(JNIEnv *env, jobject thiz, jbyteArray nv12bytes,
+Java_com_xc_ffplayer_live_DataPush_nativeSendNV12Data(JNIEnv *env, jobject thiz, jbyteArray nv12bytes,
                                                       jint len) {
-
+    if (videoChannel) {
+        jbyte *data = env->GetByteArrayElements(nv12bytes,NULL);
+        videoChannel->encodeData(reinterpret_cast<uint8_t *>(data));
+    }
 
 }
 

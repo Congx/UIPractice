@@ -46,7 +46,7 @@
 //bool isPPS(jbyte data) {
 //    return (data & 0x1f) == PPS_TYPE;
 //}
-//int addPacket(RTMPPacket *pPacket);
+//int pushPacket(RTMPPacket *pPacket);
 //
 //void sendAudio(jbyte *data, jint size, jlong stamp, jint type);
 //
@@ -248,11 +248,11 @@
 //    if (isDIR(data[4])) {
 //        LOGI("i 帧数据，发送sps、pps");
 //        RTMPPacket *packet = createVideoPacket(live);
-//        addPacket(packet);
+//        pushPacket(packet);
 //    }
 //
 //    RTMPPacket *packet = createVideoPacket(data,size,stamp);
-//    if(addPacket(packet)) {
+//    if(pushPacket(packet)) {
 ////        LOGI("send success");
 //    }else {
 ////        LOGI("send failure");
@@ -261,7 +261,7 @@
 ////    LOGI("rtmp send video packet finish");
 //}
 //
-//int addPacket(RTMPPacket *pPacket) {
+//int pushPacket(RTMPPacket *pPacket) {
 //    int ret = 0;
 //    if (live->isConnected) {
 //        ret = RTMP_SendPacket(live->rtmp,pPacket,1);
@@ -324,7 +324,7 @@
 //
 //void sendAudio(jbyte *data, jint size, jlong stamp, jint type) {
 //    RTMPPacket *packet =  createAudioPackate(data,size,stamp,type);
-//    addPacket(packet);
+//    pushPacket(packet);
 ////    LOGI("rtmp send audio packet finish");
 //}
 //

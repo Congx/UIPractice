@@ -41,6 +41,12 @@ open class DataPush(var countDownLatch: CountDownLatch) : Runnable,Releaseable {
         }
     }
 
+    fun send2Native(NV12bytes: ByteArray, len:Int) {
+        if (isConnected) {
+            nativeSendNV12Data(NV12bytes,len)
+        }
+    }
+
     fun startPush(url: String) {
         this.url = url
         connect(url)
@@ -107,7 +113,7 @@ open class DataPush(var countDownLatch: CountDownLatch) : Runnable,Releaseable {
     private external fun nativeInit()
     private external fun sendData(bytes: ByteArray,size :Int,timeStamp: Long,type:Int)
     external fun nativeSetVideoEncodeInfo(width:Int,height:Int,fps:Int,bitrate:Int)
-    external fun nativeSendNV21Data(NV12bytes: ByteArray, len:Int)
+    private external fun nativeSendNV12Data(NV12bytes: ByteArray, len:Int)
     private external fun connect(url: String):Boolean
     private external fun nativeStop()
     private external fun nativeRelease()

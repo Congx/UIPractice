@@ -1,5 +1,6 @@
 package com.xc.ffplayer.live
 
+import android.util.Log
 import android.util.Size
 import android.view.TextureView
 import androidx.camera.view.PreviewView
@@ -17,7 +18,7 @@ open class VideoLive(
     private var TAG = "VideoLive"
 
     var encoder: Decoder? = null
-    var isHardDecoder = true // 硬编、软编
+    var isHardDecoder = false // 硬编、软编开关
 
 //    private val camera2Provider: Camera2Provider by lazy {
 ////        val height = 1280
@@ -60,13 +61,14 @@ open class VideoLive(
 //                    Log.e(TAG,"不支持硬编")
 //                    isHardDecoder = false
 //                }
-                if (!isHardDecoder) {
-                    // 初始化x264解码器
-                    dataPush.nativeSetVideoEncodeInfo(size.width,size.height,15,size.width * size.height)
-                }else {
-//                    Log.e(TAG,"onStreamSize 软解---------${size.width},${size.height}")
+                if (isHardDecoder) {
                     encoder = VideoStreamEncoder(size.width,size.height,decodeCallback,countDownLatch)
                     encoder?.prepare()
+
+                }else {
+                    Log.e(TAG,"onStreamSize 软解---------${size.width},${size.height}")
+                    // 初始化x264解码器
+                    dataPush.nativeSetVideoEncodeInfo(size.width,size.height,15,size.width * size.height)
                 }
 
             }
@@ -78,7 +80,8 @@ open class VideoLive(
                     encoder?.decode(byteArray)
                 }else {
                     // 软解
-                    dataPush.nativeSendNV21Data(byteArray,byteArray.size)
+                    Log.e(TAG,"onStreamPreperaed 软解 发送数据到native")
+                    dataPush.send2Native(byteArray,byteArray.size)
                 }
 
             }

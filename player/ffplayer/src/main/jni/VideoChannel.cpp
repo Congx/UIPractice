@@ -87,48 +87,102 @@ void VideoChannel::setVideoCallback(VideoChannel::VideoCallback videoCallback) {
  */
 void VideoChannel::encodeData(uint8_t *data) {
 //    LOGI("encodeData...");
-    memcpy(pic_in->img.plane[0],data,ySize);
-    for (int i = 0; i < uvSize; i++) {
-        // u
-        *(pic_in->img.plane[1] + i) = *(data + ySize + i*2+1);
-        // v
-        *(pic_in->img.plane[2] + i) = *(data + ySize + i*2);
+//    memcpy(pic_in->img.plane[0],data,ySize);
+//    for (int i = 0; i < uvSize; i++) {
+//        // u
+//        *(pic_in->img.plane[1] + i) = *(data + ySize + i*2+1);
+//        // v
+//        *(pic_in->img.plane[2] + i) = *(data + ySize + i*2);
+//    }
+//
+//    // 编码nal 的个数 一般都是1
+//    int pi_nal;
+//    // 编码出的h264的数据
+//    x264_nal_t *pp_nals;
+//    // 编码出参，编码之后的数据存放
+//    x264_picture_t pic_out;
+//    // 编码
+//    x264_encoder_encode(videoCodec,&pp_nals,&pi_nal,pic_in,&pic_out);
+//
+//    uint8_t sps[100];
+//    uint8_t pps[100];
+//
+//    int sps_len,pps_len;
+//    if (pi_nal > 0) {
+//        for (int i = 0; i < pi_nal; ++i) {
+//            if (pp_nals[i].i_type == NAL_SPS) {
+//                LOGI("解码 sps");
+//                sps_len = pp_nals[i].i_payload - 4;
+//                memcpy(sps,pp_nals[i].p_payload + 4,sps_len);
+//                LOGI("解码完 sps");
+//            }else if(pp_nals[i].i_type == NAL_PPS) {
+//                LOGI("解码 pps");
+//                pps_len = pp_nals[i].i_payload - 4;
+//                memcpy(pps,pp_nals[i].p_payload+4,pps_len);
+//                LOGI("解码完 pps");
+//                sendSpsPps(sps,pps,sps_len,pps_len);
+//            } else {
+//                LOGI("解码完 帧");
+//                sendFrame(pp_nals[i].i_type,pp_nals[i].i_payload,pp_nals[i].p_payload);
+//            }
+//        }
+//
+//
+//    }
+
+//    容器   y的数据
+    memcpy(pic_in->img.plane[0], data, ySize);
+    for (int i = 0; i < uvSize; ++i) {
+        //v数据
+        *(pic_in->img.plane[2] + i) = *(data + ySize + i * 2);
+        //间隔1个字节取一个数据
+        //u数据
+        *(pic_in->img.plane[1] + i) = *(data + ySize + i * 2+1 );
     }
+//编码成H264码流
 
-    // 编码nal 的个数 一般都是1
+    //编码出了几个 nalu （暂时理解为帧）  1   pi_nal  1  永远是1
     int pi_nal;
-    // 编码出的h264的数据
+//     编码出了几帧
+    //编码出的数据 H264
     x264_nal_t *pp_nals;
-    // 编码出参，编码之后的数据存放
+//    pp_nal[]
+//编码出的参数  BufferInfo
     x264_picture_t pic_out;
-    // 编码
-    x264_encoder_encode(videoCodec,&pp_nals,&pi_nal,pic_in,&pic_out);
-
+//关键的一句话   yuv  数据 转化 H  sendPacket
+    x264_encoder_encode(videoCodec, &pp_nals, &pi_nal, pic_in, &pic_out);
+    LOGE("videoCodec value  %d",videoCodec);
+//sps数据   30
     uint8_t sps[100];
     uint8_t pps[100];
 
-    int sps_len,pps_len;
+
+    int sps_len, pps_len;
+    LOGE("编码出的帧数  %d",pi_nal);
     if (pi_nal > 0) {
         for (int i = 0; i < pi_nal; ++i) {
+            LOGE("输出索引:  %d  输出长度 %d",i,pi_nal);
+//                javaCallHelper->postH264(reinterpret_cast<char *>(pp_nals[i].p_payload), pp_nals[i].i_payload);
             if (pp_nals[i].i_type == NAL_SPS) {
-                LOGI("解码 sps");
+//        sps    发送  1   一起发送
                 sps_len = pp_nals[i].i_payload - 4;
-                memcpy(sps,pp_nals[i].p_payload + 4,sps_len);
-                LOGI("解码完 sps");
-            }else if(pp_nals[i].i_type == NAL_PPS) {
-                LOGI("解码 pps");
+                memcpy(sps, pp_nals[i].p_payload + 4, sps_len);
+            }  else if (pp_nals[i].i_type == NAL_PPS) {
+//        到了pps   需要 1  不需要 2
                 pps_len = pp_nals[i].i_payload - 4;
-                memcpy(pps,pp_nals[i].p_payload+4,pps_len);
-                LOGI("解码完 pps");
-                sendSpsPps(sps,pps,sps_len,pps_len);
-            } else {
-                LOGI("解码完 帧");
+                memcpy(pps, pp_nals[i].p_payload + 4, pps_len);
+//                发送出去
+                sendSpsPps(sps, pps, sps_len, pps_len);
+            } else{
+                //关键帧、非关键帧
                 sendFrame(pp_nals[i].i_type,pp_nals[i].i_payload,pp_nals[i].p_payload);
             }
         }
-
-
     }
+    LOGE("pi_nal  %d",pi_nal);
+//pp_nal  输出来
+//    H264码流
+    return;
 
 }
 

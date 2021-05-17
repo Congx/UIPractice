@@ -1,17 +1,11 @@
 package com.xc.ffplayer.live
 
-import android.app.Activity
-import android.util.Log
 import android.util.Size
 import android.view.TextureView
 import androidx.camera.view.PreviewView
 import androidx.fragment.app.FragmentActivity
 import com.xc.ffplayer.Decoder
-import com.xc.ffplayer.camera2.AutoFitTextureView
-import com.xc.ffplayer.camera2.Camera2Provider
-import com.xc.ffplayer.camera2.CameraPreviewCallback
 import com.xc.ffplayer.camera2.VideoStreamEncoder
-import java.lang.Exception
 import java.util.concurrent.CountDownLatch
 
 open class VideoLive(
@@ -54,6 +48,9 @@ open class VideoLive(
 
             }
 
+            /**
+             * 在这里初始化解码器等操作
+             */
             override fun onStreamSize(size: Size) {
 //                try {
 //                    encoder = VideoStreamEncoder(size.width,size.height,decodeCallback,countDownLatch)
@@ -65,8 +62,9 @@ open class VideoLive(
 //                }
                 if (!isHardDecoder) {
                     // 初始化x264解码器
-//                    dataPush?.
+                    dataPush.nativeSetVideoEncodeInfo(size.width,size.height,15,size.width * size.height)
                 }else {
+//                    Log.e(TAG,"onStreamSize 软解---------${size.width},${size.height}")
                     encoder = VideoStreamEncoder(size.width,size.height,decodeCallback,countDownLatch)
                     encoder?.prepare()
                 }
@@ -76,10 +74,11 @@ open class VideoLive(
             override fun onStreamPreperaed(byteArray: ByteArray, len: Int) {
                 if (isHardDecoder) {
                     // 硬解码
+//                    Log.e(TAG,"onStreamPreperaed---------硬解流")
                     encoder?.decode(byteArray)
                 }else {
                     // 软解
-//                    dataPush
+                    dataPush.nativeSendNV21Data(byteArray,byteArray.size)
                 }
 
             }

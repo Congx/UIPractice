@@ -5,14 +5,16 @@
 
 cmake_minimum_required(VERSION 3.4.1)
 
-include_directories(./log librtmp ./x264/include)
+include_directories(./log librtmp ./x264/include .)
+
+aux_source_directory(. SRC_DIR)
 
 add_subdirectory(librtmp)
 #add_subdirectory(x264)
 
 add_library( ffplayer
              SHARED
-             native-lib.cpp)
+             ${SRC_DIR})
 
 add_library(
         x264

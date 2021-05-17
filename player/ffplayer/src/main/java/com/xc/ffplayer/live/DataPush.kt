@@ -10,12 +10,16 @@ open class DataPush(var countDownLatch: CountDownLatch) : Runnable,Releaseable {
 
     private lateinit var url: String
     @Volatile
-    var connected = false
+    var isConnected = false
 
     var queue = LinkedBlockingDeque<RTMPPackage>(100)
 
+    init {
+        nativeInit()
+    }
+
     fun addData(bytes: ByteArray, timeStamp: Long,type:Int) {
-        if (!connected) return
+        if (!isConnected) return
         if (!queue.offer(RTMPPackage(bytes,timeStamp,type))) {
             queue.clear()
         }
@@ -23,61 +27,90 @@ open class DataPush(var countDownLatch: CountDownLatch) : Runnable,Releaseable {
 
     fun addData(packge:RTMPPackage) {
 //        Log.e(TAG,"add RTMPPackage")
-        if (!connected) {
-            Log.e(TAG,"add no connect")
-            return
-        }
-        if (!queue.offer(packge)) {
-            Log.e(TAG,"RTMPPackage 丢弃")
-            queue.clear()
-        }
+//        if (!isConnected) {
+//            Log.e(TAG,"add no connect")
+//            return
+//        }
+//        if (!queue.offer(packge)) {
+//            Log.e(TAG,"RTMPPackage 丢弃")
+//            queue.clear()
+//        }
 
+        if (isConnected) {
+            sendData(packge.bytes,packge.bytes.size,packge.timeStamp,packge.type)
+        }
     }
 
     fun startPush(url: String) {
         this.url = url
-        LiveTaskManager.execute(this)
+        connect(url)
+//        LiveTaskManager.execute(this)
     }
 
     override fun run() {
-        if (connect(url)){
-            Log.e(TAG,"rtmp  链接成功")
-            connected = true
-            countDownLatch.countDown()
-        }else {
-            Log.e(TAG,"rtmp  链接失败")
-            connected = false
-        }
-        try {
-            while (!(Thread.currentThread().isInterrupted) && connected) {
-                val rtmpPackage = queue.take()
-                rtmpPackage?.let {
-//                    it.bytes.append2File("livedata.h264")
-                    sendData(it.bytes,it.bytes.size,it.timeStamp,it.type)
-                }
-
-            }
-        }catch (e:InterruptedException) {
-
-        }catch (e:Exception) {
-
-        }
+//        connect(url)
+//        countDownLatch.await()
+//        if (connect(url)){
+//            Log.e(TAG,"rtmp  链接成功")
+//            connected = true
+//            countDownLatch.await()
+//            countDownLatch.countDown()
+//        }else {
+//            Log.e(TAG,"rtmp  链接失败")
+//            connected = false
+//        }
+//        isConnected = true
+//        try {
+//            while (!(Thread.currentThread().isInterrupted) && isConnected) {
+//                val rtmpPackage = queue.take()
+//                rtmpPackage?.let {
+////                    it.bytes.append2File("livedata.h264")
+//                    sendData(it.bytes,it.bytes.size,it.timeStamp,it.type)
+//                }
+//
+//            }
+//        }catch (e:InterruptedException) {
+//
+//        }catch (e:Exception) {
+//
+//        }
 
     }
 
+    /**
+     * native 回调
+     */
+    fun rtmpConnected() {
+        Log.e(TAG,"rtmpConnected")
+        isConnected = true
+        countDownLatch.countDown()
+    }
+
+    /**
+     * native 回调
+     */
+    fun rtmpConnectedFailure() {
+        Log.e(TAG,"rtmpConnectedFailure")
+        release()
+    }
+
     override fun stop() {
-        connected = false
+        isConnected = false
     }
 
     override fun release() {
         Thread.currentThread().interrupt()
-        close()
+        nativeStop()
     }
 
 
+    private external fun nativeInit()
     private external fun sendData(bytes: ByteArray,size :Int,timeStamp: Long,type:Int)
+    external fun nativeSetVideoEncodeInfo(width:Int,height:Int,fps:Int,bitrate:Int)
+    external fun nativeSendNV21Data(NV12bytes: ByteArray, len:Int)
     private external fun connect(url: String):Boolean
-    private external fun close()
+    private external fun nativeStop()
+    private external fun nativeRelease()
 
     companion object {
 

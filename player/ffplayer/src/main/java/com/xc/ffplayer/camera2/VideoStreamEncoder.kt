@@ -23,7 +23,7 @@ class VideoStreamEncoder(
     var countDownLatch: CountDownLatch
 ) : Decoder, Runnable{
 
-    private var TAG = "LiveStreamDecoder"
+    private var TAG = "VideoStreamEncoder"
 
     private var array: ArrayBlockingQueue<ByteArray> = ArrayBlockingQueue(10)
 

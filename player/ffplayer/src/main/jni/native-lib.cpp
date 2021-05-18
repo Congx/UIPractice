@@ -12,6 +12,7 @@
 #include "VideoChannel.h"
 #include "JavaCallbackHelper.h"
 #include "utils.h"
+#include "AudioChannel.h"
 
 using namespace std;
 
@@ -460,6 +461,7 @@ extern "C"
 JNIEXPORT void JNICALL
 Java_com_xc_ffplayer_live_DataPush_nativeSendPCMAudioData(JNIEnv *env, jobject thiz,jbyteArray pcm_arr, jint len) {
     LOGI("faac 编码 len=%d",len);
+
 }
 
 /**

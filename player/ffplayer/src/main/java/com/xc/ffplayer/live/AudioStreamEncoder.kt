@@ -28,13 +28,13 @@ class AudioStreamEncoder(var callback: ((packate:RTMPPackage) -> Unit)? = null,v
         try {
 
             mediaCodec = MediaCodec.createEncoderByType(MediaFormat.MIMETYPE_AUDIO_AAC)
-            var format = MediaFormat.createAudioFormat(MediaFormat.MIMETYPE_AUDIO_AAC,44100,1)
+            var format = MediaFormat.createAudioFormat(MediaFormat.MIMETYPE_AUDIO_AAC,44100,2)
             format.setInteger(
                 MediaFormat.KEY_AAC_PROFILE,
                 MediaCodecInfo.CodecProfileLevel.AACObjectLC
             )
             format.setInteger(MediaFormat.KEY_BIT_RATE, 64_000)
-            var bufferSizeInBytes = AudioRecord.getMinBufferSize(44100, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT)
+            var bufferSizeInBytes = AudioRecord.getMinBufferSize(44100, AudioFormat.CHANNEL_IN_STEREO, AudioFormat.ENCODING_PCM_16BIT)
             format.setInteger(MediaFormat.KEY_MAX_INPUT_SIZE,bufferSizeInBytes*2)
             mediaCodec.configure(format, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE)
             LiveTaskManager.execute(this)

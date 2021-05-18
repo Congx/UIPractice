@@ -451,3 +451,24 @@ Java_com_xc_ffplayer_live_DataPush_nativeRelease(JNIEnv *env, jobject thiz) {
 
 }
 
+// 音频软解
+
+/**
+ * 接收pcm 数据准备编码
+ */
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_xc_ffplayer_live_DataPush_nativeSendPCMAudioData(JNIEnv *env, jobject thiz,jbyteArray pcm_arr, jint len) {
+    LOGI("faac 编码 len=%d",len);
+}
+
+/**
+ * faac 软解初始化
+ *
+ */
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_xc_ffplayer_live_DataPush_nativeSetAudioEncodeInfo(JNIEnv *env, jobject thiz, jint sampleRate,
+                                                            jint channels, jint sampleBit) {
+    LOGI("faac init sampleRate=%d,channels=%d,sampleBit=%d",sampleRate,channels,sampleBit);
+}

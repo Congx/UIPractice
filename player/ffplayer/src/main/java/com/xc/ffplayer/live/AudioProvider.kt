@@ -5,24 +5,24 @@ import android.media.AudioRecord
 import android.media.MediaRecorder
 import android.util.Log
 
-class AudioProvider :StreamProvider,Releaseable,Runnable {
+class AudioProvider(var sampleRate:Int = 44100,var channels:Int = 2,var audioFormat:Int = AudioFormat.ENCODING_PCM_16BIT) :StreamProvider,Releaseable,Runnable {
 
     private var TAG = "AudioProvider"
-    private var sampleRate = 44100
     private var bufferSizeInBytes = 0
     private var isStart = false
 
     override var dataRecived:((byteArray:ByteArray,len:Int)->Unit)? = null
 
     private val audioRecoder by lazy {
+        var channle = if(channels == 2) AudioFormat.CHANNEL_IN_STEREO else AudioFormat.CHANNEL_IN_MONO
         bufferSizeInBytes = AudioRecord.getMinBufferSize(sampleRate,
-            AudioFormat.CHANNEL_IN_MONO,
-            AudioFormat.ENCODING_PCM_16BIT)
+            channle,
+            audioFormat)
         return@lazy AudioRecord(
             MediaRecorder.AudioSource.MIC,
             sampleRate,                     // 采样频率
-            AudioFormat.CHANNEL_IN_MONO,  // 通道数
-            AudioFormat.ENCODING_PCM_16BIT, // 采样位数
+            channle,  // 通道数
+            audioFormat, // 采样位数
             bufferSizeInBytes)
     }
 

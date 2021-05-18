@@ -46,5 +46,5 @@ find_library(log-lib log)
 target_link_libraries( ffplayer
                         rtmpdump
                         x264-lib
-#                        faac-lib
+                        faac-lib
                        ${log-lib} )

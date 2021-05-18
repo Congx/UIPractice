@@ -66,7 +66,7 @@ open class VideoLive(
                     encoder?.prepare()
 
                 }else {
-                    Log.e(TAG,"onStreamSize 软解---------${size.width},${size.height}")
+//                    Log.e(TAG,"onStreamSize 软解---------${size.width},${size.height}")
                     // 初始化x264解码器
                     dataPush.nativeSetVideoEncodeInfo(size.width,size.height,15,size.width * size.height)
                 }
@@ -80,8 +80,8 @@ open class VideoLive(
                     encoder?.decode(byteArray)
                 }else {
                     // 软解
-                    Log.e(TAG,"onStreamPreperaed 软解 发送数据到native")
-                    dataPush.send2Native(byteArray,byteArray.size)
+//                    Log.e(TAG,"onStreamPreperaed 软解 发送数据到native")
+                    dataPush.sendVideo2Native(byteArray,byteArray.size)
                 }
 
             }

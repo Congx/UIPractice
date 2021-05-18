@@ -18,13 +18,6 @@ open class DataPush(var countDownLatch: CountDownLatch) : Runnable,Releaseable {
         nativeInit()
     }
 
-    fun addData(bytes: ByteArray, timeStamp: Long,type:Int) {
-        if (!isConnected) return
-        if (!queue.offer(RTMPPackage(bytes,timeStamp,type))) {
-            queue.clear()
-        }
-    }
-
     fun addData(packge:RTMPPackage) {
 //        Log.e(TAG,"add RTMPPackage")
 //        if (!isConnected) {
@@ -41,9 +34,15 @@ open class DataPush(var countDownLatch: CountDownLatch) : Runnable,Releaseable {
         }
     }
 
-    fun send2Native(NV12bytes: ByteArray, len:Int) {
+    fun sendVideo2Native(NV12bytes: ByteArray, len:Int) {
         if (isConnected) {
             nativeSendNV12Data(NV12bytes,len)
+        }
+    }
+
+    fun sendAudio2Native(audioData: ByteArray, len:Int) {
+        if (isConnected) {
+            nativeSendPCMAudioData(audioData,len)
         }
     }
 
@@ -111,10 +110,12 @@ open class DataPush(var countDownLatch: CountDownLatch) : Runnable,Releaseable {
 
 
     private external fun nativeInit()
+    private external fun connect(url: String):Boolean
     private external fun sendData(bytes: ByteArray,size :Int,timeStamp: Long,type:Int)
     external fun nativeSetVideoEncodeInfo(width:Int,height:Int,fps:Int,bitrate:Int)
+    external fun nativeSetAudioEncodeInfo(sampleRate:Int,channels:Int,sampleBit:Int = 16)
     private external fun nativeSendNV12Data(NV12bytes: ByteArray, len:Int)
-    private external fun connect(url: String):Boolean
+    private external fun nativeSendPCMAudioData(pcmArr: ByteArray, len:Int)
     private external fun nativeStop()
     private external fun nativeRelease()
 

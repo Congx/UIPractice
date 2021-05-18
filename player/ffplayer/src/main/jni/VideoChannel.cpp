@@ -26,12 +26,12 @@ void VideoChannel::setVideoEncodeInfo(int width, int height, int fps, int bitrat
     ySize = width*height;
     uvSize = ySize/4;
 
-    LOGI("初始化x264解码器  width = %d",width);
-    LOGI("初始化x264解码器  height = %d",height);
-    LOGI("初始化x264解码器  fps = %d",fps);
-    LOGI("初始化x264解码器  bitrate = %d",bitrate);
-    LOGI("初始化x264解码器  ySize = %d",ySize);
-    LOGI("初始化x264解码器  uvSize = %d",uvSize);
+//    LOGI("初始化x264解码器  width = %d",width);
+//    LOGI("初始化x264解码器  height = %d",height);
+//    LOGI("初始化x264解码器  fps = %d",fps);
+//    LOGI("初始化x264解码器  bitrate = %d",bitrate);
+//    LOGI("初始化x264解码器  ySize = %d",ySize);
+//    LOGI("初始化x264解码器  uvSize = %d",uvSize);
 
     // 初始化之前先销毁
     if (videoCodec) {
@@ -347,7 +347,7 @@ void VideoChannel::sendSpsPps(uint8_t *sps, uint8_t *pps, int sps_len, int pps_l
 
     videoCallback(packet);
 
-    LOGI("x264 发送 sps  pps");
+//    LOGI("x264 发送 sps  pps");
 }
 
 /**
@@ -401,7 +401,7 @@ void VideoChannel::sendFrame(int type, int len, uint8_t *data) {
     packet->m_headerType = RTMP_PACKET_SIZE_LARGE;
 //    packet->m_nInfoField2 = live->rtmp->m_stream_id;
 
-//    videoCallback(packet);
+//    meidaCallback(packet);
 
 //去掉 00 00 00 01 / 00 00 01
 //    if (data[2] == 0x00){
@@ -445,6 +445,6 @@ void VideoChannel::sendFrame(int type, int len, uint8_t *data) {
 
     videoCallback(packet);
 
-    LOGI("x264 发送 帧");
+//    LOGI("x264 发送 帧");
 }
 

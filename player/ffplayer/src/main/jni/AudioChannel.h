@@ -5,7 +5,11 @@
 #ifndef UIPRACTICE_AUDIOCHANNEL_H
 #define UIPRACTICE_AUDIOCHANNEL_H
 
+#include "faac.h"
+#include "rtmp.h"
+#include "log.h"
 
+typedef void (*VideoCallback)(RTMPPacket *packet);
 class AudioChannel {
 public:
     AudioChannel();
@@ -13,7 +17,20 @@ public:
 
     int setAudioInfo(int sampleRate,int channels);
 
-    void encodeData(int32_t *data,int len);
+    void encode(int32_t *data,int len);
+
+    RTMPPacket *getAudioConfig();
+
+    void setCallback(VideoCallback callback);
+    int getMinBuferSize();
+
+    unsigned long maxOutputBytes;
+    unsigned long inputByteNum;
+    unsigned char* outputBuffer;
+    VideoCallback callback;
+
+private:
+    faacEncHandle codec = 0;
 };
 
 

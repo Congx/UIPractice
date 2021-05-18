@@ -33,6 +33,7 @@ typedef struct {
 
 Live *live = NULL;
 VideoChannel *videoChannel;
+AudioChannel *audioChannel;
 JavaCallbackHelper *callbackHelper;
 JavaVM* javaVM;
 uint32_t start_time;
@@ -63,11 +64,11 @@ void releaseRtmpPacket(RTMPPacket * rtmpPacket) {
     if(rtmpPacket) {
         RTMPPacket_Free(rtmpPacket);
         delete rtmpPacket;
-        rtmpPacket = 0;
+        rtmpPacket = NULL;
     }
 }
 
-void videoCallback(RTMPPacket *packet) {
+void meidaCallback(RTMPPacket *packet) {
     if(packet) {
         packet->m_nTimeStamp = RTMP_GetTime() - start_time;
         pushPacket(packet);
@@ -121,6 +122,11 @@ void *rtmpStart(void *arg) {
 //        LOGI("rtmp take...");
         packetQueue.pop(rtmpPacket);
         if(!rtmpPacket) continue;
+//        if (rtmpPacket->m_packetType = RTMP_PACKET_TYPE_VIDEO) {
+//            LOGI("rtmp queue pop 音频");
+//            releaseRtmpPacket(rtmpPacket);
+//            continue;
+//        }
         rtmpPacket->m_nInfoField2 = live->rtmp->m_stream_id;
         ret = RTMP_SendPacket(live->rtmp,rtmpPacket,1);
         releaseRtmpPacket(rtmpPacket);
@@ -380,7 +386,7 @@ JNIEXPORT void JNICALL
 Java_com_xc_ffplayer_live_DataPush_nativeInit(JNIEnv *env, jobject thiz) {
     videoChannel = new VideoChannel;
     callbackHelper = new JavaCallbackHelper(javaVM,env,thiz);
-    videoChannel->setVideoCallback(videoCallback);
+    videoChannel->setVideoCallback(meidaCallback);
 }
 
 
@@ -408,6 +414,7 @@ Java_com_xc_ffplayer_live_DataPush_nativeSendNV12Data(JNIEnv *env, jobject thiz,
     if (videoChannel) {
         jbyte *data = env->GetByteArrayElements(nv12bytes,NULL);
         videoChannel->encodeData(reinterpret_cast<uint8_t *>(data));
+        env->ReleaseByteArrayElements(nv12bytes,data,0);
     }
 
 }
@@ -445,6 +452,11 @@ Java_com_xc_ffplayer_live_DataPush_nativeRelease(JNIEnv *env, jobject thiz) {
         videoChannel = NULL;
     }
 
+    if(audioChannel) {
+        delete audioChannel;
+        audioChannel = NULL;
+    }
+
     if (callbackHelper) {
         delete callbackHelper;
         callbackHelper = NULL;
@@ -460,8 +472,14 @@ Java_com_xc_ffplayer_live_DataPush_nativeRelease(JNIEnv *env, jobject thiz) {
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_xc_ffplayer_live_DataPush_nativeSendPCMAudioData(JNIEnv *env, jobject thiz,jbyteArray pcm_arr, jint len) {
-    LOGI("faac 编码 len=%d",len);
 
+    if(audioChannel){
+        jbyte *data = env->GetByteArrayElements(pcm_arr,NULL);
+//        ofstream out("/sdcard/Android/data/com.xc.ffplayer/files/output/audio.pcm",ios::out | ios::app);
+//        out.write(reinterpret_cast<const char *>(data), len);
+//        audioChannel->encode(reinterpret_cast<int32_t *>(data), len);
+        env->ReleaseByteArrayElements(pcm_arr,data,0);
+    }
 }
 
 /**
@@ -469,8 +487,16 @@ Java_com_xc_ffplayer_live_DataPush_nativeSendPCMAudioData(JNIEnv *env, jobject t
  *
  */
 extern "C"
-JNIEXPORT void JNICALL
+JNIEXPORT int JNICALL
 Java_com_xc_ffplayer_live_DataPush_nativeSetAudioEncodeInfo(JNIEnv *env, jobject thiz, jint sampleRate,
                                                             jint channels, jint sampleBit) {
     LOGI("faac init sampleRate=%d,channels=%d,sampleBit=%d",sampleRate,channels,sampleBit);
+
+    if(!audioChannel){
+        audioChannel = new AudioChannel();
+        audioChannel->setCallback(meidaCallback);
+        audioChannel->setAudioInfo(sampleRate,channels);
+        return audioChannel->getMinBuferSize();
+    }
+    return 0;
 }

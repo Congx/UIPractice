@@ -12,7 +12,7 @@ open class DataPush(var countDownLatch: CountDownLatch) : Runnable,Releaseable {
     @Volatile
     var isConnected = false
 
-    var queue = LinkedBlockingDeque<RTMPPackage>(100)
+//    var queue = LinkedBlockingDeque<RTMPPackage>(100)
 
     init {
         nativeInit()
@@ -113,7 +113,7 @@ open class DataPush(var countDownLatch: CountDownLatch) : Runnable,Releaseable {
     private external fun connect(url: String):Boolean
     private external fun sendData(bytes: ByteArray,size :Int,timeStamp: Long,type:Int)
     external fun nativeSetVideoEncodeInfo(width:Int,height:Int,fps:Int,bitrate:Int)
-    external fun nativeSetAudioEncodeInfo(sampleRate:Int,channels:Int,sampleBit:Int = 16)
+    external fun nativeSetAudioEncodeInfo(sampleRate:Int,channels:Int,sampleBit:Int = 16):Int
     private external fun nativeSendNV12Data(NV12bytes: ByteArray, len:Int)
     private external fun nativeSendPCMAudioData(pcmArr: ByteArray, len:Int)
     private external fun nativeStop()

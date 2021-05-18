@@ -2,8 +2,8 @@ package com.xc.ffplayer.live
 
 import android.app.Activity
 import android.media.AudioFormat
+import android.media.AudioRecord
 import android.util.Log
-import com.xc.ffplayer.utils.append2File
 import java.util.concurrent.CountDownLatch
 
 
@@ -21,13 +21,14 @@ class AudioLive(
     private var sampleRate = 44100
     private var channles = 2 // 默认立体
     private var sampleBit = AudioFormat.ENCODING_PCM_16BIT // 采样位数
+    var inputBufferSize = 0
 
     private val audioDecoder by lazy {
         AudioStreamEncoder(countDownLatch = countDownLatch)
     }
 
     private val audioProvider by lazy {
-        AudioProvider(sampleRate,channles,sampleBit)
+        AudioProvider(sampleRate,channles,sampleBit,inputBufferSize)
     }
 
     init {
@@ -39,11 +40,15 @@ class AudioLive(
         }
         if (!isHardDecoder) {
             // 软解，初始化faac
-            dataPush.nativeSetAudioEncodeInfo(sampleRate,channles,bitCount)
+            // 最小buffer的大小
+            inputBufferSize = dataPush.nativeSetAudioEncodeInfo(sampleRate, channles, bitCount)
+            Log.e(TAG,"inputBufferSize = $inputBufferSize")
+        }else {
+            inputBufferSize = AudioRecord.getMinBufferSize(sampleRate, channles, sampleBit)
         }
 
         audioDecoder.callback = {
-//            Log.e(TAG,"音频 解码成功")
+            Log.e(TAG,"audio 硬编 解码成功")
 //            it.bytes.append2File("audio.aac")
             dataPush.addData(it)
         }
@@ -52,10 +57,11 @@ class AudioLive(
 //            Log.e(TAG ,"音频 回调byteArray size ${bytes.size}")
 //            bytes.append2File("audio.pcm")
             if(isHardDecoder) {
+                Log.e(TAG,"audio 硬解流")
                 audioDecoder.addData(bytes,len)
             }else {
                 // 软解
-                Log.e(TAG,"音频 软解")
+                Log.e(TAG,"audio 软解流")
                 dataPush.sendAudio2Native(bytes,len)
             }
 

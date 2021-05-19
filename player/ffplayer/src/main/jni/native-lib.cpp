@@ -477,7 +477,7 @@ Java_com_xc_ffplayer_live_DataPush_nativeSendPCMAudioData(JNIEnv *env, jobject t
         jbyte *data = env->GetByteArrayElements(pcm_arr,NULL);
 //        ofstream out("/sdcard/Android/data/com.xc.ffplayer/files/output/audio.pcm",ios::out | ios::app);
 //        out.write(reinterpret_cast<const char *>(data), len);
-//        audioChannel->encode(reinterpret_cast<int32_t *>(data), len);
+        audioChannel->encode(reinterpret_cast<int32_t *>(data), len);
         env->ReleaseByteArrayElements(pcm_arr,data,0);
     }
 }

@@ -28,6 +28,7 @@ public:
     unsigned long inputByteNum;
     unsigned char* outputBuffer;
     VideoCallback callback;
+    bool isSendHead = false;
 
 private:
     faacEncHandle codec = 0;

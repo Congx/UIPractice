@@ -23,13 +23,13 @@ int AudioChannel::setAudioInfo(int sampleRate, int channels) {
     /**
      unsigned long   nSampleRate,        // 采样率，单位是bps
     unsigned long   nChannels,          // 声道，1为单声道，2为双声道
-    unsigned long   &nInputSamples,     // 传引用，得到每次调用编码时所应接收的原始数据长度
+    unsigned long   &nInputSamples,     // 传引用，采样点的个数
     unsigned long   &nMaxOutputBytes    // 传引用，得到每次调用编码时生成的AAC数据的最大长度
      */
     codec = faacEncOpen(sampleRate, channels, &inputSamples, &maxOutputBytes);
 
-//输入容器真正大小
-    inputByteNum = inputSamples * 2;
+//输入容器真正大小  字节数 采样个数 * 位数 / 8
+    inputByteNum = inputSamples * 16 / 8;
 
 //实例化 输出的容器
     outputBuffer = static_cast<unsigned char *>(malloc(maxOutputBytes));
@@ -38,8 +38,17 @@ int AudioChannel::setAudioInfo(int sampleRate, int channels) {
     faacEncConfigurationPtr configurationPtr = faacEncGetCurrentConfiguration(codec);
 //编码  MPEG AAC
     configurationPtr->mpegVersion = MPEG4;
+    configurationPtr->useLfe = 0;//是否允许一个声道为低频通道
+    configurationPtr->useTns = 1;  //是否使用瞬时噪声定形滤波器(具体作用不是很清楚)
 //    编码等级
     configurationPtr->aacObjectType = LOW;
+
+    //是否允许midSide coding (在MPEG-2 AAC 系统中，M/S(Mid/Side) Stereo coding被提供在多声道信号中，每个声道对(channel pair)的组合，也就是每个通道对，是对称地排列在人耳听觉的左右两边，其方式简单，且对位串不会引起较显著的负担。 一般其在左右声道数据相似度大时常被用到，并需记载每一频带的四种能量临界组合，分别为左、右、左右声道音频合并(L+R)及相减(L-R)的两种新的能量。一般，若所转换的Sid声道的能量较小时，M/S Stereo coding 可以节省此通道的位数，而将多余的位应用于另一个所转换的声道，即Mid 声道，进而可提高此编码效率。)
+//    configurationPtr->allowMidside = 0;
+//    configurationPtr->bitRate =48000;  //设置比特率
+//    configurationPtr->useLfe = 0;
+//    configurationPtr->bandWidth = 32000;
+
 //输出aac裸流数据
     configurationPtr->outputFormat = 0;
 //采样位数
@@ -51,32 +60,45 @@ int AudioChannel::setAudioInfo(int sampleRate, int channels) {
     return 0;
 }
 
-void AudioChannel::encode(int *data, int len) {
+void AudioChannel::encode(int32_t *data, int len) {
 
-//    LOGI("faac 编码 len=%d",len);
+    // 发送音频头
+    if (!isSendHead) {
+        isSendHead = true;
+        callback(getAudioConfig());
+    }
+
+    LOGI("faac 编码 outputBuffer=%d,maxOutputBytes=%d,",outputBuffer,maxOutputBytes);
 //    音频的数据   data   原始数据  1 编码 = 压缩 数据2  检查  bug   编码初始化成功
 //    LOGE("发送音频%d", len);
 
 //    一句话  将pcm数据编码成aac数据
-    int bytelen=faacEncEncode(codec, data, len, outputBuffer, maxOutputBytes);
-//outputBuffer   压缩1   原始 2
-//    if (bytelen > 0) {
-////        拼装packet  数据   NDK
-//        LOGI("faac 编码 bytelen=%d",bytelen);
-//        RTMPPacket *packet = new RTMPPacket;
-//        RTMPPacket_Alloc(packet, bytelen + 2);
-//        packet->m_body[0] = 0xAF;//
-//        packet->m_body[1] = 0x01;
-//        memcpy(&packet->m_body[2], outputBuffer, bytelen);
-//        packet->m_hasAbsTimestamp = 0;
-//        packet->m_nBodySize = bytelen + 2;
-//        packet->m_packetType = RTMP_PACKET_TYPE_AUDIO;
-//        packet->m_nChannel = 0x11;
-//        packet->m_headerType = RTMP_PACKET_SIZE_LARGE;
-//        callback(packet);
-//    }
+    int samplesInput = len * 8 / 16; // 采样点的个数!!!! 不是数据长度
+//    int samplesInput = len;
+    int bytelen=faacEncEncode(codec, data, samplesInput, outputBuffer, maxOutputBytes);
+//    int bytelen=0;
+        //outputBuffer   压缩1   原始 2
+    if (bytelen > 0) {
+//        拼装packet  数据   NDK
+        LOGI("faac 编码 bytelen=%d",bytelen);
+        RTMPPacket *packet = new RTMPPacket;
+        RTMPPacket_Alloc(packet, bytelen + 2);
+        packet->m_body[0] = 0xAF;//
+        packet->m_body[1] = 0x01;
+        memcpy(&packet->m_body[2], outputBuffer, bytelen);
+        packet->m_hasAbsTimestamp = 0;
+        packet->m_nBodySize = bytelen + 2;
+        packet->m_packetType = RTMP_PACKET_TYPE_AUDIO;
+        packet->m_nChannel = 0x11;
+        packet->m_headerType = RTMP_PACKET_SIZE_LARGE;
+        callback(packet);
+    }
 }
 
+/**
+ * 音频头
+ * @return
+ */
 RTMPPacket *AudioChannel::getAudioConfig() {
 //    视频帧的sps pps
     u_char *buf;

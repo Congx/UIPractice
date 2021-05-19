@@ -42,13 +42,13 @@ class AudioLive(
             // 软解，初始化faac
             // 最小buffer的大小
             inputBufferSize = dataPush.nativeSetAudioEncodeInfo(sampleRate, channles, bitCount)
-            Log.e(TAG,"inputBufferSize = $inputBufferSize")
+//            Log.e(TAG,"inputBufferSize = $inputBufferSize")
         }else {
             inputBufferSize = AudioRecord.getMinBufferSize(sampleRate, channles, sampleBit)
         }
 
         audioDecoder.callback = {
-            Log.e(TAG,"audio 硬编 解码成功")
+//            Log.e(TAG,"audio 硬编 解码成功")
 //            it.bytes.append2File("audio.aac")
             dataPush.addData(it)
         }
@@ -57,11 +57,11 @@ class AudioLive(
 //            Log.e(TAG ,"音频 回调byteArray size ${bytes.size}")
 //            bytes.append2File("audio.pcm")
             if(isHardDecoder) {
-                Log.e(TAG,"audio 硬解流")
+//                Log.e(TAG,"audio 硬解流")
                 audioDecoder.addData(bytes,len)
             }else {
                 // 软解
-                Log.e(TAG,"audio 软解流")
+//                Log.e(TAG,"audio 软解流")
                 dataPush.sendAudio2Native(bytes,len)
             }
 

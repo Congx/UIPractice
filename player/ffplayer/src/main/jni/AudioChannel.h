@@ -25,6 +25,7 @@ public:
     int getMinBuferSize();
 
     unsigned long maxOutputBytes;
+    int32_t inputSamples;
     unsigned long inputByteNum;
     unsigned char* outputBuffer;
     VideoCallback callback;

@@ -31,6 +31,8 @@ int AudioChannel::setAudioInfo(int sampleRate, int channels) {
 //输入容器真正大小  字节数 采样个数 * 位数 / 8
     inputByteNum = inputSamples * 16 / 8;
 
+    this->inputSamples = inputSamples;
+
 //实例化 输出的容器
     outputBuffer = static_cast<unsigned char *>(malloc(maxOutputBytes));
     LOGI("初始化-----------》%d  inputByteNum %d  maxOutputBytes:%d ",codec,inputByteNum,maxOutputBytes);
@@ -68,19 +70,20 @@ void AudioChannel::encode(int32_t *data, int len) {
         callback(getAudioConfig());
     }
 
-    LOGI("faac 编码 outputBuffer=%d,maxOutputBytes=%d,",outputBuffer,maxOutputBytes);
+//    LOGI("faac 编码 outputBuffer=%d,maxOutputBytes=%d,",outputBuffer,maxOutputBytes);
 //    音频的数据   data   原始数据  1 编码 = 压缩 数据2  检查  bug   编码初始化成功
 //    LOGE("发送音频%d", len);
 
 //    一句话  将pcm数据编码成aac数据
     int samplesInput = len * 8 / 16; // 采样点的个数!!!! 不是数据长度
 //    int samplesInput = len;
-    int bytelen=faacEncEncode(codec, data, samplesInput, outputBuffer, maxOutputBytes);
+//    LOGI("faac 编码 samplesInput=%d",samplesInput);
+//    LOGI("faac 编码 inputSamples=%d",inputSamples);
+    int bytelen=faacEncEncode(codec, data, inputSamples, outputBuffer, maxOutputBytes);
 //    int bytelen=0;
         //outputBuffer   压缩1   原始 2
     if (bytelen > 0) {
 //        拼装packet  数据   NDK
-        LOGI("faac 编码 bytelen=%d",bytelen);
         RTMPPacket *packet = new RTMPPacket;
         RTMPPacket_Alloc(packet, bytelen + 2);
         packet->m_body[0] = 0xAF;//

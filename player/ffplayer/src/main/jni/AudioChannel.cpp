@@ -79,7 +79,7 @@ void AudioChannel::encode(int32_t *data, int len) {
 //    int samplesInput = len;
 //    LOGI("faac 编码 samplesInput=%d",samplesInput);
 //    LOGI("faac 编码 inputSamples=%d",inputSamples);
-    int bytelen=faacEncEncode(codec, data, inputSamples, outputBuffer, maxOutputBytes);
+    int bytelen=faacEncEncode(codec, data, samplesInput, outputBuffer, maxOutputBytes);
 //    int bytelen=0;
         //outputBuffer   压缩1   原始 2
     if (bytelen > 0) {

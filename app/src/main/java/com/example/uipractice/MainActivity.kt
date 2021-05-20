@@ -12,6 +12,7 @@ import com.example.uipractice.fragment.FragmentListActivity
 import com.example.uipractice.image.GlideActivity
 import com.example.uipractice.ndk.NDKActivity
 import com.example.uipractice.net.NetListActivity
+import com.example.uipractice.opengl.OpenglMainActivity
 import com.example.uipractice.others.FileProviderActivity
 import com.example.uipractice.plugin.PluginTestActivity
 import com.example.uipractice.rxjava.RxJavaActivity
@@ -35,7 +36,8 @@ class MainActivity : BaseItemListActivity() {
         ItemBean("camerax", CameraXActivity::class.java),
         ItemBean("window", WindowTestActivity::class.java),
         ItemBean("插件化", PluginTestActivity::class.java),
-        ItemBean("图片相关", GlideActivity::class.java)
+        ItemBean("图片相关", GlideActivity::class.java),
+        ItemBean("opengl", OpenglMainActivity::class.java)
     )
 
     override fun getListData(): ArrayList<ItemBean>? {

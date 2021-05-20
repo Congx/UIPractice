@@ -13,6 +13,7 @@
 #include "JavaCallbackHelper.h"
 #include "utils.h"
 #include "AudioChannel.h"
+#include <assert.h>
 
 using namespace std;
 

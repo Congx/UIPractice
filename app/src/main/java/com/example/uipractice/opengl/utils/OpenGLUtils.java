@@ -1,11 +1,17 @@
 package com.example.uipractice.opengl.utils;
 
+import android.content.Context;
 import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 import javax.microedition.khronos.opengles.GL10;
 
-public class GUtils {
+public class OpenGLUtils {
 
     public static int createOESTextureObject() {
         int[] tex = new int[1];
@@ -25,5 +31,26 @@ public class GUtils {
         //解除纹理绑定
         GLES20.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, 0);
         return tex[0];
+    }
+
+    public static String readRawTextFile(Context context, int rawId) {
+        InputStream is = context.getResources().openRawResource(rawId);
+        BufferedReader br = new BufferedReader(new InputStreamReader(is));
+        String line;
+        StringBuilder sb = new StringBuilder();
+        try {
+            while ((line = br.readLine()) != null) {
+                sb.append(line);
+                sb.append("\n");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            br.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return sb.toString();
     }
 }

@@ -6,7 +6,7 @@ import androidx.fragment.app.FragmentActivity
 import com.example.uipractice.camera.CameraXProvider
 import com.example.uipractice.camera.SurfaceTextureProvider
 import com.example.uipractice.opengl.filters.CameraFilter
-import com.example.uipractice.opengl.utils.GUtils
+import com.example.uipractice.opengl.utils.OpenGLUtils
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
@@ -14,7 +14,7 @@ class CameraRender(var context: FragmentActivity,var glSurfaceView: GLSurfaceVie
     SurfaceTexture.OnFrameAvailableListener {
 
 
-    var mOESTextureId = GUtils.createOESTextureObject()
+    var mOESTextureId = OpenGLUtils.createOESTextureObject()
 
     val surfaceTexture by lazy {
         return@lazy SurfaceTexture(mOESTextureId)

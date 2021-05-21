@@ -1,10 +1,9 @@
-package com.example.uipractice.opengl
+package com.example.uipractice.opengl.renders
 
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
 import com.example.uipractice.opengl.utils.BufferUtil
 import com.example.uipractice.opengl.utils.ShaderHelper
-import java.nio.ByteBuffer
 import java.nio.FloatBuffer
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
@@ -52,7 +51,13 @@ class TriangleRender:GLSurfaceView.Renderer {
                                             -0.5f,-0.5f,0f,
                                             0.5f,-0.5f,0f)
 
+    var color = floatArrayOf(1f,0f,0f,1f)
+
+
     lateinit var vertexBuffer:FloatBuffer
+
+    var positionLocation = 0
+    var colorLocation = 0
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         // 设置刷新屏幕时候使用的颜色值,顺序是RGBA，值的范围从0~1。GLES20.glClear调用时使用该颜色值。
@@ -62,6 +67,14 @@ class TriangleRender:GLSurfaceView.Renderer {
         val fragmentShader = ShaderHelper.compileFragmentShader(FRAGMENT_SHADER)
         program = ShaderHelper.linkProgram(vertexShader, fragmentShader)
         vertexBuffer = BufferUtil.createFloatBuffer(pointData)
+//        vertexBuffer.position(0)
+
+        GLES20.glUseProgram(program)
+        positionLocation = GLES20.glGetAttribLocation(program, "a_Position")
+        GLES20.glEnableVertexAttribArray(positionLocation)
+
+        GLES20.glVertexAttribPointer(positionLocation,3,GLES20.GL_FLOAT,false,12,vertexBuffer)
+        colorLocation = GLES20.glGetUniformLocation(program, "u_Color")
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
@@ -69,15 +82,10 @@ class TriangleRender:GLSurfaceView.Renderer {
         GLES20.glViewport(0, 0, width, height)
     }
 
-    var color = floatArrayOf(1f,0f,0f,1f)
     override fun onDrawFrame(gl: GL10?) {
-        GLES20.glUseProgram(program)
-        val positionLocation = GLES20.glGetAttribLocation(program, "a_Position")
-        GLES20.glEnableVertexAttribArray(positionLocation)
+        // 很重要！！！ 刷新缓存
+        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT)
 
-        GLES20.glVertexAttribPointer(positionLocation,3,GLES20.GL_FLOAT,false,12,vertexBuffer)
-
-        val colorLocation = GLES20.glGetUniformLocation(program, "u_Color")
         GLES20.glUniform4fv(colorLocation,1,color,0)
         GLES20.glDrawArrays(GLES20.GL_TRIANGLES,0,3)
         GLES20.glDisableVertexAttribArray(positionLocation)

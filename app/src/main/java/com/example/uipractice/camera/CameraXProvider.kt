@@ -1,17 +1,24 @@
 package com.example.uipractice.camera
 
 import android.annotation.SuppressLint
+import android.content.ContentValues
 import android.graphics.ImageFormat
 import android.graphics.Rect
+import android.graphics.SurfaceTexture
 import android.graphics.YuvImage
+import android.os.SystemClock
+import android.provider.MediaStore
 import android.util.Log
 import android.util.Size
+import android.view.Surface
 import android.widget.Toast
 import androidx.camera.core.*
+import androidx.camera.core.ImageCapture.FlashMode
 import androidx.camera.extensions.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
+import androidx.core.util.Consumer
 import androidx.fragment.app.FragmentActivity
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -19,7 +26,10 @@ import java.io.FileOutputStream
 import java.util.concurrent.Executors
 import java.util.concurrent.locks.ReentrantLock
 
-class CameraXProvider(var context:FragmentActivity,width:Int = 0, height:Int = 0, callback: StreamProviderCallback? = null):
+class CameraXProvider(var context:FragmentActivity,
+                      width:Int = 0, height:Int = 0,
+                      callback: StreamProviderCallback? = null,
+                      var surfaceTextureProvider: SurfaceTextureProvider? = null):
     StreamProvider(width,height,callback) {
 
     companion object {
@@ -35,6 +45,11 @@ class CameraXProvider(var context:FragmentActivity,width:Int = 0, height:Int = 0
     private var lock = ReentrantLock()
     private var streamSize:Size? = null
 
+    private var imageCapture: ImageCapture? = null
+    var previewCase:Preview? = null
+
+    var camera:Camera? = null
+
     override fun initPreview(previewView: PreviewView) {
         this.previewView = previewView
         if (cameraProvider == null) {
@@ -42,7 +57,7 @@ class CameraXProvider(var context:FragmentActivity,width:Int = 0, height:Int = 0
         }
     }
 
-    private fun initCameraProvider() {
+    fun initCameraProvider() {
         val future = ProcessCameraProvider.getInstance(context)
         future.addListener(Runnable {
             cameraProvider = future.get()
@@ -73,18 +88,38 @@ class CameraXProvider(var context:FragmentActivity,width:Int = 0, height:Int = 0
         //预览方面的设置
         var builder = Preview.Builder()
 //        setPreviewExtender(builder,cameraSelector)
-        var size = getPreviewViewSize()
-        var preview = builder
-            .setTargetAspectRatio(aspectRatio(getPreviewViewSize().width,size.height))
+//        var size = getPreviewViewSize()
+        var size = Size(width,height)
+        previewCase = builder
+            .setTargetResolution(size)
+            .setTargetAspectRatio(aspectRatio(size.width,size.height))
             .build()
 
-        preview.setSurfaceProvider(previewView.surfaceProvider)
-        //                preview.setSurfaceProvider { request ->
-        //                    request.provideSurface(Surface(view_finder.surfaceTexture), ContextCompat.getMainExecutor(this@CameraXProvider),
-        //                        Consumer {
-        //
-        //                    })
-        //                }
+        var st = SurfaceTexture(1)
+        st.attachToGLContext(1)
+        if (surfaceTextureProvider == null) {
+            previewCase?.setSurfaceProvider(previewView.surfaceProvider)
+        }else {
+            previewCase?.setSurfaceProvider { request ->
+                request.provideSurface(
+                    Surface(surfaceTextureProvider?.provideSurface()), ContextCompat.getMainExecutor(context),
+                    Consumer {
+
+                    })
+            }
+        }
+
+        // 拍照
+        imageCapture = ImageCapture.Builder()
+            .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
+            // We request aspect ratio but no resolution to match preview config, but letting
+            // CameraX optimize for whatever specific resolution best fits our use cases
+//            .setTargetAspectRatio(RATIO_16_9_VALUE)
+            // Set initial target rotation, we will have to call this again if rotation changes
+            // during the lifecycle of this use case
+//            .setTargetRotation(rotation)
+            .build()
+
 
         // 捕获流
         var imageAnalysis = ImageAnalysis.Builder()
@@ -120,10 +155,119 @@ class CameraXProvider(var context:FragmentActivity,width:Int = 0, height:Int = 0
         })
 
         cameraProvider?.unbindAll()
-        cameraProvider?.bindToLifecycle(context, cameraSelector, preview,imageAnalysis)
+        camera = cameraProvider?.bindToLifecycle(context, cameraSelector, previewCase, imageAnalysis,imageCapture)
 
     }
 
+    /**
+     * 停止预览
+     */
+    fun funClosePreview() {
+        cameraProvider?.unbind(previewCase)
+    }
+
+    /**
+     * 如果打开 预览，再次绑定就行
+     */
+    fun startPreview() {
+//        cameraProvider?.bindToLifecycle(context, cameraSelector, previewCase, imageAnalysis,imageCapture)
+    }
+
+    /**
+     * 手电筒
+     */
+    fun torchToggle() {
+        val state = camera?.cameraInfo?.torchState?.value ?: TorchState.OFF
+        camera?.cameraControl?.enableTorch(state == TorchState.ON)
+    }
+
+
+    /**
+     * 闪光灯
+     */
+    fun switchFlash() {
+        val hashFlash = camera?.cameraInfo?.hasFlashUnit() ?: false
+        if (hashFlash) {
+            @FlashMode val flashMode: Int = imageCapture?.getFlashMode() ?: ImageCapture.FLASH_MODE_OFF
+            if (flashMode == ImageCapture.FLASH_MODE_ON) {
+                imageCapture?.setFlashMode(ImageCapture.FLASH_MODE_OFF)
+            } else if (flashMode == ImageCapture.FLASH_MODE_OFF) {
+                imageCapture?.setFlashMode(ImageCapture.FLASH_MODE_AUTO)
+            } else if (flashMode == ImageCapture.FLASH_MODE_AUTO) {
+                imageCapture?.setFlashMode(ImageCapture.FLASH_MODE_ON)
+            }
+        }
+    }
+
+    /**
+     * 拍照
+     */
+    fun takePhoto() {
+        val contentValues = ContentValues()
+//        contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
+//        val outputFileOptions =
+//            ImageCapture.OutputFileOptions.Builder(
+//                getContentResolver(),
+//                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+//                contentValues
+//            ).build()
+//        mImageCapture.takePicture(outputFileOptions,
+//            mImageCaptureExecutorService,
+//            object : ImageCapture.OnImageSavedCallback {
+//                override fun onImageSaved(
+//                    outputFileResults: ImageCapture.OutputFileResults
+//                ) {
+//                    Log.d(
+//                        CameraXActivity.TAG, "Saved image to "
+//                                + outputFileResults.savedUri
+//                    )
+//                    try {
+//                        mImageSavedIdlingResource.decrement()
+//                    } catch (e: IllegalStateException) {
+//                        Log.e(
+//                            CameraXActivity.TAG, "Error: unexpected onImageSaved "
+//                                    + "callback received. Continuing."
+//                        )
+//                    }
+//                    val duration: Long =
+//                        SystemClock.elapsedRealtime() - mStartCaptureTime
+//                    runOnUiThread(Runnable {
+//                        Toast.makeText(
+//                            this@CameraXActivity,
+//                            "Image captured in $duration ms",
+//                            Toast.LENGTH_SHORT
+//                        ).show()
+//                    })
+//                    if (mSessionImagesUriSet != null) {
+//                        mSessionImagesUriSet.add(
+//                            Objects.requireNonNull(
+//                                outputFileResults.savedUri
+//                            )
+//                        )
+//                    }
+//                }
+//
+//                override fun onError(exception: ImageCaptureException) {
+//                    Log.e(
+//                        CameraXActivity.TAG,
+//                        "Failed to save image.",
+//                        exception.cause
+//                    )
+//                    try {
+//                        mImageSavedIdlingResource.decrement()
+//                    } catch (e: IllegalStateException) {
+//                        Log.e(
+//                            CameraXActivity.TAG, "Error: unexpected onImageSaved "
+//                                    + "callback received. Continuing."
+//                        )
+//                    }
+//                }
+//            })
+    }
+
+    /**
+     * 前后置切换
+     */
     fun switchCamera() {
         if (CameraSelector.LENS_FACING_FRONT == lensFacing){
             lensFacing = CameraSelector.LENS_FACING_BACK

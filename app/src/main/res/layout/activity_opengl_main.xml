@@ -15,4 +15,10 @@
       android:layout_height="wrap_content"
       android:text="基本用法"/>
 
+  <Button
+      android:id="@+id/btnCamera"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="Camera用法"/>
+
   </LinearLayout>

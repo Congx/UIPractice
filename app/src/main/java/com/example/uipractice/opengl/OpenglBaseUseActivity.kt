@@ -4,6 +4,7 @@ import android.opengl.GLSurfaceView
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.uipractice.R
+import com.example.uipractice.opengl.renders.TriangleRender
 import kotlinx.android.synthetic.main.activity_opengl_base_use.*
 
 class OpenglBaseUseActivity : AppCompatActivity() {

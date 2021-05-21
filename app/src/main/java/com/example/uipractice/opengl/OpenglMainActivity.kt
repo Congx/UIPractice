@@ -14,5 +14,9 @@ class OpenglMainActivity : AppCompatActivity() {
         btnBase.setOnClickListener {
             startActivity(Intent(this,OpenglBaseUseActivity::class.java))
         }
+
+        btnCamera.setOnClickListener {
+            startActivity(Intent(this,OpenglCameractivity::class.java))
+        }
     }
 }

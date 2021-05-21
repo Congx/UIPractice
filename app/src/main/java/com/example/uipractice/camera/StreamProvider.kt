@@ -1,5 +1,6 @@
 package com.example.uipractice.camera
 
+import android.graphics.SurfaceTexture
 import android.util.Size
 import android.view.TextureView
 import androidx.camera.view.PreviewView
@@ -35,4 +36,9 @@ open interface StreamProviderCallback {
     fun onPreviewSize(size: Size)
     fun onStreamSize(size: Size)
     fun onStreamPreperaed(byteArray: ByteArray, len:Int)
+    fun onSurfaceTextureCreated(surfaceTexture: SurfaceTexture){}
+}
+
+open interface SurfaceTextureProvider {
+    fun provideSurface():SurfaceTexture
 }

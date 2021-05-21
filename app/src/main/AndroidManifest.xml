@@ -26,7 +26,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".camera.CameraXActivity"></activity>
+        <activity android:name=".opengl.OpenglCameractivity"></activity>
+        <activity android:name=".camera.CameraXActivity" />
         <activity android:name=".image.GlideActivity" />
         <activity android:name=".plugin.PluginTestActivity" /> <!-- <activity android:name=".plugin.PluginActivity"></activity> -->
         <activity android:name=".recyclerview.layoutmanger.LayoutManagerActivity" />
@@ -83,8 +84,8 @@
         <activity android:name=".ui.nestedscroll.AppbarBehaviorActivity" />
         <activity android:name=".architecture.ViewModelActivity" />
         <activity android:name=".net.NetListActivity" />
-        <activity android:name="com.example.uipractice.opengl.OpenglBaseUseActivity"></activity>
-        <activity android:name="com.example.uipractice.opengl.OpenglMainActivity"></activity>
+        <activity android:name=".opengl.OpenglBaseUseActivity" />
+        <activity android:name=".opengl.OpenglMainActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

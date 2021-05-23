@@ -1,6 +1,7 @@
 package com.example.uipractice.opengl.filters
 
 import android.content.Context
+import android.opengl.GLES11Ext
 import android.opengl.GLES20
 import com.example.uipractice.R
 import com.example.uipractice.opengl.utils.BufferUtil
@@ -23,6 +24,7 @@ open class CameraFilter(var context: Context): BaseFilter() {
     var aTexCoorLocation = -1
     var uMatrixLocation = -1
     var uTextureUnit = -1
+//    var colorLocation = -1
 
     //----- buffer
     val pointBuffer:FloatBuffer = BufferUtil.createFullVertexBuffer()
@@ -37,15 +39,20 @@ open class CameraFilter(var context: Context): BaseFilter() {
         uMatrixLocation = getUniform(U_MATRIX)
         uTextureUnit = getUniform(U_TEXTUREUNIT)
 
+//        colorLocation = GLES20.glGetUniformLocation(program, "u_Color")
+
         // gl 坐标
         pointBuffer.position(0)
         GLES20.glVertexAttribPointer(aPositionLocation,2,GLES20.GL_FLOAT,false,0,pointBuffer)
         GLES20.glEnableVertexAttribArray(aPositionLocation)
 
+
         // 纹理 坐标
         texBuffer.position(0)
         GLES20.glVertexAttribPointer(aTexCoorLocation,2,GLES20.GL_FLOAT,false,0,texBuffer)
         GLES20.glEnableVertexAttribArray(aTexCoorLocation)
+
+        GLES20.glClearColor(0f, 0f, 0f, 1f)
 
     }
 
@@ -53,13 +60,17 @@ open class CameraFilter(var context: Context): BaseFilter() {
         GLES20.glViewport(0, 0, width, height)
     }
 
+    var color = floatArrayOf(1f,1f,0f,1f)
     override fun onDrawFrame(texture: Int) {
-        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
+        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT)
 
-        GLES20.glActiveTexture(GLES20.GL_TEXTURE0)
-        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D,texture)
+//        GLES20.glUniform4fv(colorLocation,1,color,0)
+
+        GLES20.glActiveTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES)
+        GLES20.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES,texture)
         GLES20.glUniform1i(uTextureUnit,0)
-        GLES20.glUniformMatrix4fv(uMatrixLocation,1,false,mtx,0)
+        GLES20.glUniformMatrix4fv(uMatrixLocation,1,false, mtx,0)
+
         GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP,0,4)
     }
 

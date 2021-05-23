@@ -2,6 +2,7 @@ package com.example.uipractice.opengl.renders
 
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
+import android.opengl.Matrix
 import com.example.uipractice.opengl.utils.BufferUtil
 import com.example.uipractice.opengl.utils.ShaderHelper
 import java.nio.FloatBuffer
@@ -9,7 +10,6 @@ import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
 class TriangleRender:GLSurfaceView.Renderer {
-
     companion object {
         //关键字 概念：
         // 1. uniform 由外部程序传递给 shader，就像是C语言里面的常量，shader 只能用，不能改；
@@ -21,11 +21,12 @@ class TriangleRender:GLSurfaceView.Renderer {
          */
         private val VERTEX_SHADER = """
                 // vec4：4个分量的向量：x、y、z、w
+                uniform mat4 u_Matrix;
                 attribute vec4 a_Position;
                 void main()
                 {
                 // gl_Position：GL中默认定义的输出变量，决定了当前顶点的最终位置
-                    gl_Position = a_Position;
+                    gl_Position = u_Matrix * a_Position;
                 // gl_PointSize：GL中默认定义的输出变量，决定了当前顶点的大小
                  //   gl_PointSize = 40.0;
                 }
@@ -43,13 +44,17 @@ class TriangleRender:GLSurfaceView.Renderer {
                    gl_FragColor = u_Color;
                 }
         """
+
+        private val U_MATRIX = "u_Matrix"
     }
 
     var program = 0
 
-    var pointData = floatArrayOf(0.5f,0.5f,0f,
-                                            -0.5f,-0.5f,0f,
-                                            0.5f,-0.5f,0f)
+    var pointData = floatArrayOf(
+            -0.5f, -0.5f,
+            0.5f, -0.5f,
+            -0.5f, 0.5f,
+            0.5f, 0.5f)
 
     var color = floatArrayOf(1f,0f,0f,1f)
 
@@ -58,6 +63,15 @@ class TriangleRender:GLSurfaceView.Renderer {
 
     var positionLocation = 0
     var colorLocation = 0
+
+    /**
+     * 矩阵数组
+     */
+    private val mProjectionMatrix = floatArrayOf(
+            1f, 0f, 0f, 0f,
+            0f, 1f, 0f, 0f,
+            0f, 0f, 1f, 0f,
+            0f, 0f, 0f, 1f)
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         // 设置刷新屏幕时候使用的颜色值,顺序是RGBA，值的范围从0~1。GLES20.glClear调用时使用该颜色值。
@@ -70,16 +84,31 @@ class TriangleRender:GLSurfaceView.Renderer {
 //        vertexBuffer.position(0)
 
         GLES20.glUseProgram(program)
+
+        vertexBuffer.position(0)
+
         positionLocation = GLES20.glGetAttribLocation(program, "a_Position")
+        GLES20.glVertexAttribPointer(positionLocation,2,GLES20.GL_FLOAT,false,0,vertexBuffer)
         GLES20.glEnableVertexAttribArray(positionLocation)
 
-        GLES20.glVertexAttribPointer(positionLocation,3,GLES20.GL_FLOAT,false,12,vertexBuffer)
         colorLocation = GLES20.glGetUniformLocation(program, "u_Color")
+
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
         // 设置宽高
         GLES20.glViewport(0, 0, width, height)
+        var aspectRatio = if (width > height) width.toFloat() / height.toFloat() else height.toFloat() / width.toFloat()
+
+        if (width > height) {
+            Matrix.orthoM(mProjectionMatrix,0,-aspectRatio,aspectRatio,-1f,1f,-1f,1f)
+        }else {
+            Matrix.orthoM(mProjectionMatrix,0,-1f,1f,-aspectRatio,aspectRatio,-1f,1f)
+        }
+
+        val vMatrixLocation = GLES20.glGetUniformLocation(program, U_MATRIX)
+
+        GLES20.glUniformMatrix4fv(vMatrixLocation,1,false,mProjectionMatrix,0)
     }
 
     override fun onDrawFrame(gl: GL10?) {
@@ -87,8 +116,9 @@ class TriangleRender:GLSurfaceView.Renderer {
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT)
 
         GLES20.glUniform4fv(colorLocation,1,color,0)
-        GLES20.glDrawArrays(GLES20.GL_TRIANGLES,0,3)
-        GLES20.glDisableVertexAttribArray(positionLocation)
+        GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP,0,4)
+//        GLES20.glDrawArrays(GLES20.GL_POINTS, 0, 4)
+//        GLES20.glDisableVertexAttribArray(positionLocation)
     }
 
 }

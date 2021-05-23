@@ -2,11 +2,13 @@ package com.example.uipractice.opengl.renders
 
 import android.graphics.SurfaceTexture
 import android.opengl.GLSurfaceView
+import android.util.Log
 import androidx.fragment.app.FragmentActivity
-import com.example.uipractice.camera.CameraXProvider
+import com.example.uipractice.camera.CameraXGLProvider
 import com.example.uipractice.camera.SurfaceTextureProvider
 import com.example.uipractice.opengl.filters.CameraFilter
 import com.example.uipractice.opengl.utils.OpenGLUtils
+import java.util.concurrent.FutureTask
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
@@ -15,41 +17,47 @@ class CameraRender(var context: FragmentActivity,var glSurfaceView: GLSurfaceVie
 
 
     var mOESTextureId = OpenGLUtils.createOESTextureObject()
+//    var mOESTextureId = 0
 
-    val surfaceTexture by lazy {
+    val surfaceTexture by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
         return@lazy SurfaceTexture(mOESTextureId)
+    }
+
+    var futureTask = FutureTask<SurfaceTexture> {
+        return@FutureTask surfaceTexture
     }
 
     var cameraFilter:CameraFilter? = null
 
-    init {
-        CameraXProvider(context = context,width = 480,height = 640,surfaceTextureProvider = this)
-    }
-
     var mtx = FloatArray(16)
 
-
-    override fun onDrawFrame(gl: GL10?) {
-        surfaceTexture.releaseTexImage()
-        surfaceTexture.getTransformMatrix(mtx)
-        cameraFilter?.setTransformMatrix(mtx)
-
-        cameraFilter?.onDrawFrame(mOESTextureId)
-    }
-
-    override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
-        cameraFilter?.onSurfaceChanged(gl,width,height)
-    }
-
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
-        surfaceTexture.attachToGLContext(mOESTextureId)
+//        surfaceTexture.attachToGLContext(mOESTextureId)
+//        var width = 1280 // 480
+//        var height = 1960 // 640
+        futureTask.run()
+        var width = 480 // 480
+        var height = 640 // 640
+        CameraXGLProvider(context = context,width = width,height = height,surfaceTextureProvider = this)
         surfaceTexture.setOnFrameAvailableListener(this)
         cameraFilter = CameraFilter(context)
         cameraFilter?.onSurfaceCreated(gl,config)
     }
 
+    override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
+//        Log.e("onSurfaceChanged","width = $width,height = $height")
+        cameraFilter?.onSurfaceChanged(gl,width,height)
+    }
+
+    override fun onDrawFrame(gl: GL10?) {
+        surfaceTexture.updateTexImage()
+        surfaceTexture.getTransformMatrix(mtx)
+        cameraFilter?.setTransformMatrix(mtx)
+        cameraFilter?.onDrawFrame(mOESTextureId)
+    }
+
     override fun provideSurface(): SurfaceTexture {
-        return surfaceTexture
+        return futureTask.get()
     }
 
     override fun onFrameAvailable(surfaceTexture: SurfaceTexture?) {

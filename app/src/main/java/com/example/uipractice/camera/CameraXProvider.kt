@@ -92,12 +92,10 @@ class CameraXProvider(var context:FragmentActivity,
         var size = Size(width,height)
         previewCase = builder
             .setTargetResolution(size)
-            .setTargetAspectRatio(aspectRatio(size.width,size.height))
+//            .setTargetAspectRatio(aspectRatio(size.width,size.height))
             .build()
 
-        var st = SurfaceTexture(1)
-        st.attachToGLContext(1)
-        if (surfaceTextureProvider == null) {
+        if (previewView != null) {
             previewCase?.setSurfaceProvider(previewView.surfaceProvider)
         }else {
             previewCase?.setSurfaceProvider { request ->

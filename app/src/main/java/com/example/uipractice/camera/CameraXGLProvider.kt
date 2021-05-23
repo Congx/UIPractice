@@ -88,7 +88,7 @@ class CameraXGLProvider(var context:FragmentActivity,
         var size = Size(width,height)
         previewCase = builder
             .setTargetResolution(size)
-            .setTargetAspectRatio(AspectRatio.RATIO_16_9)
+//            .setTargetAspectRatio(AspectRatio.RATIO_16_9)
             .build()
 
         previewCase?.setSurfaceProvider { request ->

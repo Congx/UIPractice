@@ -55,8 +55,8 @@ open class L1_1_PointRenderer : Renderer {
          * 顶点数据数组
          */
         private val POINT_DATA = floatArrayOf(
-                // 点的x,y坐标（x，y各占1个分量）
-                0f, 0f)
+            // 点的x,y坐标（x，y各占1个分量）
+            -0.5f, -0.5f, 0.5f, -0.5f, -0.5f, 0.5f, 0.5f, 0.5f)
         /**
          * 每个顶点数据关联的分量个数：当前案例只有x、y，故为2
          */
@@ -84,12 +84,12 @@ open class L1_1_PointRenderer : Renderer {
     init {
         // 分配一个块Native内存，用于与GL通讯传递。(我们通常用的数据存在于Dalvik的内存中，1.无法访问硬件；2.会被垃圾回收)
         mVertexData = ByteBuffer
-                // 分配顶点坐标分量个数 * Float占的Byte位数
-                .allocateDirect(POINT_DATA.size * BYTES_PER_FLOAT)
-                // 按照本地字节序排序
-                .order(ByteOrder.nativeOrder())
-                // Byte类型转Float类型
-                .asFloatBuffer()
+            // 分配顶点坐标分量个数 * Float占的Byte位数
+            .allocateDirect(POINT_DATA.size * BYTES_PER_FLOAT)
+            // 按照本地字节序排序
+            .order(ByteOrder.nativeOrder())
+            // Byte类型转Float类型
+            .asFloatBuffer()
 
         // 将Dalvik的内存数据复制到Native内存中
         mVertexData.put(POINT_DATA)
@@ -115,14 +115,10 @@ open class L1_1_PointRenderer : Renderer {
         GLES20.glUseProgram(mProgram)
 
         // 步骤5：获取颜色Uniform在OpenGL程序中的索引
-        uColorLocation = GLES20.glGetUniformLocation(mProgram,
-            U_COLOR
-        )
+        uColorLocation = GLES20.glGetUniformLocation(mProgram, U_COLOR)
 
         // 步骤6：获取顶点坐标属性在OpenGL程序中的索引
-        aPositionLocation = GLES20.glGetAttribLocation(mProgram,
-            A_POSITION
-        )
+        aPositionLocation = GLES20.glGetAttribLocation(mProgram, A_POSITION)
 
         // 将缓冲区的指针移动到头部，保证数据是从最开始处读取
         mVertexData.position(0)
@@ -133,9 +129,8 @@ open class L1_1_PointRenderer : Renderer {
         // 4. 指定当被访问时，固定点数据值是否应该被归一化(GL_TRUE)或者直接转换为固定点值(GL_FALSE)(只有使用整数数据时)
         // 5. 指定连续顶点属性之间的偏移量。如果为0，那么顶点属性会被理解为：它们是紧密排列在一起的。初始值为0。
         // 6. 数据缓冲区
-        GLES20.glVertexAttribPointer(aPositionLocation,
-            POSITION_COMPONENT_COUNT, GLES20.GL_FLOAT,
-                false, 0, mVertexData)
+        GLES20.glVertexAttribPointer(aPositionLocation, POSITION_COMPONENT_COUNT, GLES20.GL_FLOAT,
+            false, 0, mVertexData)
 
         // 步骤8：通知GL程序使用指定的顶点属性索引
         GLES20.glEnableVertexAttribArray(aPositionLocation)
@@ -153,6 +148,7 @@ open class L1_1_PointRenderer : Renderer {
         // 步骤2：更新u_Color的值，即更新画笔颜色
         GLES20.glUniform4f(uColorLocation, 0.0f, 0.0f, 1.0f, 1.0f)
         // 步骤3：使用数组绘制图形：1.绘制的图形类型；2.从顶点数组读取的起点；3.从顶点数组读取的顶点个数
-        GLES20.glDrawArrays(GLES20.GL_POINTS, 0, 1)
+        GLES20.glDrawArrays(GLES20.GL_POINTS, 0, 4)
+        GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, 4)
     }
 }

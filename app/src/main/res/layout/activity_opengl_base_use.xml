@@ -10,4 +10,15 @@
         android:id="@+id/glSurfaceView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+<!--    <TextureView-->
+<!--        android:id="@+id/glSurfaceView"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent" />-->
+
+<!--    <androidx.camera.view.PreviewView-->
+<!--        android:id="@+id/glSurfaceView"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent" />-->
+
 </FrameLayout>

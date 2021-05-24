@@ -1,8 +1,11 @@
 package com.example.uipractice.opengl.utils;
 
+import android.app.ActivityManager;
 import android.content.Context;
+import android.content.pm.ConfigurationInfo;
 import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
+import android.os.Build;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -52,5 +55,29 @@ public class OpenGLUtils {
             e.printStackTrace();
         }
         return sb.toString();
+    }
+
+    /**
+     * 判断是否支持es2.0
+     *
+     * @param context
+     * @return
+     */
+    public static boolean isSupportEs2(Context context) {
+        //检查是否支持2.0
+        ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        if (activityManager != null) {
+            ConfigurationInfo deviceConfigurationInfo = activityManager.getDeviceConfigurationInfo();
+            int reqGlEsVersion = deviceConfigurationInfo.reqGlEsVersion;
+            return reqGlEsVersion >= 0x00020000 || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1
+                    && (Build.FINGERPRINT.startsWith("generic")
+                    || Build.FINGERPRINT.startsWith("unknown")
+                    || Build.MODEL.contains("google_sdk")
+                    || Build.MODEL.contains("Emulator")
+                    || Build.MODEL.contains("Android SDK build for x86")));
+        } else {
+            return false;
+        }
+
     }
 }

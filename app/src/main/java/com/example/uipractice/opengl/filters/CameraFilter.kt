@@ -60,7 +60,7 @@ open class CameraFilter(var context: Context): BaseFilter() {
         GLES20.glViewport(0, 0, width, height)
     }
 
-    var color = floatArrayOf(1f,1f,0f,1f)
+//    var color = floatArrayOf(1f,1f,0f,1f)
     override fun onDrawFrame(texture: Int) {
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT)
 

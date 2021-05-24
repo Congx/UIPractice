@@ -8,7 +8,6 @@ import com.example.uipractice.camera.CameraXGLProvider
 import com.example.uipractice.camera.SurfaceTextureProvider
 import com.example.uipractice.opengl.filters.CameraFilter
 import com.example.uipractice.opengl.utils.OpenGLUtils
-import java.util.concurrent.FutureTask
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
@@ -43,8 +42,11 @@ class CameraRender(var context: FragmentActivity,var glSurfaceView: GLSurfaceVie
 //        var height = 1960 // 640
 
         surfaceTexture = SurfaceTexture(mOESTextureId)
-        var width = 480 // 480
-        var height = 640 // 640
+
+//        surfaceTexture?.attachToGLContext(mOESTextureId)
+        var width = 720 // 480
+        var height = 1280 // 640
+        surfaceTexture?.setDefaultBufferSize(width, height)
         provider =  CameraXGLProvider(context = context,width = width,height = height,surfaceTextureProvider = this)
         surfaceTexture?.setOnFrameAvailableListener(this)
 

@@ -9,7 +9,9 @@ import com.example.uipractice.camera.CameraXGLProvider
 import com.example.uipractice.camera.SurfaceTextureProvider
 import com.example.uipractice.opengl.MediaRecorder
 import com.example.uipractice.opengl.filters.CameraFilter
+import com.example.uipractice.opengl.filters.Filter
 import com.example.uipractice.opengl.filters.PreviewFilter
+import com.example.uipractice.opengl.filters.SoulEffectFilter
 import com.example.uipractice.opengl.utils.OpenGLUtils
 import java.io.File
 import java.io.IOException
@@ -38,6 +40,9 @@ class CameraRender(var context: FragmentActivity, var glSurfaceView: GLSurfaceVi
     var cameraFilter:CameraFilter? = null
     var previewFilter:PreviewFilter? = null
     var provider:CameraXGLProvider? = null
+
+    var soulEffectFilter:Filter? = null
+
     var mtx = FloatArray(16)
 
     private var mRecorder: MediaRecorder? = null
@@ -60,12 +65,19 @@ class CameraRender(var context: FragmentActivity, var glSurfaceView: GLSurfaceVi
         provider =  CameraXGLProvider(context = context, width = width, height = height, surfaceTextureProvider = this)
         surfaceTexture?.setOnFrameAvailableListener(this)
 
+        // fbo 离屏渲染
         cameraFilter = CameraFilter(context)
         cameraFilter?.onSurfaceCreated(gl, config)
 
+        // 把fbo的数据预览输出
         previewFilter = PreviewFilter(context)
         previewFilter?.onSurfaceCreated(gl, config)
 
+        // 灵魂出窍特效
+        soulEffectFilter = SoulEffectFilter(context)
+        soulEffectFilter?.onSurfaceCreated(gl, config)
+
+        // 把fbo的数据进行录制
         var path = ContextProvider.getContext()?.getExternalFilesDir("output")?.absolutePath + File.separator + "output.mp4"
         mRecorder = MediaRecorder(glSurfaceView.getContext(), path,
                 EGL14.eglGetCurrentContext(),
@@ -76,6 +88,7 @@ class CameraRender(var context: FragmentActivity, var glSurfaceView: GLSurfaceVi
 //        Log.e("CameraRender","width = $width,height = $height")
         cameraFilter?.onSurfaceChanged(gl, width, height)
         previewFilter?.onSurfaceChanged(gl, width, height)
+        soulEffectFilter?.onSurfaceChanged(gl, width, height)
     }
 
     override fun onDrawFrame(gl: GL10?) {
@@ -83,7 +96,9 @@ class CameraRender(var context: FragmentActivity, var glSurfaceView: GLSurfaceVi
         surfaceTexture?.updateTexImage()
         surfaceTexture?.getTransformMatrix(mtx)
         cameraFilter?.setTransformMatrix(mtx)
+
         var texId = cameraFilter!!.onDrawFrame(mOESTextureId)
+        texId = soulEffectFilter!!.onDrawFrame(texId)
         texId = previewFilter!!.onDrawFrame(texId)
 
         mRecorder?.fireFrame(texId, surfaceTexture!!.timestamp)

@@ -1,6 +1,6 @@
 package com.example.uipractice.opengl.utils;
 
-class Constants {
+public class Constants {
 
     /**
      * 全屏顶点数据

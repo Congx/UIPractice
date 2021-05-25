@@ -2,16 +2,16 @@ package com.example.uipractice.opengl.renders
 
 import android.content.Context
 import android.opengl.GLSurfaceView
-import com.example.uipractice.opengl.filters.BaseTexFilter
+import com.example.uipractice.opengl.filters.TexFilter
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
 class TextureRender(var context:Context):GLSurfaceView.Renderer {
 
-    lateinit var filter:BaseTexFilter
+    lateinit var filter:TexFilter
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
-        filter = BaseTexFilter(context)
+        filter = TexFilter(context)
         filter.onSurfaceCreated(gl,config)
     }
 

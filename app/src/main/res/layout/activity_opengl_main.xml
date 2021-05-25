@@ -21,4 +21,16 @@
       android:layout_height="wrap_content"
       android:text="Camera用法"/>
 
+  <Button
+      android:id="@+id/btnTex"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="纹理"/>
+
+  <Button
+      android:id="@+id/btnEffect"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="特效"/>
+
   </LinearLayout>

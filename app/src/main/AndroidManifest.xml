@@ -27,6 +27,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".opengl.OpenglCameractivity"></activity>
+        <activity android:name=".opengl.OpenglEffectsActivity"></activity>
+        <activity android:name=".opengl.OpenglTexActivity"></activity>
         <activity android:name=".camera.CameraXActivity" />
         <activity android:name=".image.GlideActivity" />
         <activity android:name=".plugin.PluginTestActivity" /> <!-- <activity android:name=".plugin.PluginActivity"></activity> -->

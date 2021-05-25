@@ -5,23 +5,22 @@ import android.opengl.GLES20
 import androidx.annotation.CallSuper
 import com.example.uipractice.BuildConfig
 import com.example.uipractice.R
-import com.example.uipractice.opengl.utils.BufferUtil
-import com.example.uipractice.opengl.utils.OpenGLUtils
-import com.example.uipractice.opengl.utils.ProjectionMatrixHelper
-import com.example.uipractice.opengl.utils.ShaderHelper
+import com.example.uipractice.opengl.utils.*
 import java.nio.FloatBuffer
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
 open class BaseFilter constructor(var context: Context,
                                   var vertexShader: Int = R.raw.base_tex_vert,
-                                  var fragmentShader: Int = R.raw.base_tex_frag) : Filter {
+                                  var fragmentShader: Int = R.raw.base_tex_frag,
+                                  var pointData:FloatArray = Constants.FULL_POINT_DATA,// gl 坐标系顶点
+                                  // 纹理坐标顶点
+                                  var texVertex:FloatArray = Constants.ANDROID_POINT_DATA) : Filter {
 
     companion object {
         const val A_POSITION = "a_Position"
         const val A_TEXCOORD = "a_TexCoord"
         const val U_TEXTURE_SAMPLER = "u_TextureSampler"
-        const val U_PROJECTION_MATRIX = "u_Projection_Matrix"
     }
 
     var program = 0
@@ -36,8 +35,8 @@ open class BaseFilter constructor(var context: Context,
     private var mHeight:Int = 0
 
     //----- buffer
-    val pointBuffer: FloatBuffer = BufferUtil.createFullVertexBuffer()
-    val texBuffer: FloatBuffer = BufferUtil.createAndroidVertexBuffer()
+    val pointBuffer: FloatBuffer = BufferUtil.createFloatBuffer(pointData)
+    val texBuffer: FloatBuffer = BufferUtil.createFloatBuffer(texVertex)
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         val vertexShader = OpenGLUtils.readRawTextFile(context, vertexShader)
@@ -45,9 +44,7 @@ open class BaseFilter constructor(var context: Context,
         makeProgram(vertexShader, fragmentShader)
         aPositionLocation = getAttrib(A_POSITION)
         aTexCoorLocation = getAttrib(A_TEXCOORD)
-//        uMatrixLocation = getUniform(U_MATRIX)
         uTextureSampler = getUniform(U_TEXTURE_SAMPLER)
-//        uProjectionMatrix = getUniform(U_PROJECTION_MATRIX)
 
         // gl 坐标
         pointBuffer.position(0)
@@ -68,7 +65,6 @@ open class BaseFilter constructor(var context: Context,
         mWidth = width
         mHeight = height
         GLES20.glViewport(0, 0, width, height)
-        projectionMatrix(width, height)
     }
 
     override fun onDrawFrame(texture: Int):Int {
@@ -92,8 +88,8 @@ open class BaseFilter constructor(var context: Context,
 
     }
 
-    open fun projectionMatrix(width: Int, height: Int) {
-//        ProjectionMatrixHelper(program, U_PROJECTION_MATRIX).enable(width, height)
+    open fun projectionMatrix(width: Int, height: Int,projectMatrixName:String) {
+        ProjectionMatrixHelper(program, projectMatrixName).enable(width, height)
     }
 
     /**

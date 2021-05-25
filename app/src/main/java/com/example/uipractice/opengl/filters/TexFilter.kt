@@ -10,7 +10,7 @@ import com.example.uipractice.utils.TextureHelper
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
-class BaseTexFilter(var context: Context): Filter {
+class TexFilter(var context: Context): Filter {
 
     companion object {
         private val VERTEX_SHADER = """

@@ -10,7 +10,6 @@ import com.example.uipractice.opengl.renders.CameraRender
 import com.example.uipractice.opengl.renders.TextureRender
 
 class CameraGLSurfaceView(context: Context, attrs: AttributeSet?) : GLSurfaceView(context, attrs) {
-//    val camera = CameraApi14()
     val cameraRender = CameraRender(context as FragmentActivity, this)
 
     init {

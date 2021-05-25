@@ -11,10 +11,6 @@ open class BaseFBOFilter(context: Context, vertexShader: Int, fragmentShader: In
 
     var fboBuffer:FrameBuffer? = null
 
-    override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
-        super.onSurfaceCreated(gl, config)
-    }
-
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
         super.onSurfaceChanged(gl, width, height)
         fboBuffer = FrameBuffer()

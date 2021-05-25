@@ -1,18 +1,22 @@
 package com.example.uipractice.opengl.renders
 
 import android.graphics.SurfaceTexture
+import android.opengl.EGL14
 import android.opengl.GLSurfaceView
-import android.util.Log
 import androidx.fragment.app.FragmentActivity
+import com.base.context.ContextProvider
 import com.example.uipractice.camera.CameraXGLProvider
 import com.example.uipractice.camera.SurfaceTextureProvider
+import com.example.uipractice.opengl.MediaRecorder
 import com.example.uipractice.opengl.filters.CameraFilter
-import com.example.uipractice.opengl.filters.ScreenFilter
+import com.example.uipractice.opengl.filters.PreviewFilter
 import com.example.uipractice.opengl.utils.OpenGLUtils
+import java.io.File
+import java.io.IOException
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
-class CameraRender(var context: FragmentActivity,var glSurfaceView: GLSurfaceView):GLSurfaceView.Renderer, SurfaceTextureProvider,
+class CameraRender(var context: FragmentActivity, var glSurfaceView: GLSurfaceView):GLSurfaceView.Renderer, SurfaceTextureProvider,
     SurfaceTexture.OnFrameAvailableListener {
 
 
@@ -32,9 +36,11 @@ class CameraRender(var context: FragmentActivity,var glSurfaceView: GLSurfaceVie
 //    }
 
     var cameraFilter:CameraFilter? = null
-    var screenFilter:ScreenFilter? = null
+    var screenFilter:PreviewFilter? = null
     var provider:CameraXGLProvider? = null
     var mtx = FloatArray(16)
+
+    private var mRecorder: MediaRecorder? = null
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
 //        futureTask.run()
@@ -49,20 +55,25 @@ class CameraRender(var context: FragmentActivity,var glSurfaceView: GLSurfaceVie
         var width = 720 // 480
         var height = 1280 // 640
         surfaceTexture?.setDefaultBufferSize(width, height)
-        provider =  CameraXGLProvider(context = context,width = width,height = height,surfaceTextureProvider = this)
+        provider =  CameraXGLProvider(context = context, width = width, height = height, surfaceTextureProvider = this)
         surfaceTexture?.setOnFrameAvailableListener(this)
 
         cameraFilter = CameraFilter(context)
-        cameraFilter?.onSurfaceCreated(gl,config)
+        cameraFilter?.onSurfaceCreated(gl, config)
 
-        screenFilter = ScreenFilter(context)
-//        screenFilter?.onSurfaceCreated(gl,config)
+        screenFilter = PreviewFilter(context)
+        screenFilter?.onSurfaceCreated(gl, config)
+
+        var path = ContextProvider.getContext()?.getExternalFilesDir("output")?.absolutePath + File.separator + "output.mp4"
+        mRecorder = MediaRecorder(glSurfaceView.getContext(), path,
+                EGL14.eglGetCurrentContext(),
+                480, 640)
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
 //        Log.e("CameraRender","width = $width,height = $height")
-        cameraFilter?.onSurfaceChanged(gl,width,height)
-//        screenFilter?.onSurfaceChanged(gl,width,height)
+        cameraFilter?.onSurfaceChanged(gl, width, height)
+        screenFilter?.onSurfaceChanged(gl, width, height)
     }
 
     override fun onDrawFrame(gl: GL10?) {
@@ -70,8 +81,10 @@ class CameraRender(var context: FragmentActivity,var glSurfaceView: GLSurfaceVie
         surfaceTexture?.updateTexImage()
         surfaceTexture?.getTransformMatrix(mtx)
         cameraFilter?.setTransformMatrix(mtx)
-        val fboTexId = cameraFilter!!.onDrawFrame(mOESTextureId)
-//        screenFilter?.onDrawFrame(fboTexId)
+        var fboTexId = cameraFilter!!.onDrawFrame(mOESTextureId)
+        fboTexId = screenFilter!!.onDrawFrame(fboTexId)
+
+        mRecorder?.fireFrame(fboTexId, surfaceTexture!!.timestamp)
     }
 
     override fun provideSurface(): SurfaceTexture {
@@ -85,5 +98,17 @@ class CameraRender(var context: FragmentActivity,var glSurfaceView: GLSurfaceVie
     public fun release() {
         cameraFilter?.release()
         screenFilter?.release()
+    }
+
+    fun startRecord(speed: Float) {
+        try {
+            mRecorder!!.start(speed)
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
+
+    fun stopRecord() {
+        mRecorder!!.stop()
     }
 }

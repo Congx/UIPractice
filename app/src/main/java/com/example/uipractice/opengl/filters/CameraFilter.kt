@@ -6,7 +6,7 @@ import com.example.uipractice.R
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
-open class CameraFilter(context: Context): BaseFilter(context,R.raw.camera_vert,R.raw.camera_frag) {
+open class CameraFilter(context: Context): BaseFBOFilter(context,R.raw.camera_vert,R.raw.camera_frag) {
 
     var mtx:FloatArray? = null
     var uMatrixLocation = -1

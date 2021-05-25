@@ -18,45 +18,46 @@ import java.io.IOException
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
-class CameraRender(var context: FragmentActivity, var glSurfaceView: GLSurfaceView):GLSurfaceView.Renderer, SurfaceTextureProvider,
+class CameraRender(var context: FragmentActivity, var glSurfaceView: GLSurfaceView,
+                   effectFilters:MutableList<Filter> = mutableListOf())
+    :GLSurfaceView.Renderer, SurfaceTextureProvider,
     SurfaceTexture.OnFrameAvailableListener {
 
+
+    var cameraFilter:CameraFilter = CameraFilter(context)
 
     val mOESTextureId by lazy {
         return@lazy OpenGLUtils.createOESTextureObject()
     }
-//    var mOESTextureId = 0
-
-//    val surfaceTexture by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
-//        return@lazy SurfaceTexture(mOESTextureId)
-//    }
 
     var surfaceTexture:SurfaceTexture? = null
 
-//    var futureTask = FutureTask<SurfaceTexture> {
-//        return@FutureTask surfaceTexture
-//    }
-
-    var cameraFilter:CameraFilter? = null
-    var previewFilter:PreviewFilter? = null
+    //    var previewFilter:PreviewFilter? = null
     var provider:CameraXGLProvider? = null
 
-    var soulEffectFilter:Filter? = null
+//    var soulEffectFilter:Filter? = null
 
     var mtx = FloatArray(16)
 
     private var mRecorder: MediaRecorder? = null
 
-    override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
-//        futureTask.run()
+    var filters = mutableListOf<Filter>()
 
+    init {
+        // fbo 离屏渲染
+        filters.add(0,cameraFilter)
+        filters.addAll(effectFilters)
+        // 把fbo的数据预览输出
+        filters.add(PreviewFilter(context))
+    }
+
+    override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
 //        surfaceTexture.attachToGLContext(mOESTextureId)
 //        var width = 1280 // 480
 //        var height = 1960 // 640
 
         surfaceTexture = SurfaceTexture(mOESTextureId)
 
-//        surfaceTexture?.attachToGLContext(mOESTextureId)
 //        var width = 720 // 480
 //        var height = 1280 // 640
         var width = 480 // 480
@@ -65,17 +66,21 @@ class CameraRender(var context: FragmentActivity, var glSurfaceView: GLSurfaceVi
         provider =  CameraXGLProvider(context = context, width = width, height = height, surfaceTextureProvider = this)
         surfaceTexture?.setOnFrameAvailableListener(this)
 
+        for (filter in filters) {
+            filter.onSurfaceCreated(gl, config)
+        }
+
         // fbo 离屏渲染
-        cameraFilter = CameraFilter(context)
-        cameraFilter?.onSurfaceCreated(gl, config)
-
-        // 把fbo的数据预览输出
-        previewFilter = PreviewFilter(context)
-        previewFilter?.onSurfaceCreated(gl, config)
-
-        // 灵魂出窍特效
-        soulEffectFilter = SoulEffectFilter(context)
-        soulEffectFilter?.onSurfaceCreated(gl, config)
+//        cameraFilter = CameraFilter(context)
+//        cameraFilter?.onSurfaceCreated(gl, config)
+//
+//        // 把fbo的数据预览输出
+//        previewFilter = PreviewFilter(context)
+//        previewFilter?.onSurfaceCreated(gl, config)
+//
+//        // 灵魂出窍特效
+//        soulEffectFilter = SoulEffectFilter(context)
+//        soulEffectFilter?.onSurfaceCreated(gl, config)
 
         // 把fbo的数据进行录制
         var path = ContextProvider.getContext()?.getExternalFilesDir("output")?.absolutePath + File.separator + "output.mp4"
@@ -86,22 +91,30 @@ class CameraRender(var context: FragmentActivity, var glSurfaceView: GLSurfaceVi
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
 //        Log.e("CameraRender","width = $width,height = $height")
-        cameraFilter?.onSurfaceChanged(gl, width, height)
-        previewFilter?.onSurfaceChanged(gl, width, height)
-        soulEffectFilter?.onSurfaceChanged(gl, width, height)
+//        cameraFilter?.onSurfaceChanged(gl, width, height)
+//        previewFilter?.onSurfaceChanged(gl, width, height)
+//        soulEffectFilter?.onSurfaceChanged(gl, width, height)
+
+        for (filter in filters) {
+            filter.onSurfaceChanged(gl, width,height)
+        }
     }
 
     override fun onDrawFrame(gl: GL10?) {
 //        Log.e("CameraRender","onDrawFrame")
         surfaceTexture?.updateTexImage()
         surfaceTexture?.getTransformMatrix(mtx)
-        cameraFilter?.setTransformMatrix(mtx)
+        cameraFilter.setTransformMatrix(mtx)
 
-        var texId = cameraFilter!!.onDrawFrame(mOESTextureId)
-        texId = soulEffectFilter!!.onDrawFrame(texId)
-        texId = previewFilter!!.onDrawFrame(texId)
+//        var texId = cameraFilter!!.onDrawFrame(mOESTextureId)
+//        texId = soulEffectFilter!!.onDrawFrame(texId)
+//        texId = previewFilter!!.onDrawFrame(texId)
 
-        mRecorder?.fireFrame(texId, surfaceTexture!!.timestamp)
+        var textureId = mOESTextureId
+        for (filter in filters) {
+            textureId = filter.onDrawFrame(textureId)
+        }
+        mRecorder?.fireFrame(textureId, surfaceTexture!!.timestamp)
     }
 
     override fun provideSurface(): SurfaceTexture {
@@ -113,8 +126,9 @@ class CameraRender(var context: FragmentActivity, var glSurfaceView: GLSurfaceVi
     }
 
     public fun release() {
-        cameraFilter?.release()
-        previewFilter?.release()
+        for (filter in filters) {
+            filter.release()
+        }
     }
 
     fun startRecord(speed: Float) {

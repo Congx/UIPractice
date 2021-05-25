@@ -24,5 +24,9 @@ class OpenglMainActivity : AppCompatActivity() {
         btnEffect.setOnClickListener {
             startActivity(Intent(this,OpenglEffectsActivity::class.java))
         }
+
+        btnSplit.setOnClickListener {
+            startActivity(Intent(this,OpenglSplitActivity::class.java))
+        }
     }
 }

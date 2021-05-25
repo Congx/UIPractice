@@ -6,7 +6,7 @@ import com.example.uipractice.opengl.renders.FrameBuffer
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
-open class BaseFBOFilter(context: Context, vertexShader: Int, fragmentShader: Int) :
+open class BaseFBOFilter constructor(context: Context, vertexShader: Int, fragmentShader: Int) :
         BaseFilter(context, vertexShader, fragmentShader) {
 
     var fboBuffer:FrameBuffer? = null

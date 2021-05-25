@@ -10,4 +10,6 @@ interface Filter {
     fun onSurfaceChanged(gl: GL10?, width: Int, height: Int)
 
     fun onDrawFrame(texture:Int):Int
+
+    fun release()
 }

@@ -28,6 +28,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".opengl.OpenglCameractivity"></activity>
         <activity android:name=".opengl.OpenglEffectsActivity"></activity>
+        <activity android:name=".opengl.OpenglSplitActivity"></activity>
         <activity android:name=".opengl.OpenglTexActivity"></activity>
         <activity android:name=".camera.CameraXActivity" />
         <activity android:name=".image.GlideActivity" />

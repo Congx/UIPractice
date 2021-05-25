@@ -116,4 +116,8 @@ class TexFilter(var context: Context): Filter {
 
         return 0
     }
+
+    override fun release() {
+        TODO("Not yet implemented")
+    }
 }

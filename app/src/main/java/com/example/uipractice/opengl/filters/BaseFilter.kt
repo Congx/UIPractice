@@ -122,7 +122,7 @@ open class BaseFilter constructor(var context: Context,
     }
 
     @CallSuper
-    open fun release() {
+    override fun release() {
         GLES20.glDeleteProgram(program)
     }
 }

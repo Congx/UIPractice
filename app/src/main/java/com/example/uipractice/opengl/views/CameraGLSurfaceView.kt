@@ -7,14 +7,18 @@ import android.util.AttributeSet
 import androidx.fragment.app.FragmentActivity
 import com.example.uipractice.opengl.camera.CameraApi14
 import com.example.uipractice.opengl.renders.CameraRender
+import com.example.uipractice.opengl.renders.TextureRender
 
-class CameraGLSurfaceView(context: Context?, attrs: AttributeSet?) : GLSurfaceView(context, attrs) {
+class CameraGLSurfaceView(context: Context, attrs: AttributeSet?) : GLSurfaceView(context, attrs) {
 //    val camera = CameraApi14()
     val cameraRender = CameraRender(context as FragmentActivity, this)
 
     init {
 //        openCamera()
         setEGLContextClientVersion(2)
+        // 纹理绘制
+//        setRenderer(TextureRender(context))
+        // 相机
         setRenderer(cameraRender)
 //        setRenderer(L11_1_CameraRenderer(getContext(),camera))
         renderMode = RENDERMODE_WHEN_DIRTY

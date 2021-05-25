@@ -7,14 +7,15 @@ import com.example.uipractice.BuildConfig
 import com.example.uipractice.R
 import com.example.uipractice.opengl.utils.BufferUtil
 import com.example.uipractice.opengl.utils.OpenGLUtils
+import com.example.uipractice.opengl.utils.ProjectionMatrixHelper
 import com.example.uipractice.opengl.utils.ShaderHelper
 import java.nio.FloatBuffer
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
 open class BaseFilter constructor(var context: Context,
-                                  var vertexShader: Int = R.raw.base_vert,
-                                  var fragmentShader: Int = R.raw.base_frag) : Filter {
+                                  var vertexShader: Int = R.raw.base_tex_vert,
+                                  var fragmentShader: Int = R.raw.base_tex_frag) : Filter {
 
     companion object {
         const val A_POSITION = "a_Position"

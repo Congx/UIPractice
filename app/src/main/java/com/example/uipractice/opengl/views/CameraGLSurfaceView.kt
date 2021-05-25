@@ -9,7 +9,7 @@ import com.example.uipractice.opengl.camera.CameraApi14
 import com.example.uipractice.opengl.renders.CameraRender
 
 class CameraGLSurfaceView(context: Context?, attrs: AttributeSet?) : GLSurfaceView(context, attrs) {
-    val camera = CameraApi14()
+//    val camera = CameraApi14()
     val cameraRender = CameraRender(context as FragmentActivity, this)
 
     init {
@@ -22,10 +22,10 @@ class CameraGLSurfaceView(context: Context?, attrs: AttributeSet?) : GLSurfaceVi
 //        Log.e("CameraGLSurfaceView","init()")
     }
 
-    private fun openCamera() {
-        camera.open(Camera.CameraInfo.CAMERA_FACING_BACK)
-        camera.preview()
-    }
+//    private fun openCamera() {
+//        camera.open(Camera.CameraInfo.CAMERA_FACING_BACK)
+//        camera.preview()
+//    }
 
 
     override fun onDetachedFromWindow() {

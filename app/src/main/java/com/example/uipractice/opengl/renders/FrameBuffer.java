@@ -16,6 +16,7 @@ public class FrameBuffer {
     public int getTextureId() {
         return textureId;
     }
+
     public boolean isInstantiation() {
         return mWidth!=0||mHeight!=0;
     }

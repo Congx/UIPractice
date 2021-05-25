@@ -36,7 +36,7 @@ class CameraRender(var context: FragmentActivity, var glSurfaceView: GLSurfaceVi
 //    }
 
     var cameraFilter:CameraFilter? = null
-    var screenFilter:PreviewFilter? = null
+    var previewFilter:PreviewFilter? = null
     var provider:CameraXGLProvider? = null
     var mtx = FloatArray(16)
 
@@ -52,8 +52,10 @@ class CameraRender(var context: FragmentActivity, var glSurfaceView: GLSurfaceVi
         surfaceTexture = SurfaceTexture(mOESTextureId)
 
 //        surfaceTexture?.attachToGLContext(mOESTextureId)
-        var width = 720 // 480
-        var height = 1280 // 640
+//        var width = 720 // 480
+//        var height = 1280 // 640
+        var width = 480 // 480
+        var height = 640 // 640
         surfaceTexture?.setDefaultBufferSize(width, height)
         provider =  CameraXGLProvider(context = context, width = width, height = height, surfaceTextureProvider = this)
         surfaceTexture?.setOnFrameAvailableListener(this)
@@ -61,19 +63,19 @@ class CameraRender(var context: FragmentActivity, var glSurfaceView: GLSurfaceVi
         cameraFilter = CameraFilter(context)
         cameraFilter?.onSurfaceCreated(gl, config)
 
-        screenFilter = PreviewFilter(context)
-        screenFilter?.onSurfaceCreated(gl, config)
+        previewFilter = PreviewFilter(context)
+        previewFilter?.onSurfaceCreated(gl, config)
 
         var path = ContextProvider.getContext()?.getExternalFilesDir("output")?.absolutePath + File.separator + "output.mp4"
         mRecorder = MediaRecorder(glSurfaceView.getContext(), path,
                 EGL14.eglGetCurrentContext(),
-                480, 640)
+                width, height)
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
 //        Log.e("CameraRender","width = $width,height = $height")
         cameraFilter?.onSurfaceChanged(gl, width, height)
-        screenFilter?.onSurfaceChanged(gl, width, height)
+        previewFilter?.onSurfaceChanged(gl, width, height)
     }
 
     override fun onDrawFrame(gl: GL10?) {
@@ -81,10 +83,10 @@ class CameraRender(var context: FragmentActivity, var glSurfaceView: GLSurfaceVi
         surfaceTexture?.updateTexImage()
         surfaceTexture?.getTransformMatrix(mtx)
         cameraFilter?.setTransformMatrix(mtx)
-        var fboTexId = cameraFilter!!.onDrawFrame(mOESTextureId)
-        fboTexId = screenFilter!!.onDrawFrame(fboTexId)
+        var texId = cameraFilter!!.onDrawFrame(mOESTextureId)
+        texId = previewFilter!!.onDrawFrame(texId)
 
-        mRecorder?.fireFrame(fboTexId, surfaceTexture!!.timestamp)
+        mRecorder?.fireFrame(texId, surfaceTexture!!.timestamp)
     }
 
     override fun provideSurface(): SurfaceTexture {
@@ -97,7 +99,7 @@ class CameraRender(var context: FragmentActivity, var glSurfaceView: GLSurfaceVi
 
     public fun release() {
         cameraFilter?.release()
-        screenFilter?.release()
+        previewFilter?.release()
     }
 
     fun startRecord(speed: Float) {

@@ -89,6 +89,7 @@ public class EGLEnv {
             throw new RuntimeException("EGL error " + EGL14.eglGetError());
         }
         screenFilter = new ScreenFilter(context);
+        screenFilter.onSurfaceCreated(null,null);
         screenFilter.onSurfaceChanged(null,width,height);
 
     }

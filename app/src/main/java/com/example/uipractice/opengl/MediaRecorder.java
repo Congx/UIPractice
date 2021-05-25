@@ -10,6 +10,10 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.view.Surface;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
@@ -103,6 +107,10 @@ public class MediaRecorder {
     }
 
     private void codec(boolean endOfStream) {
+        if (endOfStream) {
+            mMediaCodec.signalEndOfInputStream();
+            return;
+        }
 //        数据什么时候
 //        编码
         while (true) {
@@ -145,6 +153,19 @@ public class MediaRecorder {
                     encodedData.limit(bufferInfo.offset + bufferInfo.size);
                     //写出为mp4
                     mMuxer.writeSampleData(track, encodedData, bufferInfo);
+//                    byte[] arr = new byte[bufferInfo.size];
+//                    encodedData.get(arr);
+//
+//                    FileOutputStream bos = null;
+//                    try {
+//                        bos = new FileOutputStream(mPath,true);
+//                        bos.write(arr);
+//                    } catch (FileNotFoundException e) {
+//                        e.printStackTrace();
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+
                 }
                 // 释放这个缓冲区，后续可以存放新的编码后的数据啦
                 mMediaCodec.releaseOutputBuffer(index, false);

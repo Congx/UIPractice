@@ -21,4 +21,14 @@ class Constants {
             0f, 1f,
             1f, 1f
     };
+
+    /**
+     * 投影矩阵数组
+     */
+    public static float[] PROJECTIONMATRIX = {
+            1f, 0f, 0f, 0f,
+            0f, 1f, 0f, 0f,
+            0f, 0f, 1f, 0f,
+            0f, 0f, 0f, 1f
+    };
 }

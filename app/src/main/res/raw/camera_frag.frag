@@ -4,10 +4,10 @@ precision mediump float;
 varying vec2 v_TexCoord;
 //uniform vec4 u_Color;
 //采样器  uniform static
-uniform samplerExternalOES u_TextureUnit;
+uniform samplerExternalOES u_TextureSampler;
 void main(){
 //Opengl 自带函数
-    vec4 rgba = texture2D(u_TextureUnit,v_TexCoord);
+    vec4 rgba = texture2D(u_TextureSampler,v_TexCoord);
     gl_FragColor=vec4(rgba.r,rgba.g,rgba.b,rgba.a);
 //    gl_FragColor=u_Color;
 }

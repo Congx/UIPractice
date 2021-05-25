@@ -1,77 +1,29 @@
 package com.example.uipractice.opengl.filters
 
 import android.content.Context
-import android.opengl.GLES11Ext
 import android.opengl.GLES20
 import com.example.uipractice.R
-import com.example.uipractice.opengl.utils.BufferUtil
-import com.example.uipractice.opengl.utils.OpenGLUtils
-import java.nio.FloatBuffer
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
-open class CameraFilter(var context: Context): BaseFilter() {
-
-    companion object {
-        const val A_POSITION = "a_Position"
-        const val A_TEXCOORD = "a_TexCoord"
-        const val U_MATRIX = "u_Matrix"
-        const val U_TEXTUREUNIT = "u_TextureUnit"
-    }
+open class CameraFilter(context: Context): BaseFilter(context,R.raw.camera_vert,R.raw.camera_frag) {
 
     var mtx:FloatArray? = null
-    var aPositionLocation = -1
-    var aTexCoorLocation = -1
     var uMatrixLocation = -1
-    var uTextureUnit = -1
-//    var colorLocation = -1
-
-    //----- buffer
-    val pointBuffer:FloatBuffer = BufferUtil.createFullVertexBuffer()
-    val texBuffer:FloatBuffer = BufferUtil.createAndroidVertexBuffer()
+    val U_MATRIX = "u_Matrix"
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
-        val vertexShader = OpenGLUtils.readRawTextFile(context, R.raw.camera_vert)
-        val fragmentShader = OpenGLUtils.readRawTextFile(context, R.raw.camera_frag)
-        makeProgram(vertexShader,fragmentShader)
-        aPositionLocation = getAttrib(A_POSITION)
-        aTexCoorLocation = getAttrib(A_TEXCOORD)
+        super.onSurfaceCreated(gl, config)
         uMatrixLocation = getUniform(U_MATRIX)
-        uTextureUnit = getUniform(U_TEXTUREUNIT)
-
-//        colorLocation = GLES20.glGetUniformLocation(program, "u_Color")
-
-        // gl 坐标
-        pointBuffer.position(0)
-        GLES20.glVertexAttribPointer(aPositionLocation,2,GLES20.GL_FLOAT,false,0,pointBuffer)
-        GLES20.glEnableVertexAttribArray(aPositionLocation)
-
-
-        // 纹理 坐标
-        texBuffer.position(0)
-        GLES20.glVertexAttribPointer(aTexCoorLocation,2,GLES20.GL_FLOAT,false,0,texBuffer)
-        GLES20.glEnableVertexAttribArray(aTexCoorLocation)
-
-        GLES20.glClearColor(0f, 0f, 0f, 1f)
-
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
-        GLES20.glViewport(0, 0, width, height)
+        super.onSurfaceChanged(gl, width, height)
+        // TODO
     }
 
-//    var color = floatArrayOf(1f,1f,0f,1f)
-    override fun onDrawFrame(texture: Int) {
-        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT)
-
-//        GLES20.glUniform4fv(colorLocation,1,color,0)
-
-        GLES20.glActiveTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES)
-        GLES20.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES,texture)
-        GLES20.glUniform1i(uTextureUnit,0)
+    override fun beforeOndraw(texture: Int) {
         GLES20.glUniformMatrix4fv(uMatrixLocation,1,false, mtx,0)
-
-        GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP,0,4)
     }
 
     fun setTransformMatrix(mtx: FloatArray) {

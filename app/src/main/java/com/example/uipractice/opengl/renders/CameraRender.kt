@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentActivity
 import com.example.uipractice.camera.CameraXGLProvider
 import com.example.uipractice.camera.SurfaceTextureProvider
 import com.example.uipractice.opengl.filters.CameraFilter
+import com.example.uipractice.opengl.filters.ScreenFilter
 import com.example.uipractice.opengl.utils.OpenGLUtils
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
@@ -31,6 +32,7 @@ class CameraRender(var context: FragmentActivity,var glSurfaceView: GLSurfaceVie
 //    }
 
     var cameraFilter:CameraFilter? = null
+    var screenFilter:ScreenFilter? = null
     var provider:CameraXGLProvider? = null
     var mtx = FloatArray(16)
 
@@ -52,20 +54,24 @@ class CameraRender(var context: FragmentActivity,var glSurfaceView: GLSurfaceVie
 
         cameraFilter = CameraFilter(context)
         cameraFilter?.onSurfaceCreated(gl,config)
+
+        screenFilter = ScreenFilter(context)
+//        screenFilter?.onSurfaceCreated(gl,config)
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
-        Log.e("CameraRender","width = $width,height = $height")
+//        Log.e("CameraRender","width = $width,height = $height")
         cameraFilter?.onSurfaceChanged(gl,width,height)
+//        screenFilter?.onSurfaceChanged(gl,width,height)
     }
-
 
     override fun onDrawFrame(gl: GL10?) {
 //        Log.e("CameraRender","onDrawFrame")
         surfaceTexture?.updateTexImage()
         surfaceTexture?.getTransformMatrix(mtx)
         cameraFilter?.setTransformMatrix(mtx)
-        cameraFilter?.onDrawFrame(mOESTextureId)
+        val fboTexId = cameraFilter!!.onDrawFrame(mOESTextureId)
+//        screenFilter?.onDrawFrame(fboTexId)
     }
 
     override fun provideSurface(): SurfaceTexture {
@@ -74,5 +80,10 @@ class CameraRender(var context: FragmentActivity,var glSurfaceView: GLSurfaceVie
 
     override fun onFrameAvailable(surfaceTexture: SurfaceTexture?) {
         glSurfaceView.requestRender()
+    }
+
+    public fun release() {
+        cameraFilter?.release()
+        screenFilter?.release()
     }
 }

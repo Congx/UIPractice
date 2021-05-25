@@ -12,7 +12,7 @@ class ProjectionMatrixHelper(program: Int, name: String) {
 
     private val uMatrixLocation: Int = GLES20.glGetUniformLocation(program, name)
 
-    private val mProjectionMatrix = floatArrayOf(1f, 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 1f, 0f, 0f, 0f, 0f, 1f)
+    private val mProjectionMatrix = Constants.PROJECTIONMATRIX
 
     fun enable(width: Int, height: Int) {
         val aspectRatio = if (width > height)

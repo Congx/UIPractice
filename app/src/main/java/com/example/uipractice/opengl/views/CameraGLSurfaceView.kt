@@ -12,11 +12,12 @@ import com.example.uipractice.opengl.renders.L11_1_CameraRenderer
 
 class CameraGLSurfaceView(context: Context?, attrs: AttributeSet?) : GLSurfaceView(context, attrs) {
     val camera = CameraApi14()
+    val cameraRender = CameraRender(context as FragmentActivity, this)
 
     init {
 //        openCamera()
         setEGLContextClientVersion(2)
-        setRenderer(CameraRender(context as FragmentActivity,this))
+        setRenderer(cameraRender)
 //        setRenderer(L11_1_CameraRenderer(getContext(),camera))
         renderMode = RENDERMODE_WHEN_DIRTY
         requestRender()
@@ -28,4 +29,9 @@ class CameraGLSurfaceView(context: Context?, attrs: AttributeSet?) : GLSurfaceVi
         camera.preview()
     }
 
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        cameraRender.release()
+    }
 }

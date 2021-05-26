@@ -22,7 +22,9 @@ add_library( opencv-lib
 
 
 find_library(log-lib log)
+#find_library(log-lib log)
 
 target_link_libraries( opencv-lib
                         ${opencv-so}
+                        ${android}
                        ${log-lib} )

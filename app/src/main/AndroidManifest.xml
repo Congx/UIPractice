@@ -30,6 +30,7 @@
         <activity android:name=".opengl.OpenglEffectsActivity"></activity>
         <activity android:name=".opengl.OpenglSplitActivity"></activity>
         <activity android:name=".opengl.OpenglTexActivity"></activity>
+        <activity android:name=".opengl.OpenglBeautyActivity"></activity>
         <activity android:name=".camera.CameraXActivity" />
         <activity android:name=".image.GlideActivity" />
         <activity android:name=".plugin.PluginTestActivity" /> <!-- <activity android:name=".plugin.PluginActivity"></activity> -->

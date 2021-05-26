@@ -28,5 +28,9 @@ class OpenglMainActivity : AppCompatActivity() {
         btnSplit.setOnClickListener {
             startActivity(Intent(this,OpenglSplitActivity::class.java))
         }
+
+        btnBeauty.setOnClickListener {
+            startActivity(Intent(this,OpenglBeautyActivity::class.java))
+        }
     }
 }

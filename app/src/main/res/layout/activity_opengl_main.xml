@@ -1,42 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".opengl.OpenglMainActivity">
 
 
-  <Button
-      android:id="@+id/btnBase"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:text="基本用法"/>
+    <Button
+        android:id="@+id/btnBase"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="基本用法" />
 
-  <Button
-      android:id="@+id/btnCamera"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:text="Camera用法"/>
+    <Button
+        android:id="@+id/btnCamera"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Camera用法" />
 
-  <Button
-      android:id="@+id/btnTex"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:text="纹理"/>
+    <Button
+        android:id="@+id/btnTex"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="纹理" />
 
-  <Button
-      android:id="@+id/btnEffect"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:text="特效"/>
+    <Button
+        android:id="@+id/btnEffect"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="特效" />
 
-  <Button
-      android:id="@+id/btnSplit"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:text="分屏"/>
+    <Button
+        android:id="@+id/btnSplit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="分屏" />
 
-  </LinearLayout>
+    <Button
+        android:id="@+id/btnBeauty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="美颜" />
+
+</LinearLayout>

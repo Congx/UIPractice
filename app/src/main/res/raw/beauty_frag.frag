@@ -1,9 +1,8 @@
 precision mediump float;
 //当前要采集像素的点  坐标 x  y
-varying mediump vec2 aCoord;
-
+varying mediump vec2 v_TexCoord;
 //采样
-uniform sampler2D vTexture;
+uniform sampler2D u_TextureSampler;
 
 vec2 blurCoordinates[20];
 
@@ -16,37 +15,37 @@ void main(){
 //    [1/1000,1/1000]
     vec2 singleStepOffset=vec2(1.0/float(width),1.0/float(height));
 //    [500,500]        [500,490 ]             [0.5,0.5]            //    [0.5,0.5] + [1/1000,-10/1000]
-    blurCoordinates[0] =aCoord.xy+singleStepOffset* vec2(0.0, -10.0);
+    blurCoordinates[0] =v_TexCoord.xy+singleStepOffset* vec2(0.0, -10.0);
 //      [500,510]
-    blurCoordinates[1] = aCoord.xy + singleStepOffset * vec2(0.0, 10.0);
+    blurCoordinates[1] = v_TexCoord.xy + singleStepOffset * vec2(0.0, 10.0);
 //[490, 500]
-    blurCoordinates[2] = aCoord.xy + singleStepOffset * vec2(-10.0, 0.0);
+    blurCoordinates[2] = v_TexCoord.xy + singleStepOffset * vec2(-10.0, 0.0);
     //[510, 500]
-    blurCoordinates[3] = aCoord.xy + singleStepOffset * vec2(10.0, 0.0);
+    blurCoordinates[3] = v_TexCoord.xy + singleStepOffset * vec2(10.0, 0.0);
 //GPUIMage   magiccaerma
-    blurCoordinates[4] = aCoord.xy + singleStepOffset * vec2(5.0, -8.0);
-    blurCoordinates[5] = aCoord.xy + singleStepOffset * vec2(5.0, 8.0);
-    blurCoordinates[6] = aCoord.xy + singleStepOffset * vec2(-5.0, 8.0);
-    blurCoordinates[7] = aCoord.xy + singleStepOffset * vec2(-5.0, -8.0);
-    blurCoordinates[8] = aCoord.xy + singleStepOffset * vec2(8.0, -5.0);
-    blurCoordinates[9] = aCoord.xy + singleStepOffset * vec2(8.0, 5.0);
-    blurCoordinates[10] = aCoord.xy + singleStepOffset * vec2(-8.0, 5.0);
-    blurCoordinates[11] = aCoord.xy + singleStepOffset * vec2(-8.0, -5.0);
-    blurCoordinates[12] = aCoord.xy + singleStepOffset * vec2(0.0, -6.0);
-    blurCoordinates[13] = aCoord.xy + singleStepOffset * vec2(0.0, 6.0);
-    blurCoordinates[14] = aCoord.xy + singleStepOffset * vec2(6.0, 0.0);
-    blurCoordinates[15] = aCoord.xy + singleStepOffset * vec2(-6.0, 0.0);
-    blurCoordinates[16] = aCoord.xy + singleStepOffset * vec2(-4.0, -4.0);
-    blurCoordinates[17] = aCoord.xy + singleStepOffset * vec2(-4.0, 4.0);
-    blurCoordinates[18] = aCoord.xy + singleStepOffset * vec2(4.0, -4.0);
-    blurCoordinates[19] = aCoord.xy + singleStepOffset * vec2(4.0, 4.0);
+    blurCoordinates[4] = v_TexCoord.xy + singleStepOffset * vec2(5.0, -8.0);
+    blurCoordinates[5] = v_TexCoord.xy + singleStepOffset * vec2(5.0, 8.0);
+    blurCoordinates[6] = v_TexCoord.xy + singleStepOffset * vec2(-5.0, 8.0);
+    blurCoordinates[7] = v_TexCoord.xy + singleStepOffset * vec2(-5.0, -8.0);
+    blurCoordinates[8] = v_TexCoord.xy + singleStepOffset * vec2(8.0, -5.0);
+    blurCoordinates[9] = v_TexCoord.xy + singleStepOffset * vec2(8.0, 5.0);
+    blurCoordinates[10] = v_TexCoord.xy + singleStepOffset * vec2(-8.0, 5.0);
+    blurCoordinates[11] = v_TexCoord.xy + singleStepOffset * vec2(-8.0, -5.0);
+    blurCoordinates[12] = v_TexCoord.xy + singleStepOffset * vec2(0.0, -6.0);
+    blurCoordinates[13] = v_TexCoord.xy + singleStepOffset * vec2(0.0, 6.0);
+    blurCoordinates[14] = v_TexCoord.xy + singleStepOffset * vec2(6.0, 0.0);
+    blurCoordinates[15] = v_TexCoord.xy + singleStepOffset * vec2(-6.0, 0.0);
+    blurCoordinates[16] = v_TexCoord.xy + singleStepOffset * vec2(-4.0, -4.0);
+    blurCoordinates[17] = v_TexCoord.xy + singleStepOffset * vec2(-4.0, 4.0);
+    blurCoordinates[18] = v_TexCoord.xy + singleStepOffset * vec2(4.0, -4.0);
+    blurCoordinates[19] = v_TexCoord.xy + singleStepOffset * vec2(4.0, 4.0);
 
 //    科学的取法  正胎分布
 
-    vec4 currentColor=texture2D(vTexture,aCoord);
+    vec4 currentColor=texture2D(u_TextureSampler,v_TexCoord);
     vec3 rgb=currentColor.rgb;
     for (int i = 0; i < 20; i++) {
-        rgb+=texture2D(vTexture,blurCoordinates[i].xy).rgb;
+        rgb+=texture2D(u_TextureSampler,blurCoordinates[i].xy).rgb;
     }
 //    rgb   20  点1     21  点  2
     vec4 blur = vec4(rgb*1.0/21.0,currentColor.a);

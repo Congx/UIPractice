@@ -41,7 +41,6 @@ class CameraXGLProvider(var context:FragmentActivity,
 
     private var cameraProvider:ProcessCameraProvider? = null
     private lateinit var previewView:PreviewView
-    private var executors = Executors.newSingleThreadExecutor()
     private var lensFacing = CameraSelector.LENS_FACING_BACK
 
     var previewCase:Preview? = null
@@ -102,5 +101,17 @@ class CameraXGLProvider(var context:FragmentActivity,
         cameraProvider?.unbindAll()
         camera = cameraProvider?.bindToLifecycle(context, cameraSelector, previewCase)
 
+    }
+
+    /**
+     * 前后置切换
+     */
+    fun switchCamera() {
+        if (CameraSelector.LENS_FACING_FRONT == lensFacing){
+            lensFacing = CameraSelector.LENS_FACING_BACK
+        }else {
+            lensFacing = CameraSelector.LENS_FACING_FRONT
+        }
+        bindCamera()
     }
 }

@@ -31,8 +31,8 @@ open class BaseFilter constructor(var context: Context,
     var uTextureSampler = -1
 //    var uProjectionMatrix = -1
 
-    private var mWidth:Int = 0
-    private var mHeight:Int = 0
+    protected var mWidth:Int = 0
+    protected var mHeight:Int = 0
 
     //----- buffer
     val pointBuffer: FloatBuffer = BufferUtil.createFloatBuffer(pointData)

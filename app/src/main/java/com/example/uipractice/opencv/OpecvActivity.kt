@@ -1,16 +1,9 @@
 package com.example.uipractice.opencv
 
-import android.opengl.GLSurfaceView
 import android.os.Bundle
-import android.widget.RadioGroup
 import androidx.appcompat.app.AppCompatActivity
 import com.example.uipractice.R
-import com.example.uipractice.opengl.renders.CameraRender
-import com.example.uipractice.opengl.renders.TextureRender
-import com.example.uipractice.opengl.views.CameraGLSurfaceView
-import com.example.uipractice.opengl.views.RecordButton
-import kotlinx.android.synthetic.main.activity_opengl_cameractivity.*
-import kotlinx.android.synthetic.main.activity_opengl_effect_activity.*
+import com.example.uipractice.utils.FileUtils
 
 class OpecvActivity : AppCompatActivity(){
 
@@ -18,14 +11,29 @@ class OpecvActivity : AppCompatActivity(){
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_opencv_activity)
 
-        glSurfaceView.setEGLContextClientVersion(2)
-        glSurfaceView.setRenderer(TextureRender(this))
-        glSurfaceView.renderMode = GLSurfaceView.RENDERMODE_WHEN_DIRTY
-        glSurfaceView.requestRender()
+        FileUtils.copyAssets(this, "davidcascade.xml")
 
     }
 
-    private external fun init()
+    /**
+     * 初始化 追踪器
+     * @param model
+     */
+    external fun init(model: String?)
+
+    /**
+     * 处理摄像头数据
+     * @param data
+     * @param w
+     * @param h
+     * @param cameraId
+     */
+    external fun postData(data: ByteArray?, w: Int, h: Int, cameraId: Int)
+
+    /**
+     * 释放
+     */
+    external fun release()
 
     companion object {
 

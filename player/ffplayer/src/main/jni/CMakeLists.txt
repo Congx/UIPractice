@@ -10,6 +10,7 @@ include_directories(. ./log librtmp ./x264/include ./faac/include)
 aux_source_directory(. SRC_DIR)
 
 add_subdirectory(librtmp)
+add_subdirectory(ffmpeg)
 #add_subdirectory(x264)
 
 add_library( ffplayer

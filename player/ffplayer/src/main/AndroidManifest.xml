@@ -16,6 +16,7 @@
         android:theme="@style/Theme.UIPractice">
         <activity android:name=".activitys.LivePushActivity"></activity>
         <activity android:name=".activitys.MediaMuxreActivity" />
+        <activity android:name=".activitys.FFmpegActivity" />
         <activity android:name=".activitys.ClipAudioActivity" />
         <activity android:name=".activitys.CameraEncodeActivity" />
         <activity android:name=".activitys.MediaRecordActivity" />

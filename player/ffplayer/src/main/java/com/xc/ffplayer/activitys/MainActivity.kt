@@ -37,5 +37,10 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this,
                 LivePushActivity::class.java))
         }
+
+        btnffmpeg.setOnClickListener {
+            startActivity(Intent(this,
+                FFmpegActivity::class.java))
+        }
     }
 }

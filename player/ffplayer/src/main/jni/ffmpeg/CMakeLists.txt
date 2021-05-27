@@ -108,7 +108,7 @@ add_library(ffmpeg
 find_library(log-lib log)
 
 target_link_libraries( ffmpeg
-#                        x264lib
+        android
         libavcodec
         libavdevice
         libavfilter

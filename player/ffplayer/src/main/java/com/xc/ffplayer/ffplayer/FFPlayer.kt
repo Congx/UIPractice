@@ -1,30 +1,39 @@
 package com.xc.ffplayer.ffplayer
 
+import android.view.Surface
+
 open class FFPlayer:Player {
 
     var mUrl = ""
 
-    override fun setUrl(url: String) {
+    override fun setPath(url: String) {
         mUrl = url
+        nativeffmpegInfo()
+        nativeSetPath(url)
     }
 
-    override fun start() {
-        TODO("Not yet implemented")
+    override fun start(surface: Surface) {
+        nativeStart(surface)
     }
 
     override fun pause() {
-        TODO("Not yet implemented")
+        nativePause()
     }
 
     override fun resume() {
-        TODO("Not yet implemented")
+        nativeResume()
     }
 
     override fun stop() {
-        TODO("Not yet implemented")
+        nativeStop()
     }
 
-    external fun ffmpegInfo():String
+    external private fun nativeffmpegInfo():String
+    external private fun nativeSetPath(string: String):Int
+    external private fun nativeStart(surface: Surface):Int
+    external private fun nativePause()
+    external private fun nativeResume()
+    external private fun nativeStop()
 
     companion object {
         init {

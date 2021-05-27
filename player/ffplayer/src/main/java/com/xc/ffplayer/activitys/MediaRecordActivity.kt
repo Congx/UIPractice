@@ -91,7 +91,7 @@ class MediaRecordActivity : AppCompatActivity() {
     }
 
     fun  writeByte(arr:ByteArray) {
-        var os = FileOutputStream(getExternalFilesDir("encode")?.absolutePath + File.separator + "encode.h264",true)
+        var os = FileOutputStream(getExternalFilesDir("input")?.absolutePath + File.separator + "out.h264",true)
         os.write(arr)
     }
 }

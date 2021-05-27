@@ -1,10 +1,12 @@
 package com.xc.ffplayer.ffplayer
 
+import android.view.Surface
+
 interface Player {
 
-    fun setUrl(url:String)
+    fun setPath(url:String)
 
-    fun start()
+    fun start(surface: Surface)
 
     fun pause()
 

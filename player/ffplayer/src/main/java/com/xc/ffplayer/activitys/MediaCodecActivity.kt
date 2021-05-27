@@ -32,7 +32,7 @@ class MediaCodecActivity : AppCompatActivity() {
     }
 
     private fun initUI() {
-        var path = getExternalFilesDir("video")?.absolutePath + File.separator + "input.mp4"
+        var path = getExternalFilesDir("input")?.absolutePath + File.separator + "input.mp4"
 //        var path = getExternalFilesDir("video")?.absolutePath + File.separator + "input.mp4"
         Log.e("path:" , path)
         Log.e("exists:" , File(path).exists().toString())

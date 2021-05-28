@@ -4,7 +4,11 @@ import android.view.Surface
 
 interface Player {
 
-    fun setPath(url:String)
+    var callback:StatusCallback?
+
+    fun setSource(source:String)
+
+    fun prepare()
 
     fun start(surface: Surface)
 
@@ -13,4 +17,8 @@ interface Player {
     fun resume()
 
     fun stop()
+}
+
+interface StatusCallback {
+    fun onPrepared()
 }

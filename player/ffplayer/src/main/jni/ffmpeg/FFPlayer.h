@@ -5,6 +5,10 @@
 #ifndef UIPRACTICE_FFPLAYER_H
 #define UIPRACTICE_FFPLAYER_H
 
+#include "FFPlayerJavaCallback.h"
+#include "FFAudio.h"
+#include "Playerstatus.h"
+
 extern "C"{
 #include "libavcodec/avcodec.h"
 #include "libavformat/avformat.h"
@@ -19,18 +23,21 @@ enum STATUES {
 class FFPlayer {
 
 public:
+    AVFormatContext * avFormatContext = NULL;
+    Playerstatus *status;
 
-    int videoIndex;
-    int audioIndex;
-    int width;
-    int height;
-    AVFormatContext * avFormatContext;
-    AVCodec *videoCodec;
-    AVCodec *audioCodec;
-    STATUES status;
+    FFPlayerJavaCallback *callback = NULL;
+    pthread_t prepare_thread = NULL;
+    char *url = NULL;
+    FFAudio *audio = NULL;
 
-    AVPixelFormat getPix_fmt();
-    AVCodecContext* getVideoCodecContext();
+public:
+
+    FFPlayer(FFPlayerJavaCallback *callback,char* url,Playerstatus *status);
+    ~FFPlayer();
+    void prepare();
+    void start();
+    int decodeFFmpegThread();
 };
 
 

@@ -116,4 +116,5 @@ target_link_libraries( ffmpeg
         libavutil
         libswresample
         libswscale
+        OpenSLES
                        ${log-lib} )

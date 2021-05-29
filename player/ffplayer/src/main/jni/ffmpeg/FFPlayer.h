@@ -30,6 +30,7 @@ public:
     pthread_t prepare_thread = NULL;
     char *url = NULL;
     FFAudio *audio = NULL;
+    int64_t duration; // 秒
 
 public:
 

@@ -87,8 +87,7 @@ int FFPlayer::decodeFFmpegThread() {
             // 解码器参数，都放这里
             AVCodecParameters *codecpar = avFormatContext->streams[i]->codecpar;
 //            // 解码器id
-            AVCodecID codecId = codecpar->codec_id;
-
+//            AVCodecID codecId = codecpar->codec_id;
 //            AVCodec *audioCodec = avcodec_find_decoder(codecId);
 //            AVCodecContext *audioCodecContext = avcodec_alloc_context3(audioCodec);
             AVCodecContext *audioCodecContext = avFormatContext->streams[audioIndex]->codec;
@@ -97,6 +96,9 @@ int FFPlayer::decodeFFmpegThread() {
             if (avcodec_open2(audioCodecContext, audioCodec, NULL) != 0) {
                 LOGE("open audio codec failure");
             } else {
+                duration = avFormatContext->duration;
+                audio->duration = duration / AV_TIME_BASE; // 微秒-> 秒
+                audio->time_base = audioCodecContext->time_base;
                 audio->streamIndex = audioIndex;
                 audio->codecpar = codecpar;
                 audio->codecContext = audioCodecContext;

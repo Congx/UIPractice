@@ -36,6 +36,13 @@ public:
     int channels = NULL;
     uint64_t channel_layout = NULL;
     int streamIndex = NULL;
+
+    int64_t duration; // 秒
+    AVRational time_base;
+    double frame_time;
+    double last_time;
+    double clock;
+
     SafeQueue<AVPacket *> queue;
     FFPlayerJavaCallback *callback = NULL;
     Playerstatus *status = NULL;
@@ -46,7 +53,9 @@ public:
     uint8_t *buffer = NULL;
 
     SwrContext *swr_ctx = NULL;
-    int out_channel_nb;
+    int out_channel_nb; // 输出采样通道数量
+    int out_sample_byte_count; // 输出采样字节数
+    int out_sample_rate; // 输出采样频率
     AVSampleFormat out_sample_fmt;
     int out_buffer_size;
 

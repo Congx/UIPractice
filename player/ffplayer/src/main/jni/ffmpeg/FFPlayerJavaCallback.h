@@ -19,6 +19,7 @@ public:
     jmethodID jmid_onPrepared;
     jmethodID jmid_playAudio;
     jmethodID jmid_createAudioTrack;
+    jmethodID jmid_onCurrentTime;
 
 public:
     FFPlayerJavaCallback(JavaVM *javaVM, JNIEnv *env, jobject *jobj);
@@ -28,6 +29,7 @@ public:
     // 测试audioTrack用
     void createAudioTrack(int channels,int sampleRate,int sampleBitCount,int type,bool needDetach);
     void playAudio(uint8_t *bytes ,int len,int type,bool needDetach);
+    void onCurrentTime(int currentTime,int totalTime,int type);
 };
 
 

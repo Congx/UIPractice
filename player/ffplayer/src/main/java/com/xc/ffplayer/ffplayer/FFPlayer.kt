@@ -6,11 +6,12 @@ import android.media.AudioTrack
 import android.util.Log
 import android.view.Surface
 import com.xc.ffplayer.live.LiveTaskManager
+import com.xc.ffplayer.utils.MainExecuter
 import kotlinx.android.synthetic.main.activity_ffmpeg.*
 
 open class FFPlayer:Player {
 
-    override var callback: StatusCallback? = null
+    override var playerListener: IPlayerListener? = null
 
     var mUrl = ""
 
@@ -47,11 +48,21 @@ open class FFPlayer:Player {
     }
 
     /**
+     * 时间，native回调
+     */
+    fun onCurrentTime(currentTime: Int, totalTime: Int) {
+        MainExecuter.execute {
+            Log.d(TAG,"currentTime = $currentTime, totalTime = $totalTime")
+            playerListener?.onCurrentTime(currentTime,totalTime)
+        }
+    }
+
+    /**
      * 播放器初始化成功，native回调
      */
     private fun onPrepared() {
         Log.d(TAG,"onPrepared")
-        callback?.onPrepared()
+        playerListener?.onPrepared()
     }
 
     /**

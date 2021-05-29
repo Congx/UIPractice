@@ -10,6 +10,7 @@ FFPlayerJavaCallback::FFPlayerJavaCallback(JavaVM *javaVM, JNIEnv *env, jobject 
     jmid_onPrepared = env->GetMethodID(jclazz,"onPrepared","()V");
     jmid_playAudio = env->GetMethodID(jclazz,"playAudio","([BI)V");
     jmid_createAudioTrack = env->GetMethodID(jclazz,"createAudioTrack","(III)V");
+    jmid_onCurrentTime = env->GetMethodID(jclazz,"onCurrentTime","(II)V");
 }
 
 FFPlayerJavaCallback::~FFPlayerJavaCallback() {
@@ -77,6 +78,25 @@ void FFPlayerJavaCallback::playAudio(uint8_t *bytes, int len,int type,bool needD
         jniEnv->DeleteLocalRef(arr);
 //        if (needDetach) {
             javaVM->DetachCurrentThread();
+//        }
+    }
+}
+
+void FFPlayerJavaCallback::onCurrentTime(int currentTime, int totalTime,int type) {
+    if(type == MAIN_THREAD)
+    {
+        env->CallVoidMethod(jobj, jmid_onCurrentTime,currentTime,totalTime);
+    }
+    else if(type == CHILD_THREAD)
+    {
+        JNIEnv *jniEnv;
+        if(javaVM->AttachCurrentThread(&jniEnv, 0) != JNI_OK)
+        {
+            return;
+        }
+        jniEnv->CallVoidMethod(jobj, jmid_onCurrentTime,currentTime,totalTime);
+//        if (needDetach) {
+        javaVM->DetachCurrentThread();
 //        }
     }
 }

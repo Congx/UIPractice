@@ -39,8 +39,13 @@ void pcmBufferCallBack(SLAndroidSimpleBufferQueueItf bf, void *context) {
     if (audio != NULL) {
         int buffersize = audio->resampleAudio();
         if (buffersize > 0) {
-            (*audio->pcmBufferQueue)->Enqueue(audio->pcmBufferQueue, (char *) audio->buffer,
-                                              buffersize);
+            audio->clock += buffersize/(audio->out_channel_nb * audio->out_sample_rate * audio->out_sample_byte_count);
+            // 计算播放时长
+            if(audio->clock - audio->last_time >= 0.5) {
+                audio->last_time = audio->clock;
+                audio->callback->onCurrentTime(audio->clock,audio->duration,CHILD_THREAD);
+            }
+            (*audio->pcmBufferQueue)->Enqueue(audio->pcmBufferQueue, (char *) audio->buffer,buffersize);
         }
     }
 }
@@ -154,7 +159,6 @@ int FFAudio::getCurrentSampleRateForOpensles(int sample_rate) {
 }
 
 int FFAudio::resampleAudio() {
-
     // audio 相关 ----
     if(avFrame == NULL) {
         avFrame = av_frame_alloc();
@@ -164,65 +168,70 @@ int FFAudio::resampleAudio() {
         initSwrCtx();
     }
 
-    while (!status->exit) {
+    if (!status->exit) {
         queue.pop(avPacket);
         if (!avPacket || avPacket != NULL) {
             int ret = avcodec_send_packet(codecContext, avPacket);
             if (ret < 0 && AVERROR(EAGAIN) && ret != AVERROR_EOF) {
                 LOGE("音频解码出错");
-                break;
+                return 0;
             }
             ret = avcodec_receive_frame(codecContext, avFrame);
             if (ret == AVERROR(EAGAIN)) {
-                continue;
+                return 0;
             } else if (ret != 0) {
                 LOGE("音频解码receive_frame出错");
-                break;
+                return 0;
             }
 //            LOGE("nb_samples %d",avFrame->nb_samples);
             // 重采样，转换 采样的通道数、频率等数据，按照swrContext的参数来转换
-            swr_convert(swr_ctx, &buffer, avFrame->nb_samples,
-                        (const uint8_t **) avFrame->data, avFrame->nb_samples);
-            out_buffer_size = av_samples_get_buffer_size(NULL, out_channel_nb, avFrame->nb_samples,
-                                                         out_sample_fmt, 1);
+            swr_convert(swr_ctx, &buffer, avFrame->nb_samples,(const uint8_t **) avFrame->data, avFrame->nb_samples);
+            out_buffer_size = av_samples_get_buffer_size(NULL, out_channel_nb, avFrame->nb_samples,out_sample_fmt, 1);
+            // 计算时间
+            frame_time = avFrame->pts * av_q2d(time_base);
+            if(frame_time < clock) {
+                frame_time = clock;
+            }
+            clock = frame_time;
             av_packet_free(&avPacket);
             av_free(avPacket);
             avPacket = NULL;
-            av_frame_free(&avFrame);
+//            av_frame_free(&avFrame);
 //            av_free(avFrame);
 //            avFrame = NULL;
-            swr_free(&swr_ctx);
-            break;
+//            swr_free(&swr_ctx);
+            return out_buffer_size;
         } else {
+            swr_free(&swr_ctx);
             av_packet_free(&avPacket);
             av_free(avPacket);
             avPacket = NULL;
             av_frame_free(&avFrame);
             av_free(avFrame);
             avFrame = NULL;
-            continue;
+            return 0;
         }
     }
 
-    return out_buffer_size;
+    return 0;
 }
 
 void FFAudio::initSwrCtx() {
     swr_ctx = swr_alloc();
     uint64_t out_ch_layout = AV_CH_LAYOUT_STEREO; // 声道
-    int out_sample_rate = sample_rate; // 采样频率
+    out_sample_rate = sample_rate; // 采样频率
     out_sample_fmt = AV_SAMPLE_FMT_S16; // 采样位数
     // 一个采样几个字节
-    int sampleByteCount = av_get_bytes_per_sample(out_sample_fmt);
+    out_sample_byte_count = av_get_bytes_per_sample(out_sample_fmt);
     // 采样通道数
     out_channel_nb = av_get_channel_layout_nb_channels(out_ch_layout);
     // 音频的转换器
     swr_alloc_set_opts(swr_ctx,
-            // 输出到喇叭的参数，抓换后的参数
+                    // 输出到喇叭的参数，抓换后的参数
                        out_ch_layout,
                        out_sample_fmt,
                        out_sample_rate,
-            //  视频文件的参数
+                    //  视频文件的参数
                        channel_layout,
                        *sample_fmts,
                        sample_rate,
@@ -238,75 +247,75 @@ void FFAudio::initSwrCtx() {
     }
 
     if (buffer == NULL) {
-        int outBufferSize = out_sample_rate * sampleByteCount * out_channel_nb;
+        int outBufferSize = out_sample_rate * out_sample_byte_count * out_channel_nb;
         LOGD("outBufferSize：%d", outBufferSize);
         buffer = static_cast<uint8_t *>(av_malloc(outBufferSize));
     }
     LOGD("out_sample_rate：%d", out_sample_rate);
-    LOGD("sampleByteCount：%d", sampleByteCount);
+    LOGD("out_sample_byte_count：%d", out_sample_byte_count);
     LOGD("out_channel_nb：%d", out_channel_nb);
 
     LOGD("初始化swr_ctx");
 }
 
-void FFAudio::decodeFFmpegThread() {
-    queue.setWork(1);
-    LOGD("audio decodeFFmpegThread");
-    // audio 相关 ----
-    AVFrame *avFrame = av_frame_alloc();
-    SwrContext *swrContext = swr_alloc();
-    uint64_t out_ch_layout = AV_CH_LAYOUT_STEREO; // 声道
-    int out_sample_rate = sample_rate; // 采样频率
-    AVSampleFormat out_sample_fmt = AV_SAMPLE_FMT_S16; // 采样位数
-    // 一个采样几个字节
-    int sampleByteCount = av_get_bytes_per_sample(out_sample_fmt);
-    // 采样通道数
-    int out_channel_nb = av_get_channel_layout_nb_channels(out_ch_layout);
-    // 音频的转换器
-    swr_alloc_set_opts(swrContext,
-            // 输出到喇叭的参数，抓换后的参数
-                       out_ch_layout,
-                       out_sample_fmt,
-                       out_sample_rate,
-            //  视频文件的参数
-                       channel_layout,
-                       *sample_fmts,
-                       sample_rate,
-                       0, NULL);
-    swr_init(swrContext);
-    int outBufferSize = out_sample_rate * sampleByteCount * out_channel_nb;
-    uint8_t *outAudioBuffer = static_cast<uint8_t *>(av_malloc(outBufferSize));
-    LOGD("outBufferSize：%d", outBufferSize);
-    LOGD("out_sample_rate：%d", out_sample_rate);
-    LOGD("sampleByteCount：%d", sampleByteCount);
-    LOGD("out_channel_nb：%d", out_channel_nb);
-    callback->createAudioTrack(out_channel_nb, out_sample_rate, sampleByteCount, CHILD_THREAD,
-                               true);
-    while (!status->exit) {
-        AVPacket *avPacket = NULL;
-        queue.pop(avPacket);
-        if (avPacket) {
-            int ret = avcodec_send_packet(codecContext, avPacket);
-            if (ret < 0 && AVERROR(EAGAIN) && ret != AVERROR_EOF) {
-                LOGE("音频解码出错");
-                break;
-            }
-
-            ret = avcodec_receive_frame(codecContext, avFrame);
-            if (ret == AVERROR(EAGAIN)) {
-                continue;
-            } else if (ret != 0) {
-                LOGE("音频解码receive_frame出错");
-                break;
-            }
-//            LOGE("nb_samples %d",avFrame->nb_samples);
-            // 重采样，转换 采样的通道数、频率等数据，按照swrContext的参数来转换
-            swr_convert(swrContext, &outAudioBuffer, avFrame->nb_samples,
-                        (const uint8_t **) avFrame->data, avFrame->nb_samples);
-
-            int size = av_samples_get_buffer_size(NULL, out_channel_nb, avFrame->nb_samples,
-                                                  out_sample_fmt, 1);
-            callback->playAudio(outAudioBuffer, size, CHILD_THREAD, true);
-        }
-    }
-}
+//void FFAudio::decodeFFmpegThread() {
+//    queue.setWork(1);
+//    LOGD("audio decodeFFmpegThread");
+//    // audio 相关 ----
+//    AVFrame *avFrame = av_frame_alloc();
+//    SwrContext *swrContext = swr_alloc();
+//    uint64_t out_ch_layout = AV_CH_LAYOUT_STEREO; // 声道
+//    int out_sample_rate = sample_rate; // 采样频率
+//    AVSampleFormat out_sample_fmt = AV_SAMPLE_FMT_S16; // 采样位数
+//    // 一个采样几个字节
+//    int sampleByteCount = av_get_bytes_per_sample(out_sample_fmt);
+//    // 采样通道数
+//    int out_channel_nb = av_get_channel_layout_nb_channels(out_ch_layout);
+//    // 音频的转换器
+//    swr_alloc_set_opts(swrContext,
+//            // 输出到喇叭的参数，抓换后的参数
+//                       out_ch_layout,
+//                       out_sample_fmt,
+//                       out_sample_rate,
+//            //  视频文件的参数
+//                       channel_layout,
+//                       *sample_fmts,
+//                       sample_rate,
+//                       0, NULL);
+//    swr_init(swrContext);
+//    int outBufferSize = out_sample_rate * sampleByteCount * out_channel_nb;
+//    uint8_t *outAudioBuffer = static_cast<uint8_t *>(av_malloc(outBufferSize));
+//    LOGD("outBufferSize：%d", outBufferSize);
+//    LOGD("out_sample_rate：%d", out_sample_rate);
+//    LOGD("sampleByteCount：%d", sampleByteCount);
+//    LOGD("out_channel_nb：%d", out_channel_nb);
+//    callback->createAudioTrack(out_channel_nb, out_sample_rate, sampleByteCount, CHILD_THREAD,
+//                               true);
+//    while (!status->exit) {
+//        AVPacket *avPacket = NULL;
+//        queue.pop(avPacket);
+//        if (avPacket) {
+//            int ret = avcodec_send_packet(codecContext, avPacket);
+//            if (ret < 0 && AVERROR(EAGAIN) && ret != AVERROR_EOF) {
+//                LOGE("音频解码出错");
+//                break;
+//            }
+//
+//            ret = avcodec_receive_frame(codecContext, avFrame);
+//            if (ret == AVERROR(EAGAIN)) {
+//                continue;
+//            } else if (ret != 0) {
+//                LOGE("音频解码receive_frame出错");
+//                break;
+//            }
+////            LOGE("nb_samples %d",avFrame->nb_samples);
+//            // 重采样，转换 采样的通道数、频率等数据，按照swrContext的参数来转换
+//            swr_convert(swrContext, &outAudioBuffer, avFrame->nb_samples,
+//                        (const uint8_t **) avFrame->data, avFrame->nb_samples);
+//
+//            int size = av_samples_get_buffer_size(NULL, out_channel_nb, avFrame->nb_samples,
+//                                                  out_sample_fmt, 1);
+//            callback->playAudio(outAudioBuffer, size, CHILD_THREAD, true);
+//        }
+//    }
+//}

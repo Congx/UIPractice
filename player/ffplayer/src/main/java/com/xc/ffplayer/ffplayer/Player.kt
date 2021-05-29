@@ -4,9 +4,9 @@ import android.view.Surface
 
 interface Player {
 
-    var callback:StatusCallback?
+    var playerListener:IPlayerListener?
 
-    fun setSource(source:String)
+    fun setSource(source: String)
 
     fun prepare()
 
@@ -19,6 +19,13 @@ interface Player {
     fun stop()
 }
 
-interface StatusCallback {
+interface IPlayerListener {
     fun onPrepared()
+    fun onLoad(load: Boolean)
+    fun onCurrentTime(currentTime: Int, totalTime: Int)
+    fun onError(code: Int, msg: String?)
+    fun onPause(pause: Boolean)
+    fun onDbValue(db: Int)
+    fun onComplete()
+    fun onNext(): String?
 }

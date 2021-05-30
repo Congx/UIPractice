@@ -8,11 +8,17 @@
 
 extern "C" {
 #include "libswresample/swresample.h"
+#include "libavcodec/avcodec.h"
+}
+
+void realseCallback(AVPacket *&packet) {
+    av_packet_free(&packet);
+//    LOGD("audio queue free");
 }
 
 FFAudio::FFAudio(FFPlayerJavaCallback *callback, Playerstatus *status) : callback(callback),
                                                                          status(status) {
-
+    queue.setReleaseCallback(realseCallback);
 }
 
 FFAudio::~FFAudio() {
@@ -43,7 +49,6 @@ FFAudio::~FFAudio() {
 }
 
 void *decodeThreadCall(void *context) {
-    LOGD("audio decodeThreadCall");
     FFAudio *audio = static_cast<FFAudio *>(context);
     audio->initOpenSLES();
 //    audio->decodeFFmpegThread();
@@ -51,7 +56,6 @@ void *decodeThreadCall(void *context) {
 }
 
 void FFAudio::start() {
-    LOGD("audio start");
     queue.setWork(1);
     pthread_create(&decode_thread, NULL, decodeThreadCall, this);
 }
@@ -363,4 +367,8 @@ void FFAudio::resume() {
         result = (*pcmPlayerPlay)->SetPlayState(pcmPlayerPlay, SL_PLAYSTATE_PLAYING);
         assert(SL_RESULT_SUCCESS == result);
     }
+}
+
+void FFAudio::stop() {
+    queue.clear();
 }

@@ -25,7 +25,12 @@ class SafeQueue {
     typedef void (*SyncHandle)(queue<T> &);
 
 public:
-    SafeQueue() {
+    int capacity;
+    SafeQueue():SafeQueue(100) {
+
+    };
+
+    SafeQueue(int capacity):capacity(capacity) {
 #ifdef C11
 
 #else
@@ -54,6 +59,9 @@ public:
         }
 #else
         pthread_mutex_lock(&mutex);
+        if (size() > capacity) {
+            pthread_cond_wait(&cond,&mutex);
+        }
         if (work) {
             q.push(new_value);
             pthread_cond_signal(&cond);
@@ -88,6 +96,9 @@ public:
             value = q.front();
             q.pop();
             ret = 1;
+        }
+        if(size() >= capacity-1) {
+            pthread_cond_signal(&cond);
         }
         pthread_mutex_unlock(&mutex);
 #endif

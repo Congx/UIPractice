@@ -143,9 +143,9 @@ int FFPlayer::decodeFFmpegThread() {
 }
 
 void FFPlayer::start() {
-    LOGD("FFPlayer::start()");
     status->setStatus(Playerstatus::PLAYING);
     audio->start();
+    int i = 0;
     while (status != NULL && !status->isExit()) {
         AVPacket *avPacket = av_packet_alloc();
         if (av_read_frame(avFormatContext, avPacket) >= 0) {
@@ -181,3 +181,8 @@ void FFPlayer::pause() {
 void FFPlayer::resume() {
     audio->resume();
 }
+
+void FFPlayer::stop() {
+    audio->stop();
+}
+

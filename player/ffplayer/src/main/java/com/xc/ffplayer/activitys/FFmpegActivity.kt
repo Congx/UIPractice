@@ -15,6 +15,8 @@ class FFmpegActivity : AppCompatActivity(), SurfaceHolder.Callback {
 
     var ffplayer = FFPlayer()
 
+    var isPlaying = false;
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_ffmpeg)
@@ -33,6 +35,7 @@ class FFmpegActivity : AppCompatActivity(), SurfaceHolder.Callback {
             override fun onCurrentTime(currentTime: Int, totalTime: Int) {
                 seekbar.setProgress(currentTime * 100 / totalTime)
                 tvTimer.text = DisplayUtils.secdsToDateFormat(currentTime,totalTime)
+                btnPause.isEnabled = true
             }
 
             override fun onError(code: Int, msg: String?) {
@@ -59,6 +62,19 @@ class FFmpegActivity : AppCompatActivity(), SurfaceHolder.Callback {
             var path = getExternalFilesDir("input")?.absolutePath + File.separator + "input.mp4"
             ffplayer.setSource(path)
             ffplayer.prepare()
+            isPlaying = true
+            btnPause.isEnabled = false
+        }
+
+        btnPause.setOnClickListener {
+            if (isPlaying) {
+                ffplayer.pause()
+                btnPause.text = "播放"
+            }else {
+                ffplayer.resume()
+                btnPause.text = "暂停"
+            }
+            isPlaying = !isPlaying
         }
 
         surfaceView.holder.addCallback(this)

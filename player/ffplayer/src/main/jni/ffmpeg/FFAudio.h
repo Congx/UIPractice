@@ -76,6 +76,9 @@ public:
     //缓冲器队列接口
     SLAndroidSimpleBufferQueueItf pcmBufferQueue = NULL;
 
+    void pause();
+
+    void resume();
 };
 
 

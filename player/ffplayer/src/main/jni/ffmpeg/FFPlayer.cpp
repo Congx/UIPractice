@@ -45,14 +45,14 @@ int FFPlayer::decodeFFmpegThread() {
 
     if (avformat_open_input(&avFormatContext, url, NULL, NULL) != 0) {
         LOGE("打开视频失败");
-        status->exit = true;
+        status->setStatus(Playerstatus::EXIT);
         return -1;
     }
 
     LOGD("open video success");
     if (avformat_find_stream_info(avFormatContext, NULL) < 0) {
         LOGE("find_stream failure");
-        status->exit = true;
+        status->setStatus(Playerstatus::EXIT);
         return -1;
     }
 
@@ -124,7 +124,7 @@ int FFPlayer::decodeFFmpegThread() {
 
     if (audioIndex == -1 && videoIndex == -1) {
         LOGE("Couldn't find stream");
-        status->exit = true;
+        status->setStatus(Playerstatus::EXIT);
         return -1;
     }
 
@@ -134,9 +134,9 @@ int FFPlayer::decodeFFmpegThread() {
 }
 
 void FFPlayer::start() {
-    status->exit = false;
+    status->setStatus(Playerstatus::PLAYING);
     audio->start();
-    while (status != NULL && !status->exit) {
+    while (status != NULL && !status->isExit()) {
         AVPacket *avPacket = av_packet_alloc();
         if (av_read_frame(avFormatContext, avPacket) >= 0) {
             // 音频 丢入列队
@@ -146,13 +146,13 @@ void FFPlayer::start() {
         } else {
             av_packet_free(&avPacket);
             av_free(avPacket);
-            while(status != NULL && !status->exit)
+            while(status != NULL && !status->isExit())
             {
                 if(audio->queue.size() > 0)
                 {
                     continue;
                 } else{
-                    status->exit = true;
+                    status->setStatus(Playerstatus::EXIT);
                     break;
                 }
             }
@@ -162,4 +162,12 @@ void FFPlayer::start() {
 
     avformat_close_input(&avFormatContext);
 
+}
+
+void FFPlayer::pause() {
+    audio->pause();
+}
+
+void FFPlayer::resume() {
+    audio->resume();
 }

@@ -16,7 +16,7 @@ FFAudio::FFAudio(FFPlayerJavaCallback *callback, Playerstatus *status) : callbac
 }
 
 FFAudio::~FFAudio() {
-
+    (*engineObject)->Destroy(engineObject);
 }
 
 void *decodeThreadCall(void *context) {
@@ -53,8 +53,14 @@ void pcmBufferCallBack(SLAndroidSimpleBufferQueueItf bf, void *context) {
 void FFAudio::initOpenSLES() {
     SLresult result;
     result = slCreateEngine(&engineObject, 0, 0, 0, 0, 0);
+    (void)result;
+//    if(result == SL_RESULT_MEMORY_FAILURE) {
+//
+//    }
     result = (*engineObject)->Realize(engineObject, SL_BOOLEAN_FALSE);
+    (void)result;
     result = (*engineObject)->GetInterface(engineObject, SL_IID_ENGINE, &engineEngine);
+    (void)result;
 
     //第二步，创建混音器
     const SLInterfaceID mids[1] = {SL_IID_ENVIRONMENTALREVERB};
@@ -168,7 +174,7 @@ int FFAudio::resampleAudio() {
         initSwrCtx();
     }
 
-    if (!status->exit) {
+    if (!status->isExit()) {
         queue.pop(avPacket);
         if (!avPacket || avPacket != NULL) {
             int ret = avcodec_send_packet(codecContext, avPacket);
@@ -319,3 +325,19 @@ void FFAudio::initSwrCtx() {
 //        }
 //    }
 //}
+
+void FFAudio::pause() {
+    if (pcmPlayerPlay != NULL) {
+        SLresult result;
+        result = (*pcmPlayerPlay)->SetPlayState(pcmPlayerPlay, SL_PLAYSTATE_STOPPED);
+        assert(SL_RESULT_SUCCESS == result);
+    }
+}
+
+void FFAudio::resume() {
+    if (pcmPlayerPlay != NULL) {
+        SLresult result;
+        result = (*pcmPlayerPlay)->SetPlayState(pcmPlayerPlay, SL_PLAYSTATE_PLAYING);
+        assert(SL_RESULT_SUCCESS == result);
+    }
+}

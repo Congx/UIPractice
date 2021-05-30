@@ -63,6 +63,7 @@ Java_com_xc_ffplayer_ffplayer_FFPlayer_nativePrepare(JNIEnv *env, jobject thiz, 
         char *url = const_cast<char *>(env->GetStringUTFChars(jurl, NULL));
         player = new FFPlayer(javaCallback,url,playerStatus);
         player->prepare();
+        player->status->setStatus(Playerstatus::PREPARE);
     }
     return 0;
 }
@@ -191,20 +192,26 @@ Java_com_xc_ffplayer_ffplayer_FFPlayer_nativeStart(JNIEnv *env, jobject thiz, jo
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_xc_ffplayer_ffplayer_FFPlayer_nativePause(JNIEnv *env, jobject thiz) {
-
+    if (player) {
+        player->status->setStatus(Playerstatus::PAUSEE);
+        player->pause();
+    }
 }
 
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_xc_ffplayer_ffplayer_FFPlayer_nativeResume(JNIEnv *env, jobject thiz) {
-
+    if (player) {
+        player->status->setStatus(Playerstatus::PLAYING);
+        player->resume();
+    }
 }
 
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_xc_ffplayer_ffplayer_FFPlayer_nativeStop(JNIEnv *env, jobject thiz) {
     if (player) {
-        player->status->exit = true;
+        player->status->setStatus(Playerstatus::EXIT);
     }
 }
 

@@ -6,10 +6,20 @@
 class Playerstatus {
 
 public:
-    bool exit = false;
+    enum STATUS {
+        UNINIT,PREPARE,PLAYING,PAUSEE,EXIT
+    };
+
+private:
+    STATUS status = UNINIT;
 
 public:
+
     Playerstatus();
+
+    bool isExit();
+
+    bool setStatus(STATUS status);
 
 };
 

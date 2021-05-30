@@ -29,9 +29,9 @@ public:
 
 public:
     AVCodecContext *codecContext = NULL;
-    AVCodec *audioCodec = NULL;
+//    AVCodec *audioCodec = NULL;
     const AVSampleFormat *sample_fmts = NULL;
-    AVCodecParameters *codecpar = NULL;
+//    AVCodecParameters *codecpar = NULL;
     int sample_rate = NULL;
     int channels = NULL;
     uint64_t channel_layout = NULL;

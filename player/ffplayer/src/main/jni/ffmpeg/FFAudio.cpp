@@ -16,7 +16,30 @@ FFAudio::FFAudio(FFPlayerJavaCallback *callback, Playerstatus *status) : callbac
 }
 
 FFAudio::~FFAudio() {
-    (*engineObject)->Destroy(engineObject);
+    if(pcmPlayerObject != NULL) {
+        (*pcmPlayerObject)->Destroy(pcmPlayerObject);
+        pcmPlayerObject = NULL;
+        pcmPlayerPlay = NULL;
+        pcmBufferQueue = NULL;
+        outputMixObject = NULL;
+    }
+
+    if(engineObject != NULL) {
+        (*engineObject)->Destroy(engineObject);
+        engineObject = NULL;
+        engineEngine = NULL;
+    }
+
+    if(buffer != NULL) {
+        delete buffer;
+        buffer = NULL;
+    }
+
+    if(status != NULL) {
+        delete status;
+        status = NULL;
+    }
+    LOGD("audio ~ 释放");
 }
 
 void *decodeThreadCall(void *context) {

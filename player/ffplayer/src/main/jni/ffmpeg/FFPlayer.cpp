@@ -15,7 +15,16 @@ FFPlayer::FFPlayer(FFPlayerJavaCallback *callback, char *url,Playerstatus *statu
 }
 
 FFPlayer::~FFPlayer() {
-
+    if(audio != NULL) {
+        delete audio;
+        audio = NULL;
+    }
+    if(callback != NULL) {
+        delete callback;
+        callback = NULL;
+    }
+//    pthread_exit(&prepare_thread);
+    LOGD("FFPlayer ~释放");
 }
 
 void *prepareThreadCall(void *data) {
@@ -100,9 +109,9 @@ int FFPlayer::decodeFFmpegThread() {
                 audio->duration = duration / AV_TIME_BASE; // 微秒-> 秒
                 audio->time_base = audioCodecContext->time_base;
                 audio->streamIndex = audioIndex;
-                audio->codecpar = codecpar;
+//                audio->codecpar = codecpar;
                 audio->codecContext = audioCodecContext;
-                audio->audioCodec = audioCodec;
+//                audio->audioCodec = audioCodec;
                 // 采样位数
                 audio->sample_fmts = audioCodec->sample_fmts;
                 // 采样频率
@@ -134,6 +143,7 @@ int FFPlayer::decodeFFmpegThread() {
 }
 
 void FFPlayer::start() {
+    LOGD("FFPlayer::start()");
     status->setStatus(Playerstatus::PLAYING);
     audio->start();
     while (status != NULL && !status->isExit()) {

@@ -6,7 +6,7 @@
 
 AUX_SOURCE_DIRECTORY(. SRC_LIST)
 
-include_directories(../log .)
+include_directories(../log . ../soundtouch)
 
 # ---
 add_library(
@@ -117,4 +117,5 @@ target_link_libraries( ffmpeg
         libswresample
         libswscale
         OpenSLES
+        soundtouchlib
                        ${log-lib} )

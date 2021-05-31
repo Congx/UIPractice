@@ -11,7 +11,7 @@ aux_source_directory(. SRC_DIR)
 
 add_subdirectory(librtmp)
 add_subdirectory(ffmpeg)
-#add_subdirectory(x264)
+add_subdirectory(soundtouch)
 
 add_library( ffplayer
              SHARED

@@ -11,6 +11,7 @@
 #include "FFPlayer.h"
 #include "FFPlayerJavaCallback.h"
 #include "Playerstatus.h"
+#include "soundtouch/include/SoundTouch.h"
 
 extern "C" {
 #include "libavutil/time.h"

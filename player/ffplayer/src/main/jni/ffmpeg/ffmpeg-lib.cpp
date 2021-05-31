@@ -199,7 +199,7 @@ Java_com_xc_ffplayer_ffplayer_FFPlayer_nativePause(JNIEnv *env, jobject thiz) {
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_xc_ffplayer_ffplayer_FFPlayer_nativeResume(JNIEnv *env, jobject thiz) {
-    if (player) {
+    if (player != NULL) {
         player->status->setStatus(Playerstatus::PLAYING);
         player->resume();
     }
@@ -208,7 +208,7 @@ Java_com_xc_ffplayer_ffplayer_FFPlayer_nativeResume(JNIEnv *env, jobject thiz) {
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_xc_ffplayer_ffplayer_FFPlayer_nativeStop(JNIEnv *env, jobject thiz) {
-    if (player) {
+    if (player != NULL) {
         player->stop();
         player->status->setStatus(Playerstatus::EXIT);
     }
@@ -217,15 +217,23 @@ Java_com_xc_ffplayer_ffplayer_FFPlayer_nativeStop(JNIEnv *env, jobject thiz) {
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_xc_ffplayer_ffplayer_FFPlayer_nativeSeek(JNIEnv *env, jobject thiz, jint progress) {
-    if (player) {
+    if (player != NULL) {
         player->seek(progress);
     }
 }
 
 extern "C"
 JNIEXPORT void JNICALL
+Java_com_xc_ffplayer_ffplayer_FFPlayer_nativeSetVolume(JNIEnv *env, jobject thiz, jint volume) {
+    if (player != NULL) {
+        player->setVolume(volume);
+    }
+}
+
+extern "C"
+JNIEXPORT void JNICALL
 Java_com_xc_ffplayer_ffplayer_FFPlayer_nativeRelease(JNIEnv *env, jobject thiz) {
-    if (player) {
+    if (player != NULL) {
         delete player;
         player = NULL;
         javaCallback = NULL;

@@ -180,15 +180,21 @@ void FFPlayer::start() {
 }
 
 void FFPlayer::pause() {
-    audio->pause();
+    if (audio != NULL) {
+        audio->pause();
+    }
 }
 
 void FFPlayer::resume() {
-    audio->resume();
+    if (audio != NULL) {
+        audio->resume();
+    }
 }
 
 void FFPlayer::stop() {
-    audio->stop();
+    if (audio != NULL) {
+        audio->stop();
+    }
 }
 
 void FFPlayer::seek(jint secds) {
@@ -200,9 +206,9 @@ void FFPlayer::seek(jint secds) {
         playerLock.lock();
         status->setStatus(Playerstatus::SEEKING);
         audio->queue.clear();
-//        audio->last_time = 0;
-//        audio->clock = 0;
-//        audio->frame_time = 0;
+        audio->last_time = 0;
+        audio->clock = 0;
+        audio->frame_time = 0;
         avformat_seek_file(avFormatContext, -1, INT64_MIN, rel, INT64_MAX, 0);
         status->setStatus(Playerstatus::PLAYING);
 //        audio->queue.notify();
@@ -211,5 +217,11 @@ void FFPlayer::seek(jint secds) {
 
 
 
+}
+
+void FFPlayer::setVolume(int volume) {
+    if (audio != NULL) {
+        audio->setVolume(volume);
+    }
 }
 

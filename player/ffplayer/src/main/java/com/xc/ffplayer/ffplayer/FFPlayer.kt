@@ -52,6 +52,10 @@ open class FFPlayer:Player {
         nativeSeek((progress.toFloat() / 100 * duration).toInt())
     }
 
+    override fun setVolume(volume: Int) {
+        nativeSetVolume(volume)
+    }
+
     /**
      * 时间，native回调
      */
@@ -102,6 +106,7 @@ open class FFPlayer:Player {
     private external fun nativePause()
     private external fun nativeResume()
     private external fun nativeStop()
+    private external fun nativeSetVolume(volume:Int)
     private external fun nativeRelease()
     private external fun nativeSeek(progress: Int)
 

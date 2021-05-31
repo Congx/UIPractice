@@ -72,7 +72,12 @@ public:
     //pcm
     SLObjectItf pcmPlayerObject = NULL;
     SLPlayItf pcmPlayerPlay = NULL;
-
+    // 音量接口
+    SLVolumeItf pcmVolumePlay = NULL;
+    //立体声
+    int mute = 2;
+    // 声道
+    SLMuteSoloItf  pcmMutePlay = NULL;
     //缓冲器队列接口
     SLAndroidSimpleBufferQueueItf pcmBufferQueue = NULL;
 
@@ -81,6 +86,8 @@ public:
     void resume();
 
     void stop();
+
+    void setVolume(int i);
 };
 
 

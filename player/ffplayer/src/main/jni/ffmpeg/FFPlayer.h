@@ -47,6 +47,8 @@ public:
     void stop();
 
     void seek(jint i);
+
+    void setVolume(int volume);
 };
 
 

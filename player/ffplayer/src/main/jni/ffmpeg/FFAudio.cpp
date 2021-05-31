@@ -123,17 +123,20 @@ void FFAudio::initOpenSLES() {
     SLDataSource slDataSource = {&android_queue, &pcm};
 
 
-    const SLInterfaceID ids[1] = {SL_IID_BUFFERQUEUE};
-    const SLboolean req[1] = {SL_BOOLEAN_TRUE};
+    const SLInterfaceID ids[3] = {SL_IID_BUFFERQUEUE,SL_IID_VOLUME,SL_IID_MUTESOLO};
+    const SLboolean req[3] = {SL_BOOLEAN_TRUE,SL_BOOLEAN_TRUE,SL_BOOLEAN_TRUE};
 
-    (*engineEngine)->CreateAudioPlayer(engineEngine, &pcmPlayerObject, &slDataSource, &audioSnk, 1,
+    (*engineEngine)->CreateAudioPlayer(engineEngine, &pcmPlayerObject, &slDataSource, &audioSnk, 2,
                                        ids, req);
     //初始化播放器
     (*pcmPlayerObject)->Realize(pcmPlayerObject, SL_BOOLEAN_FALSE);
 
 //    得到接口后调用  获取Player接口
     (*pcmPlayerObject)->GetInterface(pcmPlayerObject, SL_IID_PLAY, &pcmPlayerPlay);
-
+    // 音量接口
+    (*pcmPlayerObject)->GetInterface(pcmPlayerObject,SL_IID_VOLUME,&pcmVolumePlay);
+//    获取声道操作接口
+    (*pcmPlayerObject)->GetInterface(pcmPlayerObject, SL_IID_MUTESOLO, &pcmMutePlay);
 //    注册回调缓冲区 获取缓冲队列接口
     (*pcmPlayerObject)->GetInterface(pcmPlayerObject, SL_IID_BUFFERQUEUE, &pcmBufferQueue);
     //缓冲接口回调
@@ -375,4 +378,28 @@ void FFAudio::resume() {
 
 void FFAudio::stop() {
     queue.clear();
+}
+
+void FFAudio::setVolume(int volume) {
+    if(pcmVolumePlay != NULL) {
+        if (volume > 30) {
+            (*pcmVolumePlay)->SetVolumeLevel(pcmVolumePlay, (100 - volume) * -20);
+        } else if (volume > 25) {
+            (*pcmVolumePlay)->SetVolumeLevel(pcmVolumePlay, (100 - volume) * -22);
+        } else if (volume > 20) {
+            (*pcmVolumePlay)->SetVolumeLevel(pcmVolumePlay, (100 - volume) * -25);
+        } else if (volume > 15) {
+            (*pcmVolumePlay)->SetVolumeLevel(pcmVolumePlay, (100 - volume) * -28);
+        } else if (volume > 10) {
+            (*pcmVolumePlay)->SetVolumeLevel(pcmVolumePlay, (100 - volume) * -30);
+        } else if (volume > 5) {
+            (*pcmVolumePlay)->SetVolumeLevel(pcmVolumePlay, (100 - volume) * -34);
+        } else if (volume > 3) {
+            (*pcmVolumePlay)->SetVolumeLevel(pcmVolumePlay, (100 - volume) * -37);
+        } else if (volume > 0) {
+            (*pcmVolumePlay)->SetVolumeLevel(pcmVolumePlay, (100 - volume) * -40);
+        } else {
+            (*pcmVolumePlay)->SetVolumeLevel(pcmVolumePlay, (100 - volume) * -100);
+        }
+    }
 }

@@ -50,5 +50,32 @@
         app:layout_constraintStart_toEndOf="@+id/btnPlay"
         app:layout_constraintTop_toBottomOf="@+id/seekbar"/>
 
+    <Button
+        android:id="@+id/btnVolumAdd"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="20dp"
+        android:text="+"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnPlay"/>
+
+    <TextView
+        android:id="@+id/tvVolum"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:text="100"
+        android:gravity="center"
+        app:layout_constraintStart_toEndOf="@+id/btnVolumAdd"
+        app:layout_constraintTop_toTopOf="@+id/btnVolumAdd"
+        app:layout_constraintBottom_toBottomOf="@+id/btnVolumAdd"/>
+
+    <Button
+        android:id="@+id/btnVolumMinus"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="20dp"
+        android:text="-"
+        app:layout_constraintStart_toEndOf="@+id/tvVolum"
+        app:layout_constraintTop_toBottomOf="@+id/btnPlay"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

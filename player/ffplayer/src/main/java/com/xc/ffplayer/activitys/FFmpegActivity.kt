@@ -18,6 +18,8 @@ class FFmpegActivity : AppCompatActivity(), SurfaceHolder.Callback {
     var isPlaying = false
     var seeking = false
 
+    var volume = 100
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_ffmpeg)
@@ -78,6 +80,18 @@ class FFmpegActivity : AppCompatActivity(), SurfaceHolder.Callback {
                 btnPause.text = "暂停"
             }
             isPlaying = !isPlaying
+        }
+
+        btnVolumAdd.setOnClickListener {
+            volume += 5
+            tvVolum.text = volume.toString()
+            ffplayer.setVolume(volume)
+        }
+
+        btnVolumMinus.setOnClickListener {
+            volume -= 5
+            tvVolum.text = volume.toString()
+            ffplayer.setVolume(volume)
         }
 
         surfaceView.holder.addCallback(this)

@@ -19,6 +19,7 @@ interface Player {
     fun stop()
 
     fun seek(progress: Int)
+    fun setVolume(volume: Int)
 }
 
 interface IPlayerListener {

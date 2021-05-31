@@ -8,6 +8,7 @@
 #include "FFPlayerJavaCallback.h"
 #include "FFAudio.h"
 #include "Playerstatus.h"
+#include "PlayerLock.h"
 
 extern "C"{
 #include "libavcodec/avcodec.h"
@@ -16,11 +17,10 @@ extern "C"{
 #include "libswscale/swscale.h"
 }
 
-enum STATUES {
-    UNUSE,INIT,START,STOP,FAILURE
-};
-
 class FFPlayer {
+
+private:
+    PlayerLock playerLock;
 
 public:
     AVFormatContext * avFormatContext = NULL;
@@ -45,6 +45,8 @@ public:
     void resume();
 
     void stop();
+
+    void seek(jint i);
 };
 
 

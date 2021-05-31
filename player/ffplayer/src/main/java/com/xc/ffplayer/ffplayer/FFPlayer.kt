@@ -14,6 +14,7 @@ open class FFPlayer:Player {
     override var playerListener: IPlayerListener? = null
 
     var mUrl = ""
+    var duration = 0
 
     override fun setSource(url: String) {
         mUrl = url
@@ -47,12 +48,17 @@ open class FFPlayer:Player {
         audioTrack?.release()
     }
 
+    override fun seek(progress: Int) {
+        nativeSeek((progress.toFloat() / 100 * duration).toInt())
+    }
+
     /**
      * 时间，native回调
      */
     fun onCurrentTime(currentTime: Int, totalTime: Int) {
+        duration = totalTime
         MainExecuter.execute {
-            Log.d(TAG,"currentTime = $currentTime, totalTime = $totalTime")
+//            Log.d(TAG,"currentTime = $currentTime, totalTime = $totalTime")
             playerListener?.onCurrentTime(currentTime,totalTime)
         }
     }
@@ -97,6 +103,7 @@ open class FFPlayer:Player {
     private external fun nativeResume()
     private external fun nativeStop()
     private external fun nativeRelease()
+    private external fun nativeSeek(progress: Int)
 
     companion object {
         init {

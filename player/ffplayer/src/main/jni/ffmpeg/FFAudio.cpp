@@ -201,6 +201,10 @@ int FFAudio::resampleAudio() {
         initSwrCtx();
     }
 
+    while (status->isSeeking()) {
+        // empty;
+    }
+
     if (!status->isExit()) {
         queue.pop(avPacket);
         if (!avPacket || avPacket != NULL) {

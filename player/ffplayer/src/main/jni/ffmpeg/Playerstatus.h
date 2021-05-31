@@ -7,7 +7,7 @@ class Playerstatus {
 
 public:
     enum STATUS {
-        UNINIT,PREPARE,PLAYING,PAUSEE,EXIT
+        UNINIT,PREPARE,PLAYING,PAUSEE,SEEKING,EXIT
     };
 
 private:
@@ -18,6 +18,8 @@ public:
     Playerstatus();
 
     bool isExit();
+
+    bool isSeeking();
 
     bool setStatus(STATUS status);
 

@@ -5,6 +5,7 @@
 #include <log/log.h>
 #include "FFPlayer.h"
 #include "pthread.h"
+#include <unistd.h>
 
 extern "C" {
 #include "libswresample/swresample.h"
@@ -12,6 +13,7 @@ extern "C" {
 
 FFPlayer::FFPlayer(FFPlayerJavaCallback *callback, char *url,Playerstatus *status) : url(url),status(status) {
     this->callback = callback;
+
 }
 
 FFPlayer::~FFPlayer() {
@@ -23,6 +25,7 @@ FFPlayer::~FFPlayer() {
         delete callback;
         callback = NULL;
     }
+    avformat_close_input(&avFormatContext);
 //    pthread_exit(&prepare_thread);
     LOGD("FFPlayer ~释放");
 }
@@ -105,8 +108,8 @@ int FFPlayer::decodeFFmpegThread() {
             if (avcodec_open2(audioCodecContext, audioCodec, NULL) != 0) {
                 LOGE("open audio codec failure");
             } else {
-                duration = avFormatContext->duration;
-                audio->duration = duration / AV_TIME_BASE; // 微秒-> 秒
+                duration = avFormatContext->duration / AV_TIME_BASE;// 微秒-> 秒
+                audio->duration = duration;
                 audio->time_base = audioCodecContext->time_base;
                 audio->streamIndex = audioIndex;
 //                audio->codecpar = codecpar;
@@ -145,13 +148,15 @@ int FFPlayer::decodeFFmpegThread() {
 void FFPlayer::start() {
     status->setStatus(Playerstatus::PLAYING);
     audio->start();
-    int i = 0;
     while (status != NULL && !status->isExit()) {
+
         AVPacket *avPacket = av_packet_alloc();
         if (av_read_frame(avFormatContext, avPacket) >= 0) {
             // 音频 丢入列队
             if (avPacket->stream_index == audio->streamIndex) {
+                playerLock.lock();
                 audio->queue.push(avPacket);
+                playerLock.unlock();
             }
         } else {
             av_packet_free(&avPacket);
@@ -167,11 +172,11 @@ void FFPlayer::start() {
                 }
             }
         }
-
+//        playerLock.unlock();
     }
 
-    avformat_close_input(&avFormatContext);
-
+    LOGD("ffplayer 结束");
+//    avformat_close_input(&avFormatContext);
 }
 
 void FFPlayer::pause() {
@@ -184,5 +189,27 @@ void FFPlayer::resume() {
 
 void FFPlayer::stop() {
     audio->stop();
+}
+
+void FFPlayer::seek(jint secds) {
+    if(duration <= 0) {
+        return;
+    }
+    if(secds >= 0 && secds <= duration && audio != NULL) {
+        uint64_t rel = secds * AV_TIME_BASE;
+        playerLock.lock();
+        status->setStatus(Playerstatus::SEEKING);
+        audio->queue.clear();
+//        audio->last_time = 0;
+//        audio->clock = 0;
+//        audio->frame_time = 0;
+        avformat_seek_file(avFormatContext, -1, INT64_MIN, rel, INT64_MAX, 0);
+        status->setStatus(Playerstatus::PLAYING);
+//        audio->queue.notify();
+        playerLock.unlock();
+    }
+
+
+
 }
 

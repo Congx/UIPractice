@@ -7,6 +7,7 @@
 
 #include <queue>
 #include <pthread.h>
+#include "log.h"
 
 
 //todo 宏 开关 是否使用c++11,玩玩而已。还是习惯posix标准的线程。。。。
@@ -71,6 +72,22 @@ public:
         pthread_mutex_unlock(&mutex);
 #endif
 
+    }
+
+    void lock() {
+        pthread_mutex_lock(&mutex);
+    }
+
+    void unlock() {
+        pthread_mutex_unlock(&mutex);
+    }
+
+    void await() {
+        pthread_cond_wait(&cond, &mutex);
+    }
+
+    void notify() {
+        pthread_cond_signal(&cond);
     }
 
 

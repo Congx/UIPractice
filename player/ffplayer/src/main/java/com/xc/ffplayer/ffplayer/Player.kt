@@ -17,6 +17,8 @@ interface Player {
     fun resume()
 
     fun stop()
+
+    fun seek(progress: Int)
 }
 
 interface IPlayerListener {

@@ -73,7 +73,6 @@ JNIEXPORT int JNICALL
 Java_com_xc_ffplayer_ffplayer_FFPlayer_nativeStart(JNIEnv *env, jobject thiz, jobject surface) {
 
     if (player != NULL) {
-
         player->start();
     }
 
@@ -212,6 +211,14 @@ Java_com_xc_ffplayer_ffplayer_FFPlayer_nativeStop(JNIEnv *env, jobject thiz) {
     if (player) {
         player->stop();
         player->status->setStatus(Playerstatus::EXIT);
+    }
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_xc_ffplayer_ffplayer_FFPlayer_nativeSeek(JNIEnv *env, jobject thiz, jint progress) {
+    if (player) {
+        player->seek(progress);
     }
 }
 

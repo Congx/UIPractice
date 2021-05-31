@@ -15,7 +15,8 @@ class FFmpegActivity : AppCompatActivity(), SurfaceHolder.Callback {
 
     var ffplayer = FFPlayer()
 
-    var isPlaying = false;
+    var isPlaying = false
+    var seeking = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,7 +34,9 @@ class FFmpegActivity : AppCompatActivity(), SurfaceHolder.Callback {
             }
 
             override fun onCurrentTime(currentTime: Int, totalTime: Int) {
-                seekbar.setProgress(currentTime * 100 / totalTime)
+                if (!seeking) {
+                    seekbar.progress = currentTime * 100 / totalTime
+                }
                 tvTimer.text = DisplayUtils.secdsToDateFormat(currentTime,totalTime)
                 btnPause.isEnabled = true
             }
@@ -85,12 +88,13 @@ class FFmpegActivity : AppCompatActivity(), SurfaceHolder.Callback {
 
             }
 
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {
-
+            override fun onStartTrackingTouch(seekBar: SeekBar) {
+                seeking = true
             }
 
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {
-
+            override fun onStopTrackingTouch(seekBar: SeekBar) {
+                seeking = false
+                ffplayer.seek(seekBar.progress)
             }
 
         })

@@ -49,6 +49,8 @@ public:
     void seek(jint i);
 
     void setVolume(int volume);
+
+    void setMute(int mute);
 };
 
 

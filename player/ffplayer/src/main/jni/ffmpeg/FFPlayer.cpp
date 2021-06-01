@@ -225,3 +225,9 @@ void FFPlayer::setVolume(int volume) {
     }
 }
 
+void FFPlayer::setMute(int mute) {
+    if (audio != NULL) {
+        audio->setMute(mute);
+    }
+}
+

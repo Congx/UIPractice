@@ -56,6 +56,10 @@ open class FFPlayer:Player {
         nativeSetVolume(volume)
     }
 
+    override fun setMute(@IMute mute: Int) {
+        nativeSetMute(mute)
+    }
+
     /**
      * 时间，native回调
      */
@@ -106,6 +110,7 @@ open class FFPlayer:Player {
     private external fun nativePause()
     private external fun nativeResume()
     private external fun nativeStop()
+    private external fun nativeSetMute(mute: Int)
     private external fun nativeSetVolume(volume:Int)
     private external fun nativeRelease()
     private external fun nativeSeek(progress: Int)
@@ -114,6 +119,10 @@ open class FFPlayer:Player {
         init {
             System.loadLibrary("ffmpeg")
         }
+
+//        const val MUTE_RIGHT = 0 // 右声道
+//        const val MUTE_LEFT = 0  // 左声道
+//        const val MUTE_STEREO = 0 // 立体声
 
         val TAG = FFPlayer::class.java.simpleName.toString()
     }

@@ -88,6 +88,8 @@ public:
     void stop();
 
     void setVolume(int i);
+
+    void setMute(int mute);
 };
 
 

@@ -11,7 +11,7 @@
 #include "FFPlayer.h"
 #include "FFPlayerJavaCallback.h"
 #include "Playerstatus.h"
-#include "soundtouch/include/SoundTouch.h"
+//#include "soundtouch/include/SoundTouch.h"
 
 extern "C" {
 #include "libavutil/time.h"
@@ -228,6 +228,14 @@ JNIEXPORT void JNICALL
 Java_com_xc_ffplayer_ffplayer_FFPlayer_nativeSetVolume(JNIEnv *env, jobject thiz, jint volume) {
     if (player != NULL) {
         player->setVolume(volume);
+    }
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_xc_ffplayer_ffplayer_FFPlayer_nativeSetMute(JNIEnv *env, jobject thiz, jint mute) {
+    if (player != NULL) {
+        player->setMute(mute);
     }
 }
 

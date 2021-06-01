@@ -5,9 +5,7 @@ import android.view.SurfaceHolder
 import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatActivity
 import com.xc.ffplayer.R
-import com.xc.ffplayer.ffplayer.DisplayUtils
-import com.xc.ffplayer.ffplayer.FFPlayer
-import com.xc.ffplayer.ffplayer.IPlayerListener
+import com.xc.ffplayer.ffplayer.*
 import kotlinx.android.synthetic.main.activity_ffmpeg.*
 import java.io.File
 
@@ -92,6 +90,18 @@ class FFmpegActivity : AppCompatActivity(), SurfaceHolder.Callback {
             volume -= 5
             tvVolum.text = volume.toString()
             ffplayer.setVolume(volume)
+        }
+
+        btnLeftMute.setOnClickListener {
+            ffplayer.setMute(MUTE_LEFT)
+
+        }
+        btnRightMute.setOnClickListener {
+            ffplayer.setMute(MUTE_RIGHT)
+
+        }
+        btnStereoMute.setOnClickListener {
+            ffplayer.setMute(MUTE_STEREO)
         }
 
         surfaceView.holder.addCallback(this)

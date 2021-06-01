@@ -7,16 +7,16 @@
 include_directories(../log ./include ./SoundTouch)
 #include_directories(.)
 
-aux_source_directory(./ st_dir) # 这里的名字一定不要和上层的重名
+aux_source_directory(./SoundTouch st_dir) # 这里的名字一定不要和上层的重名
 
 add_library(
-        soundtouchlib
+        soundtouch
         SHARED
         ${st_dir}
 )
 
 find_library(log-lib log)
 
-target_link_libraries( soundtouchlib
+target_link_libraries( soundtouch
                        ${log-lib}
         )

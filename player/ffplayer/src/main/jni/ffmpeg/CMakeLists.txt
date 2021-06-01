@@ -117,5 +117,5 @@ target_link_libraries( ffmpeg
         libswresample
         libswscale
         OpenSLES
-        soundtouchlib
+        soundtouch
                        ${log-lib} )

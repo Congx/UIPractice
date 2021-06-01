@@ -403,3 +403,28 @@ void FFAudio::setVolume(int volume) {
         }
     }
 }
+
+void FFAudio::setMute(int mute) {
+    if(pcmMutePlay == NULL)
+    {
+        return;
+    }
+    this->mute = mute;
+    if(mute == 0)//right   0
+    {
+//        1
+        (*pcmMutePlay)->SetChannelMute(pcmMutePlay, 1, false);
+        (*pcmMutePlay)->SetChannelMute(pcmMutePlay, 0, true);
+
+    } else if(mute == 1)//left
+    {
+        (*pcmMutePlay)->SetChannelMute(pcmMutePlay, 1, true);
+        (*pcmMutePlay)->SetChannelMute(pcmMutePlay, 0, false);
+    } else if(mute == 2)//center
+    {
+
+        (*pcmMutePlay)->SetChannelMute(pcmMutePlay, 1, false);
+        (*pcmMutePlay)->SetChannelMute(pcmMutePlay, 0, false);
+    }
+}
+

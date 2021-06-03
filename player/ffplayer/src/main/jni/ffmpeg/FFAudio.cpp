@@ -37,13 +37,24 @@ FFAudio::~FFAudio() {
     }
 
     if(buffer != NULL) {
-        delete buffer;
+        free(buffer);
         buffer = NULL;
     }
 
     if(status != NULL) {
         delete status;
         status = NULL;
+    }
+
+    if(codecContext) {
+        avcodec_close(codecContext);
+        avcodec_free_context(&codecContext);
+        codecContext = NULL;
+    }
+
+    if(callback != NULL) {
+        delete callback;
+        callback = NULL;
     }
     LOGD("audio ~ 释放");
 }

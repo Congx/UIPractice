@@ -375,7 +375,7 @@ void FFAudio::pause() {
     if (pcmPlayerPlay != NULL) {
         SLresult result;
         result = (*pcmPlayerPlay)->SetPlayState(pcmPlayerPlay, SL_PLAYSTATE_STOPPED);
-        assert(SL_RESULT_SUCCESS == result);
+//        assert(SL_RESULT_SUCCESS == result);
     }
 }
 
@@ -383,7 +383,7 @@ void FFAudio::resume() {
     if (pcmPlayerPlay != NULL) {
         SLresult result;
         result = (*pcmPlayerPlay)->SetPlayState(pcmPlayerPlay, SL_PLAYSTATE_PLAYING);
-        assert(SL_RESULT_SUCCESS == result);
+//        assert(SL_RESULT_SUCCESS == result);
     }
 }
 

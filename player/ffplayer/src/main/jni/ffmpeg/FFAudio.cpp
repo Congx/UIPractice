@@ -2,14 +2,18 @@
 // Created by Luffy on 28/5/2021.
 //
 
+#include <cassert>
 #include "FFAudio.h"
 #include "log.h"
 #include "pthread.h"
+#include <fstream>
 
 extern "C" {
 #include "libswresample/swresample.h"
 #include "libavcodec/avcodec.h"
 }
+
+using namespace std;
 
 void realseCallback(AVPacket *&packet) {
     av_packet_free(&packet);
@@ -36,9 +40,19 @@ FFAudio::~FFAudio() {
         engineEngine = NULL;
     }
 
+    if(sampleBuffer != NULL) {
+        free(sampleBuffer);
+        sampleBuffer = NULL;
+    }
+
     if(buffer != NULL) {
         delete (buffer);
         buffer = NULL;
+    }
+
+    if(soundTouch != NULL) {
+        delete soundTouch;
+        soundTouch = NULL;
     }
 
     if(status != NULL) {
@@ -52,10 +66,10 @@ FFAudio::~FFAudio() {
         codecContext = NULL;
     }
 
-//    if(callback != NULL) {
-//        delete callback;
-//        callback = NULL;
-//    }
+    if(callback != NULL) {
+        delete callback;
+        callback = NULL;
+    }
     LOGD("audio ~ 释放");
 }
 
@@ -75,16 +89,34 @@ void FFAudio::start() {
 void pcmBufferCallBack(SLAndroidSimpleBufferQueueItf bf, void *context) {
     FFAudio *audio = (FFAudio *) context;
     if (audio != NULL) {
-        int buffersize = audio->resampleAudio();
-        if (buffersize > 0) {
-            audio->clock += buffersize/(audio->out_channel_nb * audio->out_sample_rate * audio->out_sample_byte_count);
+        int sample_nb = audio->getSoundTouchData();
+//        LOGD("sample_nb = %d",sample_nb);
+        if (sample_nb > 0) {
+            audio->clock += sample_nb/(double)audio->out_sample_rate;
             // 计算播放时长
             if(audio->clock - audio->last_time >= 0.5) {
                 audio->last_time = audio->clock;
                 audio->callback->onCurrentTime(audio->clock,audio->duration,CHILD_THREAD);
             }
-            (*audio->pcmBufferQueue)->Enqueue(audio->pcmBufferQueue, (char *) audio->buffer,buffersize);
+//            ofstream out("/sdcard/Android/data/com.xc.ffplayer/files/output/sound2.pcm",ios::out | ios::app);
+//            out.write(reinterpret_cast<const char *>(audio->sampleBuffer), sample_nb * audio->out_sample_byte_count * audio->out_channel_nb);
+//            (*audio->pcmBufferQueue)->Enqueue(audio->pcmBufferQueue, (char *) audio->buffer,buffersize);
+            (*audio->pcmBufferQueue)->Enqueue(audio->pcmBufferQueue, (char *)audio->sampleBuffer,sample_nb * audio->out_sample_byte_count * audio->out_channel_nb);
         }
+
+//        uint8_t *buffer = NULL;
+//        int buffersize = audio->resampleAudio(&buffer);
+//        LOGD("out_buffer_size = %d",buffersize);
+//        if (buffersize > 0) {
+//            audio->clock += buffersize/(audio->out_channel_nb * audio->out_sample_rate * audio->out_sample_byte_count);
+//            // 计算播放时长
+//            if(audio->clock - audio->last_time >= 0.5) {
+//                audio->last_time = audio->clock;
+//                audio->callback->onCurrentTime(audio->clock,audio->duration,CHILD_THREAD);
+//            }
+////            (*audio->pcmBufferQueue)->Enqueue(audio->pcmBufferQueue, (char *) audio->buffer,buffersize);
+//            (*audio->pcmBufferQueue)->Enqueue(audio->pcmBufferQueue, buffer,buffersize);
+//        }
     }
 }
 
@@ -205,7 +237,7 @@ int FFAudio::getCurrentSampleRateForOpensles(int sample_rate) {
     return rate;
 }
 
-int FFAudio::resampleAudio() {
+int FFAudio::resampleAudio(uint8_t **pcmbuffer) {
     // audio 相关 ----
     if(avFrame == NULL) {
         avFrame = av_frame_alloc();
@@ -213,6 +245,10 @@ int FFAudio::resampleAudio() {
     // 初始化转换器
     if(swr_ctx == NULL) {
         initSwrCtx();
+    }
+
+    if (soundTouch == NULL) {
+        initSoundTouch();
     }
 
     while (status->isSeeking()) {
@@ -236,7 +272,7 @@ int FFAudio::resampleAudio() {
             }
 //            LOGE("nb_samples %d",avFrame->nb_samples);
             // 重采样，转换 采样的通道数、频率等数据，按照swrContext的参数来转换
-            swr_convert(swr_ctx, &buffer, avFrame->nb_samples,(const uint8_t **) avFrame->data, avFrame->nb_samples);
+            nb_samples = swr_convert(swr_ctx, &buffer, avFrame->nb_samples,(const uint8_t **) avFrame->data, avFrame->nb_samples);
             out_buffer_size = av_samples_get_buffer_size(NULL, out_channel_nb, avFrame->nb_samples,out_sample_fmt, 1);
             // 计算时间
             frame_time = avFrame->pts * av_q2d(time_base);
@@ -247,6 +283,7 @@ int FFAudio::resampleAudio() {
             av_packet_free(&avPacket);
             av_free(avPacket);
             avPacket = NULL;
+            *pcmbuffer = buffer;
 //            av_frame_free(&avFrame);
 //            av_free(avFrame);
 //            avFrame = NULL;
@@ -436,6 +473,85 @@ void FFAudio::setMute(int mute) {
 
         (*pcmMutePlay)->SetChannelMute(pcmMutePlay, 1, false);
         (*pcmMutePlay)->SetChannelMute(pcmMutePlay, 0, false);
+    }
+}
+
+int FFAudio::getSoundTouchData() {
+    s_len = 0;
+    while (status!=NULL && !status->isExit()) {
+        uint8_t *out_buffer = NULL;
+        if(finished){
+            finished = false;
+            int buffersize = resampleAudio(&out_buffer);
+            if (buffersize > 0) {
+                for(int i = 0; i < buffersize / 2 + 1; i++){
+//short  2个字节  pcm数据   ====波形
+                    sampleBuffer[i] = (out_buffer[i * 2] | ((out_buffer[i * 2 + 1]) << 8));
+                }
+//丢给sountouch   进行波的整理
+//                ofstream out("/sdcard/Android/data/com.xc.ffplayer/files/output/sound1.pcm",ios::out | ios::app);
+//                out.write(reinterpret_cast<const char *>(out_buffer), buffersize);
+                soundTouch->putSamples(sampleBuffer,nb_samples);
+                s_len = soundTouch->receiveSamples(sampleBuffer,nb_samples);
+
+            }else {
+                soundTouch->flush();
+            }
+
+            if (s_len == 0) {
+                finished = true;
+                continue;
+            } else{
+                if(out_buffer == NULL){
+                    s_len=soundTouch->receiveSamples(sampleBuffer, nb_samples);
+//                    s_len=soundTouch->receiveSamples(sampleBuffer, buffersize / 4);
+                    if(s_len == 0)
+                    {
+                        finished = true;
+                        continue;
+                    }
+                }
+                finished = true;
+                return s_len;
+            }
+        }
+
+    }
+//    finished = true;
+    return s_len;
+
+}
+
+void FFAudio::initSoundTouch() {
+    if (soundTouch == NULL) {
+        soundTouch = new SoundTouch();
+        soundTouch->setSampleRate(out_sample_rate);
+        soundTouch->setChannels(out_channel_nb);
+//    speed  1.1   1.5  2.1
+        soundTouch->setTempo(speed);
+        soundTouch->setPitch(pitch);
+
+        if(sampleBuffer == NULL) {
+            int outBufferSize = out_sample_rate * out_sample_byte_count * out_channel_nb;
+            sampleBuffer = static_cast<SAMPLETYPE *>(malloc(outBufferSize));
+//            LOGD("getSoundTouchData sampleBuffer = %d",outBufferSize);
+        }
+
+//        LOGD("soundTouch 初始化");
+    }
+}
+
+void FFAudio::setPitch(float pitch) {
+    this->pitch = pitch;
+    if(soundTouch != NULL) {
+        soundTouch->setPitch(pitch);
+    }
+}
+
+void FFAudio::setSpeed(float speed) {
+    this->speed = speed;
+    if (soundTouch != NULL) {
+        soundTouch->setTempo(speed);
     }
 }
 

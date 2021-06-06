@@ -231,3 +231,15 @@ void FFPlayer::setMute(int mute) {
     }
 }
 
+void FFPlayer::setPitch(float pitch) {
+    if (audio != NULL) {
+        audio->setPitch(pitch);
+    }
+}
+
+void FFPlayer::setSpeed(float speed) {
+    if (audio != NULL) {
+        audio->setSpeed(speed);
+    }
+}
+

@@ -51,6 +51,10 @@ public:
     void setVolume(int volume);
 
     void setMute(int mute);
+
+    void setSpeed(jfloat speed);
+
+    void setPitch(jfloat pitch);
 };
 
 

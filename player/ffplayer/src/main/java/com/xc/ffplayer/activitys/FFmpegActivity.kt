@@ -18,6 +18,9 @@ class FFmpegActivity : AppCompatActivity(), SurfaceHolder.Callback {
 
     var volume = 100
 
+    var speed = 1f
+    var pitch = 1f
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_ffmpeg)
@@ -63,6 +66,7 @@ class FFmpegActivity : AppCompatActivity(), SurfaceHolder.Callback {
         }
         btnPlay.setOnClickListener {
             var path = getExternalFilesDir("input")?.absolutePath + File.separator + "input.mp4"
+//            var path = getExternalFilesDir("input")?.absolutePath + File.separator + "music1.mp3"
             ffplayer.setSource(path)
             ffplayer.prepare()
             isPlaying = true
@@ -102,6 +106,30 @@ class FFmpegActivity : AppCompatActivity(), SurfaceHolder.Callback {
         }
         btnStereoMute.setOnClickListener {
             ffplayer.setMute(MUTE_STEREO)
+        }
+
+        btnSpeedAdd.setOnClickListener {
+            speed += 0.1f
+            tvSpeed.text = speed.toString()
+            ffplayer.setSpeed(speed)
+        }
+
+        btnSppedMinus.setOnClickListener {
+            speed -= 0.1f
+            tvSpeed.text = speed.toString()
+            ffplayer.setSpeed(speed)
+        }
+
+        btnPitchAdd.setOnClickListener {
+            pitch += 0.1f
+            tvPitch.text = pitch.toString()
+            ffplayer.setPitch(pitch)
+        }
+
+        btnPitchMinus.setOnClickListener {
+            pitch -= 0.1f
+            tvPitch.text = pitch.toString()
+            ffplayer.setPitch(pitch)
         }
 
         surfaceView.holder.addCallback(this)

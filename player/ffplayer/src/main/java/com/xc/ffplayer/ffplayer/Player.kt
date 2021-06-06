@@ -30,6 +30,8 @@ interface Player {
     fun setVolume(volume: Int)
 
     fun setMute(@IMute mute: Int)
+    fun setSpeed(speed: Float)
+    fun setPitch(pitch: Float)
 }
 
 @kotlin.annotation.Retention(AnnotationRetention.SOURCE)

@@ -241,6 +241,20 @@ Java_com_xc_ffplayer_ffplayer_FFPlayer_nativeSetMute(JNIEnv *env, jobject thiz, 
 
 extern "C"
 JNIEXPORT void JNICALL
+Java_com_xc_ffplayer_ffplayer_FFPlayer_nativeSetSpeed(JNIEnv *env, jobject thiz, jfloat speed) {
+    if (player != NULL) {
+        player->setSpeed(speed);
+    }
+}extern "C"
+JNIEXPORT void JNICALL
+Java_com_xc_ffplayer_ffplayer_FFPlayer_nativeSetPitch(JNIEnv *env, jobject thiz, jfloat pitch) {
+    if (player != NULL) {
+        player->setPitch(pitch);
+    }
+}
+
+extern "C"
+JNIEXPORT void JNICALL
 Java_com_xc_ffplayer_ffplayer_FFPlayer_nativeRelease(JNIEnv *env, jobject thiz) {
     if (player != NULL) {
         delete player;

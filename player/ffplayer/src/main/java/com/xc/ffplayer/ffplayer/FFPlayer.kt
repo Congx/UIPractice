@@ -28,9 +28,9 @@ open class FFPlayer:Player {
         if(mUrl.isEmpty()) {
             return
         }
-        LiveTaskManager.execute {
+        LiveTaskManager.execute(Runnable {
             nativeStart(surface)
-        }
+        })
     }
 
     override fun pause() {
@@ -58,6 +58,14 @@ open class FFPlayer:Player {
 
     override fun setMute(@IMute mute: Int) {
         nativeSetMute(mute)
+    }
+
+    override fun setSpeed(speed: Float) {
+        nativeSetSpeed(speed)
+    }
+
+    override fun setPitch(pitch: Float) {
+        nativeSetPitch(pitch)
     }
 
     /**
@@ -111,6 +119,8 @@ open class FFPlayer:Player {
     private external fun nativeResume()
     private external fun nativeStop()
     private external fun nativeSetMute(mute: Int)
+    private external fun nativeSetSpeed(speed: Float)
+    private external fun nativeSetPitch(pitch: Float)
     private external fun nativeSetVolume(volume:Int)
     private external fun nativeRelease()
     private external fun nativeSeek(progress: Int)

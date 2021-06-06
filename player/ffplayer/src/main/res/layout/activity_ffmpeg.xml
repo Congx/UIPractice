@@ -105,4 +105,75 @@
         app:layout_constraintStart_toEndOf="@+id/btnRightMute"
         app:layout_constraintTop_toBottomOf="@+id/btnVolumAdd"/>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="速度："
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnLeftMute"/>
+
+    <Button
+        android:id="@+id/btnSpeedAdd"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="30dp"
+        android:text="+"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnLeftMute"/>
+
+    <TextView
+        android:id="@+id/tvSpeed"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:text="1"
+        android:gravity="center"
+        app:layout_constraintStart_toEndOf="@+id/btnSpeedAdd"
+        app:layout_constraintTop_toTopOf="@+id/btnSpeedAdd"
+        app:layout_constraintBottom_toBottomOf="@+id/btnSpeedAdd"/>
+
+    <Button
+        android:id="@+id/btnSppedMinus"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:text="-"
+        app:layout_constraintStart_toEndOf="@+id/tvSpeed"
+        app:layout_constraintTop_toTopOf="@+id/tvSpeed"
+        app:layout_constraintBottom_toBottomOf="@+id/tvSpeed"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="声调："
+        app:layout_constraintStart_toEndOf="@+id/btnSppedMinus"
+        app:layout_constraintTop_toBottomOf="@+id/btnLeftMute"/>
+
+    <Button
+        android:id="@+id/btnPitchAdd"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:text="+"
+        android:layout_marginStart="30dp"
+        app:layout_constraintStart_toEndOf="@+id/btnSppedMinus"
+        app:layout_constraintTop_toTopOf="@+id/btnSppedMinus"
+        app:layout_constraintBottom_toBottomOf="@+id/btnSppedMinus"/>
+
+    <TextView
+        android:id="@+id/tvPitch"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:text="1"
+        android:gravity="center"
+        app:layout_constraintStart_toEndOf="@+id/btnPitchAdd"
+        app:layout_constraintTop_toTopOf="@+id/btnPitchAdd"
+        app:layout_constraintBottom_toBottomOf="@+id/btnPitchAdd"/>
+
+    <Button
+        android:id="@+id/btnPitchMinus"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:text="-"
+        app:layout_constraintStart_toEndOf="@+id/tvPitch"
+        app:layout_constraintTop_toTopOf="@+id/tvPitch"
+        app:layout_constraintBottom_toBottomOf="@+id/tvPitch"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

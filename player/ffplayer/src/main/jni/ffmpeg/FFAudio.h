@@ -7,6 +7,8 @@
 #include "safe_queue.h"
 #include "FFPlayerJavaCallback.h"
 #include "Playerstatus.h"
+#include "soundtouch/include/SoundTouch.h"
+#include "soundtouch/include/STTypes.h"
 
 extern "C" {
 #include <libavcodec/avcodec.h>
@@ -15,6 +17,8 @@ extern "C" {
 #include "libswresample/swresample.h"
 }
 
+using namespace soundtouch;
+
 class FFAudio {
 public:
     FFAudio(FFPlayerJavaCallback *callback,Playerstatus *status);
@@ -22,10 +26,12 @@ public:
 
     void start();
     void initOpenSLES();
-    int resampleAudio();
+    int resampleAudio(uint8_t **buffer);
     int getCurrentSampleRateForOpensles(int sample_rate);
     void initSwrCtx();
     void decodeFFmpegThread();
+    int getSoundTouchData();
+    void initSoundTouch();
 
 public:
     AVCodecContext *codecContext = NULL;
@@ -50,7 +56,6 @@ public:
 
     AVPacket *avPacket = NULL;
     AVFrame *avFrame = NULL;
-    uint8_t *buffer = NULL;
 
     SwrContext *swr_ctx = NULL;
     int out_channel_nb; // 输出采样通道数量
@@ -58,6 +63,10 @@ public:
     int out_sample_rate; // 输出采样频率
     AVSampleFormat out_sample_fmt;
     int out_buffer_size;
+    // swr 转换后的实际采样个数
+    int nb_samples;
+    // 解码后的pcm数据
+    uint8_t *buffer = NULL;
 
     // opensl
     // 引擎接口
@@ -81,6 +90,21 @@ public:
     //缓冲器队列接口
     SLAndroidSimpleBufferQueueItf pcmBufferQueue = NULL;
 
+    // soundtouch 相关
+    //变调
+    float pitch= 1.0f;
+    //变速度
+    float speed= 1.0f;
+    //采样位数 SoudTouch最低支持16bit，所以使用16bit的来播放
+//    int bits= 16;
+    //每秒理论PCM大小
+//    int BUFF_SIZE =out_sample_rate * out_channel_nb * out_sample_byte_count;
+    // soundtouch 输出数据
+    SAMPLETYPE * sampleBuffer = NULL;
+    SoundTouch *soundTouch = NULL;
+    int s_len = 0;
+    bool finished = true;
+
     void pause();
 
     void resume();
@@ -90,6 +114,10 @@ public:
     void setVolume(int i);
 
     void setMute(int mute);
+
+    void setPitch(float pitch);
+
+    void setSpeed(float speed);
 };
 
 

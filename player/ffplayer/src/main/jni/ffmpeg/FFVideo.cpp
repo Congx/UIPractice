@@ -95,7 +95,57 @@ void FFVideo::decodeVideo() {
                     avFrame->data[1],
                     avFrame->data[2]);
         }else {
+            AVFrame *pFrameYUV420P = av_frame_alloc();
+            int num = av_image_get_buffer_size(
+                    AV_PIX_FMT_YUV420P,
+                    width,
+                    height,
+                    1);
+            uint8_t *buffer = static_cast<uint8_t *>(av_malloc(num * sizeof(uint8_t)));
+            av_image_fill_arrays(
+                    pFrameYUV420P->data,
+                    pFrameYUV420P->linesize,
+                    buffer,
+                    AV_PIX_FMT_YUV420P,
+                    width,
+                    height,
+                    1);
+            SwsContext *sws_ctx = sws_getContext(
+                    width,
+                    height,
+                    pix_fmt,
+                    width,
+                    height,
+                    AV_PIX_FMT_YUV420P,
+                    SWS_BICUBIC, NULL, NULL, NULL);
 
+            if(!sws_ctx)
+            {
+                av_frame_free(&pFrameYUV420P);
+                av_free(pFrameYUV420P);
+                av_free(buffer);
+                continue;
+            }
+            sws_scale(
+                    sws_ctx,
+                    reinterpret_cast<const uint8_t *const *>(avFrame->data),
+                    avFrame->linesize,
+                    0,
+                    avFrame->height,
+                    pFrameYUV420P->data,
+                    pFrameYUV420P->linesize);
+            //渲染
+            callback->onCallRenderYUV(
+                    width,
+                    height,
+                    pFrameYUV420P->data[0],
+                    pFrameYUV420P->data[1],
+                    pFrameYUV420P->data[2]);
+
+            av_frame_free(&pFrameYUV420P);
+            av_free(pFrameYUV420P);
+            av_free(buffer);
+            sws_freeContext(sws_ctx);
         }
         av_frame_free(&avFrame);
         av_free(avFrame);
@@ -104,10 +154,6 @@ void FFVideo::decodeVideo() {
         av_free(avPacket);
         avPacket = NULL;
     }
-}
-
-void FFVideo::release() {
-
 }
 
 double FFVideo::getFrameDiffTime(AVFrame *avFrame) {
@@ -170,5 +216,26 @@ double FFVideo::getDelayTime(double diff) {
         delayTime = defaultDelayTime;
     }
     return delayTime;
+}
+
+void FFVideo::stop() {
+    queue.clear();
+}
+
+void FFVideo::release() {
+    queue.setWork(0);
+    if(audio != NULL) {
+        audio = NULL;
+    }
+
+    if(codecContext != NULL) {
+        avcodec_close(codecContext);
+        avcodec_free_context(&codecContext);
+        codecContext = NULL;
+    }
+
+    if(status != NULL) {
+        status = NULL;
+    }
 }
 

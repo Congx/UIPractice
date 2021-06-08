@@ -41,10 +41,12 @@ open class FFPlayer:Player {
     }
 
     override fun stop() {
-        nativeStop()
-        nativeRelease()
-        audioTrack?.stop()
-        audioTrack?.release()
+        LiveTaskManager.execute(Runnable {
+            nativeStop()
+            nativeRelease()
+            audioTrack?.stop()
+            audioTrack?.release()
+        })
     }
 
     override fun seek(progress: Int) {
@@ -89,7 +91,7 @@ open class FFPlayer:Player {
         u: ByteArray?,
         v: ByteArray?
     ) {
-//        Log.d(TAG, "width = $width,height = $height,y = ${y?.size},u = ${u?.size},v = ${v?.size},")
+        Log.d(TAG, "width = $width,height = $height,y = ${y?.size},u = ${u?.size},v = ${v?.size},")
     }
 
     /**

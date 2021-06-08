@@ -51,6 +51,8 @@ public:
 
     void stop();
 
+    void release();
+
     void seek(jint i);
 
     void setVolume(int volume);

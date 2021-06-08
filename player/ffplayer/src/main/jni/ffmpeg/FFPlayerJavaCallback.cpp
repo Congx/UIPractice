@@ -17,11 +17,7 @@ FFPlayerJavaCallback::FFPlayerJavaCallback(JavaVM *javaVM, JNIEnv *env, jobject 
 }
 
 FFPlayerJavaCallback::~FFPlayerJavaCallback() {
-    JNIEnv *jniEnv;
-    if(javaVM->AttachCurrentThread(&jniEnv, 0) != JNI_OK){
-        return;
-    }
-    jniEnv->DeleteGlobalRef(jobj);
+
 }
 
 void FFPlayerJavaCallback::onPrepared(int width,int height,int fps,int type) {
@@ -147,4 +143,13 @@ void FFPlayerJavaCallback::onCallRenderYUV(int width, int height, uint8_t *fy, u
     jniEnv->DeleteLocalRef(u);
     jniEnv->DeleteLocalRef(v);
     javaVM->DetachCurrentThread();
+}
+
+void FFPlayerJavaCallback::release() {
+//    JNIEnv *jniEnv;
+//    if(javaVM->AttachCurrentThread(&jniEnv, 0) != JNI_OK){
+//        return;
+//    }
+//    jniEnv->DeleteGlobalRef(jobj);
+//    javaVM->DetachCurrentThread();
 }

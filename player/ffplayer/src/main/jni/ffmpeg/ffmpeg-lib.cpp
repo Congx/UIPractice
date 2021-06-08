@@ -257,6 +257,7 @@ extern "C"
 JNIEXPORT void JNICALL
 Java_com_xc_ffplayer_ffplayer_FFPlayer_nativeRelease(JNIEnv *env, jobject thiz) {
     if (player != NULL) {
+        player->release();
         delete player;
         player = NULL;
         javaCallback = NULL;

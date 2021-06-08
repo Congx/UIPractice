@@ -35,6 +35,8 @@ public:
     void onCallLoad(int type, bool isLoading);
     void onCallRenderYUV(int width, int height, uint8_t *fy, uint8_t *fu, uint8_t *fv);
 
+    void release();
+
 };
 
 

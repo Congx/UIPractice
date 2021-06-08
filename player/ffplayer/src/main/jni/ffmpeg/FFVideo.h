@@ -16,6 +16,8 @@ extern "C" {
 #include "libavcodec/packet.h"
 #include "libavutil/time.h"
 #include "libavcodec/avcodec.h"
+#include "libavutil/imgutils.h"
+#include "libswscale/swscale.h"
 }
 
 class FFVideo {
@@ -33,6 +35,7 @@ public:
     SafeQueue<AVPacket *> queue;
     FFPlayerJavaCallback *callback = NULL;
     AVCodecContext *codecContext = NULL;
+    AVPixelFormat pix_fmt;
     Playerstatus *status = NULL;
     pthread_t decode_thread = NULL;
     int streamIndex = 0;
@@ -44,6 +47,7 @@ public:
     double clock = 0;
     double defaultDelayTime = 0;
 
+    void stop();
 };
 
 

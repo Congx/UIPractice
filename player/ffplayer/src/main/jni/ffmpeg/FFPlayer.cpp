@@ -13,25 +13,10 @@ extern "C" {
 
 FFPlayer::FFPlayer(FFPlayerJavaCallback *callback, char *url,Playerstatus *status) : url(url),status(status) {
     this->callback = callback;
-
 }
 
 FFPlayer::~FFPlayer() {
-    if(audio != NULL) {
-        delete audio;
-        audio = NULL;
-    }
-    if(video != NULL) {
-        delete video;
-        video = NULL;
-    }
-    if(callback != NULL) {
-        delete callback;
-        callback = NULL;
-    }
-    avformat_close_input(&avFormatContext);
-//    pthread_exit(&prepare_thread);
-    LOGD("FFPlayer ~释放");
+
 }
 
 void *prepareThreadCall(void *data) {
@@ -95,6 +80,7 @@ int FFPlayer::decodeFFmpegThread() {
                 video->width = codecpar->width;
                 video->height = codecpar->height;
                 video->codecContext = videoCodecContext;
+                video->pix_fmt = videoCodecContext->pix_fmt;
                 video->time_base = avFormatContext->streams[i]->time_base;
 //                LOGD("video width = %d,height = %d",video->width,video->height);
 //                LOGD("video time_base den = %d,num = %d",video->time_base.den,video->time_base.num);
@@ -226,6 +212,9 @@ void FFPlayer::stop() {
     if (audio != NULL) {
         audio->stop();
     }
+    if (video != NULL) {
+        video->stop();
+    }
 }
 
 void FFPlayer::seek(jint secds) {
@@ -270,5 +259,24 @@ void FFPlayer::setSpeed(float speed) {
     if (audio != NULL) {
         audio->setSpeed(speed);
     }
+}
+
+void FFPlayer::release() {
+    if(audio != NULL) {
+        audio->release();
+        delete audio;
+        audio = NULL;
+    }
+    if(video != NULL) {
+        video->release();
+        delete video;
+        video = NULL;
+    }
+    if(callback != NULL) {
+        delete callback;
+        callback = NULL;
+    }
+    avformat_close_input(&avFormatContext);
+    LOGD("FFPlayer ~释放");
 }
 

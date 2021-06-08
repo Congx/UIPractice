@@ -26,51 +26,7 @@ FFAudio::FFAudio(FFPlayerJavaCallback *callback, Playerstatus *status) : callbac
 }
 
 FFAudio::~FFAudio() {
-    if(pcmPlayerObject != NULL) {
-        (*pcmPlayerObject)->Destroy(pcmPlayerObject);
-        pcmPlayerObject = NULL;
-        pcmPlayerPlay = NULL;
-        pcmBufferQueue = NULL;
-        outputMixObject = NULL;
-    }
 
-    if(engineObject != NULL) {
-        (*engineObject)->Destroy(engineObject);
-        engineObject = NULL;
-        engineEngine = NULL;
-    }
-
-    if(sampleBuffer != NULL) {
-        free(sampleBuffer);
-        sampleBuffer = NULL;
-    }
-
-    if(buffer != NULL) {
-        delete (buffer);
-        buffer = NULL;
-    }
-
-    if(soundTouch != NULL) {
-        delete soundTouch;
-        soundTouch = NULL;
-    }
-
-    if(status != NULL) {
-        delete status;
-        status = NULL;
-    }
-
-    if(codecContext) {
-        avcodec_close(codecContext);
-//        avcodec_free_context(&codecContext);
-        codecContext = NULL;
-    }
-
-    if(callback != NULL) {
-        delete callback;
-        callback = NULL;
-    }
-    LOGD("audio ~ 释放");
 }
 
 void *decodeThreadCall(void *context) {
@@ -553,5 +509,54 @@ void FFAudio::setSpeed(float speed) {
     if (soundTouch != NULL) {
         soundTouch->setTempo(speed);
     }
+}
+
+void FFAudio::release() {
+    queue.setWork(0);
+    if(pcmPlayerObject != NULL) {
+        (*pcmPlayerObject)->Destroy(pcmPlayerObject);
+        pcmPlayerObject = NULL;
+        pcmPlayerPlay = NULL;
+        pcmBufferQueue = NULL;
+        outputMixObject = NULL;
+    }
+
+    if(engineObject != NULL) {
+        (*engineObject)->Destroy(engineObject);
+        engineObject = NULL;
+        engineEngine = NULL;
+    }
+
+    if(sampleBuffer != NULL) {
+        free(sampleBuffer);
+        sampleBuffer = NULL;
+    }
+
+    if(buffer != NULL) {
+        delete (buffer);
+        buffer = NULL;
+    }
+
+    if(soundTouch != NULL) {
+        delete soundTouch;
+        soundTouch = NULL;
+    }
+
+    if(status != NULL) {
+        delete status;
+        status = NULL;
+    }
+
+    if(codecContext) {
+        avcodec_close(codecContext);
+        avcodec_free_context(&codecContext);
+        codecContext = NULL;
+    }
+
+    if(callback != NULL) {
+        delete callback;
+        callback = NULL;
+    }
+    LOGD("audio ~ 释放");
 }
 

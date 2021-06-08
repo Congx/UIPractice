@@ -29,6 +29,7 @@ public:
     double getFrameDiffTime(AVFrame *avFrame);
     double getDelayTime(double diff);
     void decodeVideo();
+    void stop();
 
 public:
     FFAudio *audio = NULL;
@@ -47,7 +48,8 @@ public:
     double clock = 0;
     double defaultDelayTime = 0;
 
-    void stop();
+    pthread_mutex_t codecMutex;
+
 };
 
 

@@ -165,14 +165,14 @@ void FFPlayer::start() {
         AVPacket *avPacket = av_packet_alloc();
         if (av_read_frame(avFormatContext, avPacket) >= 0) {
             // 音频 丢入列队
-//            playerLock.lock();
+            playerLock.lock();
             if (avPacket->stream_index == audio->streamIndex) {
                 audio->queue.push(avPacket);
             }else if(avPacket->stream_index == video->streamIndex) {
 //                LOGD("video queue push");
                 video->queue.push(avPacket);
             }
-//            playerLock.unlock();
+            playerLock.unlock();
         } else {
             av_packet_free(&avPacket);
             av_free(avPacket);
@@ -221,17 +221,27 @@ void FFPlayer::seek(jint secds) {
     if(duration <= 0) {
         return;
     }
-    if(secds >= 0 && secds <= duration && audio != NULL) {
+    if(secds >= 0 && secds <= duration ) {
         uint64_t rel = secds * AV_TIME_BASE;
         playerLock.lock();
         status->setStatus(Playerstatus::SEEKING);
-        audio->queue.clear();
-        audio->last_time = 0;
-        audio->clock = 0;
-        audio->frame_time = 0;
         avformat_seek_file(avFormatContext, -1, INT64_MIN, rel, INT64_MAX, 0);
+        if(audio != NULL) {
+            audio->queue.clear();
+            audio->last_time = 0;
+            audio->clock = 0;
+            audio->frame_time = 0;
+            avcodec_flush_buffers(audio->codecContext);
+        }
+        if(video != NULL) {
+            video->queue.clear();
+            pthread_mutex_lock(&video->codecMutex);
+            avcodec_flush_buffers(video->codecContext);
+            pthread_mutex_unlock(&video->codecMutex);
+        }
         status->setStatus(Playerstatus::PLAYING);
 //        audio->queue.notify();
+
         playerLock.unlock();
     }
 

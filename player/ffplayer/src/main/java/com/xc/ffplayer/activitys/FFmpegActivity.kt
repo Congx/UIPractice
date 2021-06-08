@@ -26,7 +26,7 @@ class FFmpegActivity : AppCompatActivity(), SurfaceHolder.Callback {
         setContentView(R.layout.activity_ffmpeg)
 
         surfaceView.keepScreenOn = true
-
+        ffplayer.glSurfaceView = surfaceView
         ffplayer.playerListener = object : IPlayerListener {
             override fun onPrepared() {
                 ffplayer.start(surfaceView.holder.surface)

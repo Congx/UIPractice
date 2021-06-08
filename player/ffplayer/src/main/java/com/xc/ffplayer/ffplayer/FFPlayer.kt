@@ -10,6 +10,7 @@ import com.xc.ffplayer.utils.MainExecuter
 
 open class FFPlayer:Player {
 
+    var glSurfaceView: FFGLSurfaceView? = null
     override var playerListener: IPlayerListener? = null
 
     var mUrl = ""
@@ -91,7 +92,8 @@ open class FFPlayer:Player {
         u: ByteArray?,
         v: ByteArray?
     ) {
-        Log.d(TAG, "width = $width,height = $height,y = ${y?.size},u = ${u?.size},v = ${v?.size},")
+//        Log.d(TAG, "width = $width,height = $height,y = ${y?.size},u = ${u?.size},v = ${v?.size},")
+        glSurfaceView?.setYUVData(width,height,y,u,v)
     }
 
     /**

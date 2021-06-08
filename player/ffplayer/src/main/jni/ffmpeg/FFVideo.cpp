@@ -13,10 +13,11 @@ void videoRealseCallback(AVPacket *&packet) {
 FFVideo::FFVideo(FFPlayerJavaCallback *callback, Playerstatus *status) : callback(callback),
                                                                          status(status){
     queue.setReleaseCallback(videoRealseCallback);
+    pthread_mutex_init(&codecMutex, NULL);
 }
 
 FFVideo::~FFVideo() {
-
+    pthread_mutex_unlock(&codecMutex);
 }
 
 void *videoDecodeThread(void *context) {
@@ -69,10 +70,12 @@ void FFVideo::decodeVideo() {
 //        LOGD("video queue size = %d",queue.size());
         queue.pop(avPacket);
 //        LOGD("video queue pop");
+        pthread_mutex_lock(&codecMutex);
         if(avcodec_send_packet(codecContext,avPacket) != 0) {
             av_packet_free(&avPacket);
             av_free(avPacket);
             avPacket = NULL;
+            pthread_mutex_unlock(&codecMutex);
             continue;
         }
         AVFrame *avFrame = av_frame_alloc();
@@ -83,6 +86,7 @@ void FFVideo::decodeVideo() {
             av_packet_free(&avPacket);
             av_free(avPacket);
             avPacket = NULL;
+            pthread_mutex_unlock(&codecMutex);
             continue;
         }
         if(avFrame->format == AV_PIX_FMT_YUV420P) {
@@ -94,6 +98,7 @@ void FFVideo::decodeVideo() {
                     avFrame->data[0],
                     avFrame->data[1],
                     avFrame->data[2]);
+            pthread_mutex_unlock(&codecMutex);
         }else {
             AVFrame *pFrameYUV420P = av_frame_alloc();
             int num = av_image_get_buffer_size(
@@ -124,6 +129,7 @@ void FFVideo::decodeVideo() {
                 av_frame_free(&pFrameYUV420P);
                 av_free(pFrameYUV420P);
                 av_free(buffer);
+                pthread_mutex_unlock(&codecMutex);
                 continue;
             }
             sws_scale(
@@ -153,6 +159,7 @@ void FFVideo::decodeVideo() {
         av_packet_free(&avPacket);
         av_free(avPacket);
         avPacket = NULL;
+        pthread_mutex_unlock(&codecMutex);
     }
 }
 

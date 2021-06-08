@@ -14,3 +14,11 @@ bool Playerstatus::setStatus(STATUS status) {
 bool Playerstatus::isSeeking() {
     return status == SEEKING;
 }
+
+bool Playerstatus::isPause() {
+    return status == PAUSE;
+}
+
+bool Playerstatus::isLoading() {
+    return status == LOADING;
+}

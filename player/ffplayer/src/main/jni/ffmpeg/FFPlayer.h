@@ -9,6 +9,7 @@
 #include "FFAudio.h"
 #include "Playerstatus.h"
 #include "PlayerLock.h"
+#include <FFVideo.h>
 
 extern "C"{
 #include "libavcodec/avcodec.h"
@@ -30,7 +31,11 @@ public:
     pthread_t prepare_thread = NULL;
     char *url = NULL;
     FFAudio *audio = NULL;
+    FFVideo *video = NULL;
     int64_t duration; // 秒
+
+//    int width = 0;
+//    int height = 0;
 
 public:
 

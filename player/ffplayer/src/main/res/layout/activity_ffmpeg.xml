@@ -14,7 +14,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_height="240dp"/>
+        android:layout_height="368dp"/>
 
     <SeekBar
         android:id="@+id/seekbar"

@@ -21,6 +21,10 @@ FFPlayer::~FFPlayer() {
         delete audio;
         audio = NULL;
     }
+    if(video != NULL) {
+        delete video;
+        video = NULL;
+    }
     if(callback != NULL) {
         delete callback;
         callback = NULL;
@@ -71,25 +75,38 @@ int FFPlayer::decodeFFmpegThread() {
     int videoIndex = -1;
     int audioIndex = -1;
     for (int i = 0; i < avFormatContext->nb_streams; ++i) {
-//        if (avFormatContext->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_VIDEO) {
-//            // 视频流
-//            videoIndex = i;
-//            videoIndex = videoIndex;
-//            // 找解码器
-//            // video
-//            LOGD("videoIndex=%d",videoIndex);
+        if (avFormatContext->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_VIDEO) {
+            if(video == NULL) {
+                video = new FFVideo(callback,status);
+            }
+            // 视频流
+            videoIndex = i;
+            LOGD("videoIndex=%d",videoIndex);
+            AVCodecParameters *codecpar = avFormatContext->streams[i]->codecpar;
+            AVCodec * videoCodec = avcodec_find_decoder(codecpar->codec_id);
+            AVCodecContext *videoCodecContext = avcodec_alloc_context3(videoCodec);
+            avcodec_parameters_to_context(videoCodecContext,codecpar);
 //            AVCodecContext *videoCodecContext = avFormatContext->streams[videoIndex]->codec;
-//            AVCodec *videoCodec = avcodec_find_decoder(videoCodecContext->codec_id);
-//
-//            if (avcodec_open2(videoCodecContext,videoCodec,NULL) != 0) {
-//                LOGE("open video codec failure");
-//            } else {
-//                width = videoCodecContext->width;
-//                height = videoCodecContext->height;
-//                videoCodec = videoCodec;
-//            }
-//        }
-        if (avFormatContext->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_AUDIO) {
+//            AVCodec *videoCodec = avcodec_find_decoder(codecpar->codec_id);
+            if (avcodec_open2(videoCodecContext,videoCodec,NULL) != 0) {
+                LOGD("open video codec failure");
+            } else {
+                video->streamIndex = videoIndex;
+                video->width = codecpar->width;
+                video->height = codecpar->height;
+                video->codecContext = videoCodecContext;
+                video->time_base = avFormatContext->streams[i]->time_base;
+//                LOGD("video width = %d,height = %d",video->width,video->height);
+//                LOGD("video time_base den = %d,num = %d",video->time_base.den,video->time_base.num);
+                int den = avFormatContext->streams[i]->avg_frame_rate.den;
+                int num = avFormatContext->streams[i]->avg_frame_rate.num;
+//                LOGD("video avg_frame_rate den = %d,num = %d",den,num);
+                video->fps = num / den;
+//                LOGD("fps = %d",video->fps);
+                video->defaultDelayTime = 1/(double)video->fps;
+                LOGD("defaultDelayTime = %f",video->defaultDelayTime);
+            }
+        }else if (avFormatContext->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_AUDIO) {
             // audio
             if (audio == NULL) {
                 audio = new FFAudio(callback,status);
@@ -103,14 +120,14 @@ int FFPlayer::decodeFFmpegThread() {
 //            AVCodec *audioCodec = avcodec_find_decoder(codecId);
 //            AVCodecContext *audioCodecContext = avcodec_alloc_context3(audioCodec);
             AVCodecContext *audioCodecContext = avFormatContext->streams[audioIndex]->codec;
-            AVCodec *audioCodec = avcodec_find_decoder(
-                    avFormatContext->streams[i]->codecpar->codec_id);
+            AVCodec *audioCodec = avcodec_find_decoder(audioCodecContext->codec_id);
+            avcodec_parameters_to_context(audioCodecContext, codecpar);
             if (avcodec_open2(audioCodecContext, audioCodec, NULL) != 0) {
                 LOGE("open audio codec failure");
             } else {
                 duration = avFormatContext->duration / AV_TIME_BASE;// 微秒-> 秒
                 audio->duration = duration;
-                audio->time_base = audioCodecContext->time_base;
+                audio->time_base = avFormatContext->streams[i]->time_base;
                 audio->streamIndex = audioIndex;
 //                audio->codecpar = codecpar;
                 audio->codecContext = audioCodecContext;
@@ -141,23 +158,35 @@ int FFPlayer::decodeFFmpegThread() {
     }
 
     LOGD("ffmpeg init success");
-    callback->onPrepared(CHILD_THREAD);
+    int width = 0;
+    int height = 0;
+    int fps = 0;
+    if(video != NULL) {
+        width = video->width;
+        height = video->height;
+        fps = video->fps;
+    }
+    callback->onPrepared(width,height,fps,CHILD_THREAD);
     return 0;
 }
 
 void FFPlayer::start() {
     status->setStatus(Playerstatus::PLAYING);
     audio->start();
+    video->audio = audio;
+    video->start();
     while (status != NULL && !status->isExit()) {
-
         AVPacket *avPacket = av_packet_alloc();
         if (av_read_frame(avFormatContext, avPacket) >= 0) {
             // 音频 丢入列队
+//            playerLock.lock();
             if (avPacket->stream_index == audio->streamIndex) {
-                playerLock.lock();
                 audio->queue.push(avPacket);
-                playerLock.unlock();
+            }else if(avPacket->stream_index == video->streamIndex) {
+//                LOGD("video queue push");
+                video->queue.push(avPacket);
             }
+//            playerLock.unlock();
         } else {
             av_packet_free(&avPacket);
             av_free(avPacket);
@@ -165,8 +194,10 @@ void FFPlayer::start() {
             {
                 if(audio->queue.size() > 0)
                 {
+//                    LOGD("video queue continue");
                     continue;
                 } else{
+//                    LOGD("video queue EXIT");
                     status->setStatus(Playerstatus::EXIT);
                     break;
                 }
@@ -214,8 +245,6 @@ void FFPlayer::seek(jint secds) {
 //        audio->queue.notify();
         playerLock.unlock();
     }
-
-
 
 }
 

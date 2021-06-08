@@ -114,7 +114,7 @@ public:
             q.pop();
             ret = 1;
         }
-        if(size() >= capacity-1) {
+        if(size() >= capacity/2) {
             pthread_cond_signal(&cond);
         }
         pthread_mutex_unlock(&mutex);

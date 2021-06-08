@@ -7,7 +7,6 @@ import android.util.Log
 import android.view.Surface
 import com.xc.ffplayer.live.LiveTaskManager
 import com.xc.ffplayer.utils.MainExecuter
-import kotlinx.android.synthetic.main.activity_ffmpeg.*
 
 open class FFPlayer:Player {
 
@@ -79,11 +78,25 @@ open class FFPlayer:Player {
         }
     }
 
+    private fun onLoading(isLoading:Boolean) {
+        Log.d(TAG, "isLoading = $isLoading")
+    }
+
+    private fun onCallRenderYUV(
+        width: Int,
+        height: Int,
+        y: ByteArray?,
+        u: ByteArray?,
+        v: ByteArray?
+    ) {
+//        Log.d(TAG, "width = $width,height = $height,y = ${y?.size},u = ${u?.size},v = ${v?.size},")
+    }
+
     /**
      * 播放器初始化成功，native回调
      */
-    private fun onPrepared() {
-        Log.d(TAG,"onPrepared")
+    private fun onPrepared(width:Int,height:Int,fps:Int) {
+        Log.d(TAG, "onPreparedwidth = $width, height = $height, fps = $fps")
         playerListener?.onPrepared()
     }
 

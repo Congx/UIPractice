@@ -192,7 +192,7 @@ extern "C"
 JNIEXPORT void JNICALL
 Java_com_xc_ffplayer_ffplayer_FFPlayer_nativePause(JNIEnv *env, jobject thiz) {
     if (player) {
-        player->status->setStatus(Playerstatus::PAUSEE);
+        player->status->setStatus(Playerstatus::PAUSE);
         player->pause();
     }
 }

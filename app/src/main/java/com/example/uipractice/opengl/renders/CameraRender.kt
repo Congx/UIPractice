@@ -60,8 +60,8 @@ class CameraRender(var context: FragmentActivity, var glSurfaceView: GLSurfaceVi
         // (480,640)、(720,1280)、(1080,1920)、
         surfaceTexture = SurfaceTexture(mOESTextureId)
 
-        var width = 1080
-        var height = 1920
+        var width = 720
+        var height = 1280
         surfaceTexture?.setDefaultBufferSize(width, height)
         provider =  CameraXGLProvider(context = context, width = width, height = height, surfaceTextureProvider = this)
         surfaceTexture?.setOnFrameAvailableListener(this)
@@ -69,6 +69,10 @@ class CameraRender(var context: FragmentActivity, var glSurfaceView: GLSurfaceVi
         for (filter in filters) {
             filter.onSurfaceCreated(gl, config)
         }
+
+        cameraFilter.setImgSize(width,height)
+        surfaceTexture?.getTransformMatrix(mtx)
+        cameraFilter.setTransformMatrix(mtx)
 
         // 把fbo的数据进行录制
         var path = ContextProvider.getContext()?.getExternalFilesDir("output")?.absolutePath + File.separator + "output.mp4"

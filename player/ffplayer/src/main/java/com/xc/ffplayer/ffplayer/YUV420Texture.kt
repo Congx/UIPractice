@@ -100,27 +100,11 @@ open class YUV420Texture(context: Context?) {
             for (id in textureId_yuv) {
                 GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, id)
                 //环绕（超出纹理坐标范围）  （s==x t==y GL_REPEAT 重复）
-                GLES20.glTexParameteri(
-                    GLES20.GL_TEXTURE_2D,
-                    GLES20.GL_TEXTURE_WRAP_S,
-                    GLES20.GL_REPEAT
-                )
-                GLES20.glTexParameteri(
-                    GLES20.GL_TEXTURE_2D,
-                    GLES20.GL_TEXTURE_WRAP_T,
-                    GLES20.GL_REPEAT
-                )
+                GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_REPEAT)
+                GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_REPEAT)
                 //过滤（纹理像素映射到坐标点）  （缩小、放大：GL_LINEAR线性）
-                GLES20.glTexParameteri(
-                    GLES20.GL_TEXTURE_2D,
-                    GLES20.GL_TEXTURE_MIN_FILTER,
-                    GLES20.GL_LINEAR
-                )
-                GLES20.glTexParameteri(
-                    GLES20.GL_TEXTURE_2D,
-                    GLES20.GL_TEXTURE_MAG_FILTER,
-                    GLES20.GL_LINEAR
-                )
+                GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_LINEAR)
+                GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR)
             }
         }
     }
@@ -143,23 +127,9 @@ open class YUV420Texture(context: Context?) {
         if (width_yuv > 0 && height_yuv > 0 && y != null && u != null && v != null) {
             GLES20.glUseProgram(program)
             GLES20.glEnableVertexAttribArray(avPosition)
-            GLES20.glVertexAttribPointer(
-                avPosition,
-                COORDS_PER_VERTEX,
-                GLES20.GL_FLOAT,
-                false,
-                vertexStride,
-                vertexBuffer
-            )
+            GLES20.glVertexAttribPointer(avPosition, COORDS_PER_VERTEX, GLES20.GL_FLOAT, false, 0, vertexBuffer)
             GLES20.glEnableVertexAttribArray(afPosition)
-            GLES20.glVertexAttribPointer(
-                afPosition,
-                COORDS_PER_VERTEX,
-                GLES20.GL_FLOAT,
-                false,
-                vertexStride,
-                textureBuffer
-            )
+            GLES20.glVertexAttribPointer(afPosition, COORDS_PER_VERTEX, GLES20.GL_FLOAT, false, 0, textureBuffer)
 
             //激活纹理0来绑定y数据
             GLES20.glActiveTexture(GLES20.GL_TEXTURE0)

@@ -30,10 +30,19 @@ open class CameraFilter(context: Context): BaseFBOFilter(context,R.raw.camera_ve
         // TODO
         this.width = width
         this.height = height
-        val sx = 1f * imgWidth / width
-        val sy = 1f * imgHeight / height
+        var sx = 1f * imgWidth / width
+        var sy = 1f * imgHeight / height
         Matrix.setIdentityM(vMatrix, 0)
-//        Matrix.scaleM(vMatrix, 0, sx, sy, 1f)
+        // 比例：宽>高
+        if(sx > sy && sx > 1f) {
+            sx = 1f
+            sy = 1f/sx
+        }else if(sy > sx && sy > 1f) {
+           // 比例：宽<高
+            sy = 1f
+            sx = 1/sy
+        }
+        Matrix.scaleM(vMatrix, 0, sx, sy, 1f)
     }
 
     override fun beforeOndraw(texture: Int) {

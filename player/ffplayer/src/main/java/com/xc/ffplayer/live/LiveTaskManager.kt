@@ -1,10 +1,11 @@
 package com.xc.ffplayer.live
 
+import java.util.concurrent.Executor
 import java.util.concurrent.LinkedBlockingDeque
 import java.util.concurrent.ThreadPoolExecutor
 import java.util.concurrent.TimeUnit
 
-object LiveTaskManager {
+object LiveTaskManager : Executor {
 
     @JvmStatic
     private var CPU_COUNT = Runtime.getRuntime().availableProcessors()
@@ -24,7 +25,7 @@ object LiveTaskManager {
         poolExecutor.allowCoreThreadTimeOut(true)
     }
 
-    fun execute(runnable: Runnable) {
+    override fun execute(runnable: Runnable) {
         poolExecutor.execute(runnable)
     }
 

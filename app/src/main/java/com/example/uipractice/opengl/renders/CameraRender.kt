@@ -60,8 +60,8 @@ class CameraRender(var context: FragmentActivity, var glSurfaceView: GLSurfaceVi
         // (480,640)、(720,1280)、(1080,1920)、
         surfaceTexture = SurfaceTexture(mOESTextureId)
 
-        var width = 720
-        var height = 1280
+        var width = 1080
+        var height = 1920
         surfaceTexture?.setDefaultBufferSize(width, height)
         provider =  CameraXGLProvider(context = context, width = width, height = height, surfaceTextureProvider = this)
         surfaceTexture?.setOnFrameAvailableListener(this)

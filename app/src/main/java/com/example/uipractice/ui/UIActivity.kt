@@ -8,6 +8,7 @@ import com.example.uipractice.ui.ivpacage.ImageViewActivity
 import com.example.uipractice.ui.keybord.KeybordActivity
 import com.example.uipractice.ui.nestedscroll.NestedBaseActivity
 import com.example.uipractice.ui.others.OthersUIActivity
+import com.example.uipractice.ui.others.ProgressbarActivity
 import com.example.uipractice.ui.recyclerview.RecyclerviewBaseActivity
 import com.example.uipractice.ui.viewPager2.ViewPagerActivity
 
@@ -21,6 +22,7 @@ class UIActivity : BaseItemListActivity() {
         ItemBean("ViewPager-新懒加载", ViewPagerActivity::class.java),
         ItemBean("事件分发", EventDispatchActivity::class.java),
         ItemBean("自定义LayoutManager", LayoutManagerActivity::class.java),
+        ItemBean("进度条", ProgressbarActivity::class.java),
         ItemBean("其他", OthersUIActivity::class.java)
     )
 

@@ -43,6 +43,7 @@
         <activity android:name=".others.FileProviderActivity" />
         <activity android:name=".net.WebsocketActivity" />
         <activity android:name=".ui.others.OthersUIActivity" />
+        <activity android:name=".ui.others.ProgressbarActivity" />
         <activity android:name=".ui.eventdispatch.EventDispatchActivity" />
         <activity android:name=".anim.AnimTestActivity" />
         <activity android:name=".anim.AnimListActivity" />

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.xc.ffplayer">
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <application
+        android:name=".MyApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.UIPractice">
+        <activity android:name=".activitys.LivePushActivity"></activity>
+        <activity android:name=".activitys.MediaMuxreActivity" />
+        <activity android:name=".activitys.FFmpegActivity" />
+        <activity android:name=".activitys.ClipAudioActivity" />
+        <activity android:name=".activitys.CameraEncodeActivity" />
+        <activity android:name=".activitys.MediaRecordActivity" />
+        <activity
+            android:name=".activitys.MediaCodecActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize" />
+        <activity android:name=".activitys.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

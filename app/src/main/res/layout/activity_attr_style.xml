@@ -20,19 +20,19 @@
         android:id="@+id/dogView2"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        app:dogStyle="?attr/xiaoHuang"
+        app:dogColor="?attr/dogColor2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/dogView" />
 
-    <com.example.uipractice.ui.custom.DogView
-        android:id="@+id/dogView3"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        app:dogColor="?attr/colorPrimaryDark"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dogView2" />
+<!--    <com.example.uipractice.ui.custom.DogView-->
+<!--        android:id="@+id/dogView3"-->
+<!--        android:layout_width="100dp"-->
+<!--        android:layout_height="100dp"-->
+<!--        app:dogColor="?attr/colorPrimaryDark"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/dogView2" />-->
 
     <TextView
         style="@style/zangAo"

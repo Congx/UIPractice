@@ -1,11 +1,21 @@
 package com.base.net
 
+import android.util.Log
 import com.base.context.ContextProvider
+import com.base.framwork.BuildConfig
 import com.base.framwork.utils.NetworkUtils
+import com.base.utils.removeExtraSlashOfUrl
+import com.safframework.http.interceptor.LoggingInterceptor
 import okhttp3.CacheControl
 import okhttp3.Interceptor
+import okhttp3.Request
 import okhttp3.Response
+import okhttp3.internal.platform.Platform
 import okhttp3.logging.HttpLoggingInterceptor
+import org.json.JSONArray
+import org.json.JSONException
+import org.json.JSONObject
+import timber.log.Timber
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 
@@ -18,13 +28,54 @@ import java.util.concurrent.TimeUnit
 object InterceptorHelper {
 
     var TAG = "Interceptor"
+    private val LINE_SEPARATOR = System.getProperty("line.separator")
+
+    @JvmStatic
+    fun getJsonString(msg: String): String {
+
+        var message: String
+        try {
+            if (msg.startsWith("{")) {
+                val jsonObject = JSONObject(msg)
+                message = jsonObject.toString(3)
+            } else if (msg.startsWith("[")) {
+                val jsonArray = JSONArray(msg)
+                message = jsonArray.toString(3)
+            } else {
+                message = msg
+            }
+            message = message.replace("\\/", "/")
+        } catch (e: JSONException) {
+            message = msg
+        }
+
+        return message
+    }
 
     /**
      * 日志拦截器
      */
     //设置打印数据的级别
-    val logInterceptor: HttpLoggingInterceptor
-        get() = HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
+    val logInterceptor: Interceptor
+        get() {
+            return HttpLoggingInterceptor(object :HttpLoggingInterceptor.Logger {
+                override fun log(message: String) {
+                    var formate = getJsonString(message)
+//                    Log.d("httplog",LINE_SEPARATOR + formate)
+                    Timber.tag("httplog").d(formate + formate + formate)
+                }
+
+            }).apply { level = HttpLoggingInterceptor.Level.BODY }
+//            val interceptor: LoggingInterceptor = LoggingInterceptor.Builder()
+//                    .loggable(BuildConfig.DEBUG)
+//                    .request()
+//                    .requestTag("Request")
+//                    .response()
+//                    .responseTag("Response") //.hideVerticalLine()// 隐藏竖线边框
+//                    .hideVerticalLine()
+//                    .build()
+//            return interceptor
+        }
 
     /**
      * 缓存拦截器
@@ -89,20 +140,29 @@ object InterceptorHelper {
         get() = object : Interceptor {
             @Throws(IOException::class)
             override fun intercept(chain: Interceptor.Chain): Response {
-                val originalRequest = chain.request()
-                if (null == originalRequest.body) {
-                    return chain.proceed(originalRequest)
-                }
-                val compressedRequest = originalRequest.newBuilder()
+                var request = checkUrl(chain.request())
+                val compressedRequest = request.newBuilder()
                     .header("Content-Encoding", "gzip")
                     .header("User-Agent", "OkHttp Headers.java")
-                    .addHeader("Accept", "application/json; q=0.5")
-                    .addHeader("Accept", "application/vnd.github.v3+json")
+                    .addHeader("Accept", "application/json;charset=UTF-8")
                     .addHeader("Accept-Encoding", "identity")
                     .build()
                 return chain.proceed(compressedRequest)
             }
+
+            /**
+             * 校验url是否有多余的 斜杠，有的话去掉
+             */
+            private fun checkUrl(request: Request): Request {
+                var uUrl = request.url.toUrl()
+                uUrl.host
+                var url = uUrl.toString()
+                // 校验多余的斜杠
+                url = removeExtraSlashOfUrl(url)
+                return request.newBuilder().url(url).build()
+            }
         }
+
 }
 
 

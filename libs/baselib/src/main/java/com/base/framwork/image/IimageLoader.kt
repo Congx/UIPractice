@@ -56,42 +56,43 @@ interface IimageLoader {
      * @param errorId   加载失败占位图
      * @param radio   圆角
      */
-    fun display(context: Context, imageView: ImageView, url: String, progressId: Int, errorId: Int,radio:Int) : IimageLoader
+    fun display(context: Context, imageView: ImageView, url: Any, progressId: Int, errorId: Int,radio:Int) : IimageLoader
 
-    fun display(context: Context, imageView: ImageView, url: String, progressId: Int, errorId: Int) : IimageLoader
+    fun display(context: Context, imageView: ImageView, url: Any, progressId: Int, errorId: Int) : IimageLoader
 
-    fun display(context: Context, imageView: ImageView, url: String, progressId: Int) : IimageLoader
+    fun display(context: Context, imageView: ImageView, url: Any, progressId: Int) : IimageLoader
 
-    fun display(context: Context, imageView: ImageView, url: String) : IimageLoader
+    fun display(context: Context, imageView: ImageView, url: Any) : IimageLoader
 
-    fun display(context: Context, imageView: ImageView, url: String,config: Config) : IimageLoader
+    fun display(context: Context, imageView: ImageView, url: Any,config: Config) : IimageLoader
 
     /**
      * view fragment 使用场景
      */
-    fun display(context: Fragment, imageView: ImageView, url: String, progressId: Int, errorId: Int,radio:Int) : IimageLoader
+    fun display(context: Fragment, imageView: ImageView, url: Any, progressId: Int, errorId: Int,radio:Int) : IimageLoader
 
-    fun display(context: Fragment, imageView: ImageView, url: String, progressId: Int, errorId: Int) : IimageLoader
+    fun display(context: Fragment, imageView: ImageView, url: Any, progressId: Int, errorId: Int) : IimageLoader
 
-    fun display(context: Fragment, imageView: ImageView, url: String, progressId: Int) : IimageLoader
+    fun display(context: Fragment, imageView: ImageView, url: Any, progressId: Int) : IimageLoader
 
-    fun display(context: Fragment, imageView: ImageView, url: String) : IimageLoader
+    fun display(context: Fragment, imageView: ImageView, url: Any) : IimageLoader
 
-    fun display(context: Fragment, imageView: ImageView, url: String,config: Config) : IimageLoader
+    fun display(context: Fragment, imageView: ImageView, url: Any,config: Config) : IimageLoader
 
     /**
      * view 使用场景
      */
-    fun display(context: View, imageView: ImageView, url: String, progressId: Int, errorId: Int,radio:Int) : IimageLoader
+    fun display(context: View, imageView: ImageView, url: Any, progressId: Int, errorId: Int,radio:Int) : IimageLoader
 
-    fun display(context: View, imageView: ImageView, url: String, progressId: Int, errorId: Int) : IimageLoader
+    fun display(context: View, imageView: ImageView, url: Any, progressId: Int, errorId: Int) : IimageLoader
 
-    fun display(context: View, imageView: ImageView, url: String, progressId: Int) : IimageLoader
+    fun display(context: View, imageView: ImageView, url: Any, progressId: Int) : IimageLoader
 
-    fun display(context: View, imageView: ImageView, url: String) : IimageLoader
+    fun display(context: View, imageView: ImageView, url: Any) : IimageLoader
 
-    fun display(context: View, imageView: ImageView, url: String,config: Config) : IimageLoader
+    fun display(context: View, imageView: ImageView, url: Any,config: Config) : IimageLoader
 
     fun display(context: Any, imageView: ImageView, uri: Uri)
+
 
 }

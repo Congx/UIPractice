@@ -2,8 +2,20 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.uipractice">
 
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
+
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.autofocus" />
 
     <application
         android:name=".MyApp"
@@ -14,19 +26,38 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.others.OthersUIActivity"></activity>
+        <activity android:name=".opengl.OpenglCameractivity"></activity>
+        <activity android:name=".opengl.OpenglEffectsActivity"></activity>
+        <activity android:name=".opengl.OpenglSplitActivity"></activity>
+        <activity android:name=".opengl.OpenglTexActivity"></activity>
+        <activity android:name=".opengl.OpenglBeautyActivity"></activity>
+        <activity android:name=".camera.CameraXActivity" />
+        <activity android:name=".image.GlideActivity" />
+        <activity android:name=".plugin.PluginTestActivity" /> <!-- <activity android:name=".plugin.PluginActivity"></activity> -->
+        <activity android:name=".recyclerview.layoutmanger.LayoutManagerActivity" />
+        <activity android:name=".ndk.NDKActivity" />
+        <activity android:name=".rxjava.RxTestActivity" />
+        <activity android:name=".window.WindowTestActivity" />
+        <activity android:name=".net.RetrofitActivity" />
+        <activity android:name=".rxjava.HotObserverActivity" />
+        <activity android:name=".others.FileProviderActivity" />
+        <activity android:name=".net.WebsocketActivity" />
+        <activity android:name=".ui.others.OthersUIActivity" />
+        <activity android:name=".ui.others.ProgressbarActivity" />
         <activity android:name=".ui.eventdispatch.EventDispatchActivity" />
         <activity android:name=".anim.AnimTestActivity" />
         <activity android:name=".anim.AnimListActivity" />
+        <activity android:name=".camera.CameraActivity" />
+        <activity
+            android:name=".camera.Camera2Activity"
+            android:configChanges="orientation|screenSize" />
         <activity android:name=".fragment.FragmentLiveActivity" />
         <activity android:name=".fragment.FragmentLifecyclerActivity" />
         <activity android:name=".fragment.FragmentViewpager2Activity" />
         <activity android:name=".fragment.FragmentListActivity" />
         <activity android:name=".basepractice.StatusActivity" />
         <activity android:name=".basepractice.BaseLibActivity" />
-        <activity
-            android:name=".SplashActivity"
-            android:theme="@style/Splash">
+        <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -35,7 +66,7 @@
         </activity>
         <activity android:name=".rxjava.AutoDisposeActivity" />
         <activity android:name=".ui.viewPager2.ViewPagerActivity" />
-        <activity android:name=".ui.viewPager2.ViewPager2Activity" />
+        <activity android:name=".ui.recyclerview.itemdivider.Viewpager2Activity" />
         <activity android:name=".rxjava.BackPressActivity" />
         <activity android:name=".rxjava.RxJavaActivity" />
         <activity android:name=".rxjava.ThreadActivity" />
@@ -55,7 +86,25 @@
         <activity android:name=".ui.nestedscroll.NestedBaseActivity" />
         <activity android:name=".ui.nestedscroll.NestedBaseUsedActivity" />
         <activity android:name=".ui.nestedscroll.NestedBehaviorActivity" />
+        <activity android:name=".ui.nestedscroll.AppbarBehaviorActivity" />
         <activity android:name=".architecture.ViewModelActivity" />
+        <activity android:name=".net.NetListActivity" />
+        <activity android:name=".opengl.OpenglBaseUseActivity" />
+        <activity android:name=".opengl.OpenglMainActivity" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.example.uipractice.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/export_paths" />
+        </provider>
+
+        <activity android:name=".plugin.StubActivity" />
+
+        <service android:name=".plugin.service.ProxyService" />
     </application>
 
 </manifest>

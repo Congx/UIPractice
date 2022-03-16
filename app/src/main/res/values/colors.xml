@@ -5,4 +5,5 @@
     <color name="colorAccent">#D81B60</color>
     <color name="dogColor">#662367</color>
     <color name="dogColor2">#66ff67</color>
+    <color name="colorRed">#ff0000</color>
 </resources>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".opengl.OpenglCameractivity">
+
+    <android.opengl.GLSurfaceView
+        android:id="@+id/glSurfaceView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <CheckBox
+        android:id="@+id/cbBeauty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_toRightOf="@+id/btnSwitch"
+        android:layout_marginTop="30dp"
+        android:text="美颜"/>
+
+    <Button
+        android:id="@+id/btnSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="切换摄像头"/>
+
+
+</RelativeLayout>

@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.base.custom.BaseViewModel
+import com.base.framwork.p.BaseViewModel
 import com.example.uipractice.R
 import kotlinx.android.synthetic.main.layout_fragment_a.*
 

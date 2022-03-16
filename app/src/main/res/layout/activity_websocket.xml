@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".net.WebsocketActivity">
+
+    <Button
+        android:id="@+id/startServer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="开启服务"/>
+
+    <Button
+        android:id="@+id/closeServer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/startServer"
+        android:text="关闭服务"/>
+
+    <Button
+        android:id="@+id/sendMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/closeServer"
+        android:text="发送消息"/>
+
+    <Button
+        android:id="@+id/startClient"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="客户端连接"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,22 +5,36 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.1"
+    compileSdkVersion 30
+    buildToolsVersion "30.0.2"
     defaultConfig {
         applicationId "com.example.uipractice"
         minSdkVersion 21
-        targetSdkVersion 29
+        targetSdkVersion 30
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-    }
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+        ndk {
+            abiFilters 'armeabi-v7a', 'arm64-v8a'
+
+        }
+
+        externalNativeBuild {
+            cmake {
+                arguments '-DANDROID_STL=c++_shared'
+            }{
+                release {
+                    minifyEnabled false
+                    proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+                    ndk {
+                        abiFilters "armeabi-v7a"
+                    }
+                }
+            }
         }
     }
+    buildTypes
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -32,15 +46,28 @@ android {
 //        if (variant.buildType.name != "debug") {//防止AS无法安装debug包(apk)
 //            variant.getPackageApplication().outputDirectory = new File(myPackageDir())
 //        }
-        variant.getPackageApplication().outputScope.apkDatas.forEach { apkData ->
-            //这个修改输出APK的文件名
-            apkData.outputFileName = "${appNamePrefix()}" +
-                    variant.versionName + "_" +
-                    "${releaseTime()}" + "_" +
-                    variant.flavorName + "_" +
-                    variant.buildType.name + "_" +
-                    ".apk"
+//        variant.getPackageApplicationProvider().outputScope.apkDatas.forEach { apkData ->
+//            //这个修改输出APK的文件名
+//            apkData.outputFileName = "${appNamePrefix()}" +
+//                    variant.versionName + "_" +
+//                    "${releaseTime()}" + "_" +
+//                    variant.flavorName + "_" +
+//                    variant.buildType.name + "_" +
+//                    ".apk"
+//        }
+
+//        variant.getPackageApplicationProvider()
+    }
+
+    externalNativeBuild {
+        cmake {
+//            path "src/main/jni/CMakeList.txt"
+            version "3.10.2"
+            path file('src/main/jni/CMakeLists.txt')
         }
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
     }
 
 }
@@ -58,19 +85,22 @@ String releaseTime() {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.0-beta4'
+    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.4'
 
-    implementation project(":baselib")
-    implementation project(":libcustom")
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-//    implementation "com.base.framwork:frawork:1.0.1"
-}
+    implementation project(":libs:baselib")
+//    implementation project(":libcustom")
 
-// lifecycler
-dependencies {
     implementation rootProject.ext.libs.libsAll
-}
 
-repositories {
-    mavenCentral()
+    implementation 'pub.devrel:easypermissions:3.0.0'
+    implementation 'com.github.tbruyelle:rxpermissions:0.10.2'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
+    implementation "org.java-websocket:Java-WebSocket:1.5.1"
+    implementation 'org.webrtc:google-webrtc:1.0.+'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation 'me.zhanghai.android.materialprogressbar:library:1.6.1'
+    implementation 'com.mikhaellopez:circularprogressbar:3.1.0'
+
 }

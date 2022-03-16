@@ -1,0 +1,83 @@
+package com.example.uipractice.opengl.utils
+
+import java.nio.ByteBuffer
+import java.nio.ByteOrder
+import java.nio.FloatBuffer
+import java.nio.ShortBuffer
+
+/**
+ * Buffer工具类
+ *
+ * @author Benhero
+ */
+object BufferUtil {
+
+
+    /**
+     * Float类型占4Byte
+     */
+    const val BYTES_PER_FLOAT = 4
+    /**
+     * Short类型占2Byte
+     */
+    const val BYTES_PER_SHORT = 2
+
+    /**
+     * 创建一个 全屏顶点 buffer
+     * -1.0f, -1.0f,
+     * -1.0f, 1.0f,
+     * 1.0f, 1.0f,
+     * 1.0f, -1.0f
+     *
+     */
+    @JvmStatic
+    fun createFullVertexBuffer(): FloatBuffer {
+        return createFloatBuffer(Constants.FULL_POINT_DATA)
+    }
+
+    /**
+     * 创建一个Android 坐标系的buffer
+     * 0f, 1f,
+     * 0f, 0f,
+     * 1f, 0f,
+     */
+    @JvmStatic
+    fun createAndroidVertexBuffer(): FloatBuffer {
+        return createFloatBuffer(Constants.ANDROID_POINT_DATA)
+    }
+
+    /**
+     * 创建一个FloatBuffer
+     */
+    @JvmStatic
+    fun createFloatBuffer(array: FloatArray): FloatBuffer {
+        val buffer = ByteBuffer
+                // 分配顶点坐标分量个数 * Float占的Byte位数
+                .allocateDirect(array.size * BYTES_PER_FLOAT)
+                // 按照本地字节序排序
+                .order(ByteOrder.nativeOrder())
+                // Byte类型转Float类型
+                .asFloatBuffer()
+
+        // 将Dalvik的内存数据复制到Native内存中
+        buffer.put(array)
+        return buffer
+    }
+
+    /**
+     * 创建一个FloatBuffer
+     */
+    fun createShortBuffer(array: ShortArray): ShortBuffer {
+        val buffer = ByteBuffer
+                // 分配顶点坐标分量个数 * Float占的Byte位数
+                .allocateDirect(array.size * BYTES_PER_SHORT)
+                // 按照本地字节序排序
+                .order(ByteOrder.nativeOrder())
+                // Byte类型转Float类型
+                .asShortBuffer()
+
+        // 将Dalvik的内存数据复制到Native内存中
+        buffer.put(array)
+        return buffer
+    }
+}

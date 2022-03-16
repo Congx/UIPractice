@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <root-path name="root" path="xiaoi/shrq/" />
+
+    <files-path name="aaa" path="bbb/ccc" />
+
+    <cache-path name="cache" path="xiaoi/shrq/cache/." />
+    <!-- path设置为'.'时代表整个SDCard Environment.getExternalStorageDirectory()目录   -->
+    <external-path name="fff" path="aaa/jjj"/>
+
+    <external-files-path name="bbb" path="ccc/." />
+
+    <external-cache-path name="external_cache_path" path="." />
+
+    <external-media-path name="ext_media" path="media" />
+
+</paths>

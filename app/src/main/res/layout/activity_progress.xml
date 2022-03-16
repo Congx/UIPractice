@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_marginLeft="20dp"
+    android:layout_marginTop="20dp"
+    tools:context=".ui.others.OthersUIActivity">
+
+
+    <View
+        android:foreground="?attr/selectableItemBackground"
+        android:id="@+id/view"
+        android:layout_width="200dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:clickable="true"
+        android:background="@drawable/shape_round_red"
+        app:clipToOutline="true"/>
+
+
+    <me.zhanghai.android.materialprogressbar.MaterialProgressBar
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        style="@style/Widget.MaterialProgressBar.ProgressBar"
+        app:mpb_indeterminateTint="@color/colorRed"
+        app:mpb_progressStyle="circular"
+        app:mpb_progressTint="@color/colorPrimary"
+        app:mpb_secondaryProgressTint="@color/colorPrimary"
+        app:mpb_showProgressBackground="false"
+        app:mpb_useIntrinsicPadding="false"
+        android:indeterminate="true"/>
+
+    <com.example.uipractice.views.CircularProgressBar
+        android:id="@+id/loading"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        app:cpb_indeterminate_mode="true"
+        app:cpb_round_border="true"
+        app:cpb_progressbar_width="2dp"
+        app:cpb_background_progressbar_width="2dp"
+        app:cpb_progressbar_color="@color/colorRed" />
+
+<!--    app:mpb_progressTintMode="src_over"-->
+<!--    app:mpb_secondaryProgressTintMode="src_over"-->
+<!--    app:mpb_indeterminateTintMode="src_over"-->
+
+</LinearLayout>

@@ -1,5 +1,7 @@
 package com.base.framwork;
 
+import com.base.utils.MathUtils;
+
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -14,4 +16,17 @@ public class ExampleUnitTest {
     public void addition_isCorrect() {
         assertEquals(4, 2 + 2);
     }
+
+    @Test
+    public void mathUtils() {
+        int a = 352;
+        int b = 288;
+        int divisor = MathUtils.getGreastCommonDivisor(a, b);
+        System.out.println(divisor);
+        System.out.println(a / divisor);
+        System.out.println(b / divisor);
+
+    }
+
+
 }

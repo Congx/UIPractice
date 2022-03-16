@@ -34,12 +34,12 @@ class FragmentLiveActivity : AppCompatActivity() {
         Log.e("FragmentLiveActivity","onCreate")
     }
 
-    override fun onSaveInstanceState(outState: Bundle?, outPersistentState: PersistableBundle?) {
+    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
         Log.e("FragmentLiveActivity","onResume")
         super.onSaveInstanceState(outState, outPersistentState)
     }
 
-    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         Log.e("FragmentLiveActivity","onResume")
     }

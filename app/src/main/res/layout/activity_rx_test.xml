@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".rxjava.BackPressActivity">
+
+    <androidx.constraintlayout.helper.widget.Flow
+        android:id="@+id/flow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="btnTest1,btnTest2,btnTest3,btnTest4"
+        app:flow_firstHorizontalBias="0.7"
+        app:flow_firstVerticalStyle="spread"
+        app:flow_horizontalGap="10dp"
+        app:flow_maxElementsWrap="2"
+        app:flow_verticalAlign="top"
+        app:flow_wrapMode="aligned"
+        app:layout_constraintStart_toStartOf="@+id/image"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btnTest1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="btnTest1" />
+
+    <Button
+        android:id="@+id/btnTest2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="btnTest1" />
+
+    <Button
+        android:id="@+id/btnTest3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="btnTest1" />
+
+    <Button
+        android:id="@+id/btnTest4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="btnTest4x" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/btnTest4"
+        android:layout_marginTop="500dp"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,4 +2,7 @@
 <resources>
     <!-- 默认状态栏颜色，在需要在主题中设置 -->
     <attr name="statuBarColor" format="color|dimension"></attr>
+
+    <attr name="statubarColor" format="dimension|color" />
+    <attr name="fullScreen" format="dimension|boolean" />
 </resources>

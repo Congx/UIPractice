@@ -15,6 +15,13 @@ android {
     dataBinding {
         enabled = true
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
 
 }
 
@@ -44,6 +51,9 @@ dependencies {
     implementation rootProject.ext.libs.libsAll
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 //    implementation project(path: ':rxjavalib')
+    implementation 'com.safframework.log:saf-logginginterceptor:1.4.8'
+    api 'com.jakewharton.timber:timber:4.7.1'
+
 }
 repositories {
     mavenCentral()

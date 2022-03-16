@@ -1,10 +1,12 @@
 package com.example.uipractice.ui.custom;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -33,23 +35,25 @@ public class DogView extends View {
         super(context, attrs, defStyleAttr);
         TypedArray typedArray = context.getTheme().obtainStyledAttributes(attrs, R.styleable.DogView, 0, 0);
 
-        color = typedArray.getColor(R.styleable.DogView_dogColor, 0);
+//        color = typedArray.getColor(R.styleable.DogView_dogColor, 0);
         // 复用系统自带的attr
 //        color = typedArray.getColor(R.styleable.DogView_android_textColor, 0);
 
-        int dogStyle = typedArray.getResourceId(R.styleable.DogView_dogStyle, 0);
+//        int dogStyle = typedArray.getResourceId(R.styleable.DogView_dogStyle, 0);
 
 
-        // 直接从 attr中获取样式
-//        Resources.Theme theme = context.getTheme();
-//        TypedValue typedValue = new TypedValue();
-//        boolean attribute = theme.resolveAttribute(R.attr.dogColor, typedValue, true);
 //
-//        if(attribute) {
-//            this.color = typedValue.data;
-//        }
+//
+//        // 直接从 attr中获取样式
+        Resources.Theme theme = context.getTheme();
+        TypedValue typedValue = new TypedValue();
+        boolean attribute = theme.resolveAttribute(R.attr.dogColor, typedValue, true);
 
-        // 直接获取attr中的style
+        if(attribute) {
+            this.color = typedValue.data;
+        }
+//
+//        // 直接获取attr中的style
 //        boolean attribute2 = theme.resolveAttribute(R.attr.xiaoHuang, typedValue, true);
 //
 //        if(attribute2) {
@@ -58,11 +62,11 @@ public class DogView extends View {
 //            TypedArray typedArray1 = context.obtainStyledAttributes(resourceId, attrss);
 //            this.color = typedArray1.getColor(0, color);
 //        }
-
-        // style 用自定义的形式
-        int[] attrss = new int[]{R.attr.dogColor2};
-        TypedArray typedArray1 = context.obtainStyledAttributes(dogStyle, attrss);
-        this.color = typedArray1.getColor(0, this.color);
+//
+//        // style 用自定义的形式
+//        int[] attrss = new int[]{R.attr.dogColor2};
+//        TypedArray typedArray1 = context.obtainStyledAttributes(dogStyle, attrss);
+//        this.color = typedArray1.getColor(0, this.color);
 
     }
 

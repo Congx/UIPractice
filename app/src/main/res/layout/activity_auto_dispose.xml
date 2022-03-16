@@ -13,4 +13,11 @@
         android:layout_height="70dp"
         android:background="@color/colorPrimary"/>
 
+
+    <Button
+        android:id="@+id/btnSend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="发送"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

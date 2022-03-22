@@ -65,8 +65,8 @@ class FFmpegActivity : AppCompatActivity(), SurfaceHolder.Callback {
             }
         }
         btnPlay.setOnClickListener {
-            var path = getExternalFilesDir("input")?.absolutePath + File.separator + "input.mp4"
-//            var path = getExternalFilesDir("input")?.absolutePath + File.separator + "music1.mp3"
+//            var path = getExternalFilesDir("input")?.absolutePath + File.separator + "music.mp4"
+            var path = getExternalFilesDir("input")?.absolutePath + File.separator + "music.aac"
             ffplayer.setSource(path)
             ffplayer.prepare()
             isPlaying = true
@@ -150,6 +150,20 @@ class FFmpegActivity : AppCompatActivity(), SurfaceHolder.Callback {
             }
 
         })
+      ffplayer.speachDetectListener = object :FFPlayer.SpeachDetectListener {
+        override fun onSpeechDetected() {
+          tvSpeakDetect.post {
+            tvSpeakDetect.text = "说话中..."
+          }
+        }
+
+        override fun onNoiseDetected() {
+          tvSpeakDetect.post {
+            tvSpeakDetect.text = "静音中..."
+          }
+        }
+
+      }
     }
 
     override fun onDestroy() {

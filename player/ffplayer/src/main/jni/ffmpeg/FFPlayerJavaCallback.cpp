@@ -14,6 +14,8 @@ FFPlayerJavaCallback::FFPlayerJavaCallback(JavaVM *javaVM, JNIEnv *env, jobject 
     jmid_onCurrentTime = env->GetMethodID(jclazz,"onCurrentTime","(II)V");
     jmid_onLoading = env->GetMethodID(jclazz,"onLoading","(Z)V");
     jmid_renderyuv = env->GetMethodID(jclazz, "onCallRenderYUV", "(II[B[B[B)V");
+    jmid_pcmCallback = env->GetMethodID(jclazz, "onPcmCallback", "(I[B)V");
+    jmid_audioInfoUpdate = env->GetMethodID(jclazz, "audioInfoUpdate", "(III)V");
 }
 
 FFPlayerJavaCallback::~FFPlayerJavaCallback() {
@@ -142,6 +144,35 @@ void FFPlayerJavaCallback::onCallRenderYUV(int width, int height, uint8_t *fy, u
     jniEnv->DeleteLocalRef(y);
     jniEnv->DeleteLocalRef(u);
     jniEnv->DeleteLocalRef(v);
+    javaVM->DetachCurrentThread();
+}
+
+void FFPlayerJavaCallback::pcmCallback(int len, uint8_t *pcm) {
+
+    JNIEnv *jniEnv;
+    if(javaVM->AttachCurrentThread(&jniEnv, 0) != JNI_OK)
+    {
+        LOGE("call onCallComplete worng");
+        return;
+    }
+
+    jbyteArray y = jniEnv->NewByteArray(len);
+    jniEnv->SetByteArrayRegion(y, 0, len, reinterpret_cast<const jbyte *>(pcm));
+
+    jniEnv->CallVoidMethod(jobj, jmid_pcmCallback, len, y);
+
+    jniEnv->DeleteLocalRef(y);
+    javaVM->DetachCurrentThread();
+}
+
+void FFPlayerJavaCallback::audioInfoUpdate(int byte_count_per_sample, int channel_nb, int sample_rate) {
+    JNIEnv *jniEnv;
+    if(javaVM->AttachCurrentThread(&jniEnv, 0) != JNI_OK)
+    {
+        LOGE("call onCallComplete worng");
+        return;
+    }
+    jniEnv->CallVoidMethod(jobj, jmid_audioInfoUpdate, byte_count_per_sample, channel_nb, sample_rate);
     javaVM->DetachCurrentThread();
 }
 

@@ -22,6 +22,8 @@ public:
     jmethodID jmid_onCurrentTime;
     jmethodID jmid_onLoading;
     jmethodID jmid_renderyuv;
+    jmethodID jmid_pcmCallback;
+    jmethodID jmid_audioInfoUpdate;
 
 public:
     FFPlayerJavaCallback(JavaVM *javaVM, JNIEnv *env, jobject *jobj);
@@ -31,12 +33,11 @@ public:
     void createAudioTrack(int channels,int sampleRate,int sampleBitCount,int type,bool needDetach);
     void playAudio(uint8_t *bytes ,int len,int type,bool needDetach);
     void onCurrentTime(int currentTime,int totalTime,int type);
-
     void onCallLoad(int type, bool isLoading);
     void onCallRenderYUV(int width, int height, uint8_t *fy, uint8_t *fu, uint8_t *fv);
-
     void release();
-
+    void pcmCallback(int len, uint8_t *pcm);
+    void audioInfoUpdate(int byte_count_per_sample, int channel_nb, int sample_rate);
 };
 
 

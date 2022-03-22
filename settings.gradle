@@ -9,3 +9,5 @@ include ":libs:baselib"
 
 //include "libcustom"
 //project(":libcustom").projectDir = new File("./libs/libcustom")
+
+include ":libs:vad"

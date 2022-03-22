@@ -17,7 +17,7 @@ interface Player {
 
     fun prepare()
 
-    fun start(surface: Surface)
+    fun start(surface: Surface?)
 
     fun pause()
 

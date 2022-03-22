@@ -226,12 +226,14 @@ double FFVideo::getDelayTime(double diff) {
 }
 
 void FFVideo::stop() {
+    queue.setWork(0);
     queue.clear();
 }
 
 void FFVideo::release() {
-    queue.setWork(0);
+
     if(audio != NULL) {
+        delete status;
         audio = NULL;
     }
 
@@ -242,7 +244,9 @@ void FFVideo::release() {
     }
 
     if(status != NULL) {
+        delete status;
         status = NULL;
     }
+    LOGD("FFVideo ~释放");
 }
 

@@ -124,6 +124,11 @@ int FFPlayer::decodeFFmpegThread() {
                 audio->sample_rate = codecpar->sample_rate;
                 audio->channels = codecpar->channels;
                 audio->channel_layout = codecpar->channel_layout;
+                // 一个采样点占几个字
+                int sample_byte_count = av_get_bytes_per_sample(*audioCodec->sample_fmts);
+                // 采样通道数
+                int channel_nb = av_get_channel_layout_nb_channels(codecpar->channel_layout);
+                audio->callback->audioInfoUpdate(sample_byte_count, channel_nb, codecpar->sample_rate);
                 LOGD("FFaudio init success");
             }
         }
@@ -158,9 +163,13 @@ int FFPlayer::decodeFFmpegThread() {
 
 void FFPlayer::start() {
     status->setStatus(Playerstatus::PLAYING);
-    audio->start();
-    video->audio = audio;
-    video->start();
+    if(audio != NULL) {
+        audio->start();
+    }
+    if(video != NULL) {
+        video->audio = audio;
+        video->start();
+    }
     while (status != NULL && !status->isExit()) {
         AVPacket *avPacket = av_packet_alloc();
         if (av_read_frame(avFormatContext, avPacket) >= 0) {

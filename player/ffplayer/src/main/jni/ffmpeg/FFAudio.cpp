@@ -43,36 +43,39 @@ void FFAudio::start() {
 
 
 void pcmBufferCallBack(SLAndroidSimpleBufferQueueItf bf, void *context) {
-    FFAudio *audio = (FFAudio *) context;
-    if (audio != NULL) {
-        int sample_nb = audio->getSoundTouchData();
-//        LOGD("sample_nb = %d",sample_nb);
-        if (sample_nb > 0) {
-            audio->clock += sample_nb/(double)audio->out_sample_rate;
-            // 计算播放时长
-            if(audio->clock - audio->last_time >= 0.5) {
-                audio->last_time = audio->clock;
-                audio->callback->onCurrentTime(audio->clock,audio->duration,CHILD_THREAD);
-            }
-//            ofstream out("/sdcard/Android/data/com.xc.ffplayer/files/output/sound2.pcm",ios::out | ios::app);
-//            out.write(reinterpret_cast<const char *>(audio->sampleBuffer), sample_nb * audio->out_sample_byte_count * audio->out_channel_nb);
-//            (*audio->pcmBufferQueue)->Enqueue(audio->pcmBufferQueue, (char *) audio->buffer,buffersize);
-            (*audio->pcmBufferQueue)->Enqueue(audio->pcmBufferQueue, (char *)audio->sampleBuffer,sample_nb * audio->out_sample_byte_count * audio->out_channel_nb);
-        }
-
-//        uint8_t *buffer = NULL;
-//        int buffersize = audio->resampleAudio(&buffer);
-//        LOGD("out_buffer_size = %d",buffersize);
-//        if (buffersize > 0) {
-//            audio->clock += buffersize/(audio->out_channel_nb * audio->out_sample_rate * audio->out_sample_byte_count);
+    if (context != NULL) {
+        FFAudio *audio = (FFAudio *) context;
+//        int sample_nb = audio->getSoundTouchData();
+////        LOGD("sample_nb = %d",sample_nb);
+//        if (sample_nb > 0) {
+//            audio->clock += sample_nb/(double)audio->out_sample_rate;
 //            // 计算播放时长
 //            if(audio->clock - audio->last_time >= 0.5) {
 //                audio->last_time = audio->clock;
 //                audio->callback->onCurrentTime(audio->clock,audio->duration,CHILD_THREAD);
 //            }
+////            ofstream out("/sdcard/Android/data/com.xc.ffplayer/files/output/sound2.pcm",ios::out | ios::app);
+////            out.write(reinterpret_cast<const char *>(audio->sampleBuffer), sample_nb * audio->out_sample_byte_count * audio->out_channel_nb);
 ////            (*audio->pcmBufferQueue)->Enqueue(audio->pcmBufferQueue, (char *) audio->buffer,buffersize);
-//            (*audio->pcmBufferQueue)->Enqueue(audio->pcmBufferQueue, buffer,buffersize);
+//            (*audio->pcmBufferQueue)->Enqueue(audio->pcmBufferQueue, (char *)audio->sampleBuffer,sample_nb * audio->out_sample_byte_count * audio->out_channel_nb);
 //        }
+
+        // 不进行变速处理
+        uint8_t *buffer = NULL;
+        int buffersize = audio->resampleAudio(&buffer);
+//        LOGD("out_buffer_size = %d",buffersize);
+        if (buffersize > 0) {
+            audio->clock += buffersize/(audio->out_channel_nb * audio->out_sample_rate * audio->out_sample_byte_count);
+            // 计算播放时长
+            if(audio->clock - audio->last_time >= 0.5) {
+                audio->last_time = audio->clock;
+                audio->callback->onCurrentTime(audio->clock,audio->duration,CHILD_THREAD);
+            }
+//            (*audio->pcmBufferQueue)->Enqueue(audio->pcmBufferQueue, (char *) audio->buffer,buffersize);
+            (*audio->callback).pcmCallback(buffersize, reinterpret_cast<uint8_t *>(buffer));
+            (*audio->pcmBufferQueue)->Enqueue(audio->pcmBufferQueue, buffer,buffersize);
+            LOGD("播放。。");
+        }
     }
 }
 
@@ -244,6 +247,7 @@ int FFAudio::resampleAudio(uint8_t **pcmbuffer) {
 //            av_free(avFrame);
 //            avFrame = NULL;
 //            swr_free(&swr_ctx);
+            LOGD("audio 解码成功");
             return out_buffer_size;
         } else {
             swr_free(&swr_ctx);
@@ -274,7 +278,7 @@ void FFAudio::initSwrCtx() {
                     // 输出到喇叭的参数，抓换后的参数
                        out_ch_layout,
                        out_sample_fmt,
-                       out_sample_rate,
+                       48000,
                     //  视频文件的参数
                        channel_layout,
                        *sample_fmts,
@@ -381,6 +385,7 @@ void FFAudio::resume() {
 }
 
 void FFAudio::stop() {
+    queue.setWork(0);
     queue.clear();
 }
 
@@ -512,7 +517,7 @@ void FFAudio::setSpeed(float speed) {
 }
 
 void FFAudio::release() {
-    queue.setWork(0);
+
     if(pcmPlayerObject != NULL) {
         (*pcmPlayerObject)->Destroy(pcmPlayerObject);
         pcmPlayerObject = NULL;

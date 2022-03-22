@@ -19,7 +19,7 @@ object ShaderUtil {
         val sb = StringBuffer()
         var line: String = ""
         try {
-            while (reader.readLine().also({ line = it }) != null) {
+            while (reader.readLine().also { line = it } != null) {
                 sb.append(line).append("\n")
             }
             reader.close()

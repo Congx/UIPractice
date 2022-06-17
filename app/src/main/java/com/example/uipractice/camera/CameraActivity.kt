@@ -16,7 +16,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.base.utils.MathUtils
 import com.example.uipractice.R
-import com.tbruyelle.rxpermissions2.RxPermissions
+import com.tbruyelle.rxpermissions3.RxPermissions
 import kotlinx.android.synthetic.main.layout_camera.*
 import java.io.FileOutputStream
 

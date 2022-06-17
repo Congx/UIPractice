@@ -5,9 +5,6 @@ import android.util.Log;
 
 import com.base.framwork.BuildConfig;
 import com.base.framwork.app.AppActivityLifecycleCallback;
-import com.base.framwork.app.CrashHandler;
-import com.base.framwork.image.ImageLoader;
-import com.example.uipractice.plugin.HookHelper;
 
 import timber.log.Timber;
 
@@ -26,8 +23,6 @@ public class MyApp extends Application {
         // ActivityLifecycleCallbacks 注册
         registerActivityLifecycleCallbacks(new AppActivityLifecycleCallback());
 
-        ImageLoader.globeErrorId = R.mipmap.app_logo;
-        ImageLoader.globeProgressId = R.mipmap.app_logo;
 
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());

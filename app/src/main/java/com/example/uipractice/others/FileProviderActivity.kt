@@ -14,7 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import com.base.rxjavalib.bindLifecycle
 import com.example.uipractice.R
-import com.tbruyelle.rxpermissions2.RxPermissions
+import com.tbruyelle.rxpermissions3.RxPermissions
 import kotlinx.android.synthetic.main.activity_file_provider.*
 import java.io.File
 import java.io.FileNotFoundException
@@ -35,7 +35,6 @@ class FileProviderActivity : AppCompatActivity() {
         btnCamera.setOnClickListener {
             RxPermissions(this)
                 .request(Manifest.permission.CAMERA)
-                .bindLifecycle(this)
                 .subscribe {
                     if (it) {
                         val takePhotoIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE) //用来打开相机的Intent
@@ -51,7 +50,6 @@ class FileProviderActivity : AppCompatActivity() {
         btnPhoto.setOnClickListener {
             RxPermissions(this)
                 .request(Manifest.permission.CAMERA)
-                .bindLifecycle(this)
                 .subscribe {
                     if (it) {
                         val takePhotoIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE) //用来打开相机的Intent
@@ -67,7 +65,6 @@ class FileProviderActivity : AppCompatActivity() {
         btnfile.setOnClickListener {
             RxPermissions(this)
                 .request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                .bindLifecycle(this)
                 .subscribe {
                     selectPicFromLocal()
                 }

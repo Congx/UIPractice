@@ -7,6 +7,8 @@ import java.util.Stack;
 
 public class ActivityStackManager {
 
+    private static ActivityStackManager sInstance = null;
+
     private Stack<Activity> activities;
 
     private WeakReference<Activity> sCurrentActivityWeakRef;
@@ -15,12 +17,11 @@ public class ActivityStackManager {
 
     }
 
-    private static class InstanceHolder {
-        private static final ActivityStackManager sInstance = new ActivityStackManager();
-    }
-
     public static ActivityStackManager getInstance() {
-        return InstanceHolder.sInstance;
+        if (sInstance == null) {
+            sInstance = new ActivityStackManager();
+        }
+        return sInstance;
     }
 
     public Activity getCurrentActivity() {

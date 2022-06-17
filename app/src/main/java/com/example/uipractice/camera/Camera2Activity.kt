@@ -8,7 +8,7 @@ import android.util.Log
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import com.example.uipractice.R
-import com.tbruyelle.rxpermissions2.RxPermissions
+import com.tbruyelle.rxpermissions3.RxPermissions
 import kotlinx.android.synthetic.main.layout_camera2.*
 import java.io.StringReader
 

@@ -2,8 +2,7 @@ ext {
 
     android = [
             "compileSdkVersion": 30,
-            "buildToolsVersion": "30.0.2",
-            "applicationId"    : "com.example.androidbaseframwork",
+            "buildToolsVersion": "30.0.0",
             "minSdkVersion"    : 21,
             "targetSdkVersion" : 30,
             "versionCode"      : 1,
@@ -25,7 +24,9 @@ ext {
 
         rxJava = [
                 "rxJava"     : "2.2.15",
+                "rxJava3"     : "3.1.5",
                 "rxAndrood"  : "2.1.1",
+                "rxAndrood3"  : "3.0.0",
                 "autodispose": "1.4.0",
         ]
         androidx = [
@@ -53,7 +54,9 @@ ext {
 
         rxJava = [
                 "rxjava"             : "io.reactivex.rxjava2:rxjava:${rootProject.ext.libVersion.rxJava.rxJava}",
+                "rxjava3"             : "io.reactivex.rxjava3:rxjava:${rootProject.ext.libVersion.rxJava.rxJava3}",
                 "rxAndrood"          : "io.reactivex.rxjava2:rxandroid:${rootProject.ext.libVersion.rxJava.rxAndrood}",
+                "rxAndrood3"          : "io.reactivex.rxjava3:rxandroid:${rootProject.ext.libVersion.rxJava.rxAndrood3}",
                 "autodispose"        : "com.uber.autodispose:autodispose:${rootProject.ext.libVersion.rxJava.autodispose}",
                 "autodispose-android": "com.uber.autodispose:autodispose-android-archcomponents:${rootProject.ext.libVersion.rxJava.autodispose}",
                 "rxlife"             : 'com.ljx.rxlife2:rxlife-rxjava:2.0.0'
@@ -77,7 +80,8 @@ ext {
                 "camera-camera2"   : "androidx.camera:camera-camera2:${rootProject.ext.libVersion.androidx.camera2}",
                 "camera-lifecycle" : "androidx.camera:camera-lifecycle:${rootProject.ext.libVersion.androidx.camera2}",
                 "camera-view"      : "androidx.camera:camera-view:1.0.0-alpha24",
-                "camera-extensions": "androidx.camera:camera-extensions:1.0.0-alpha24"
+                "camera-extensions": "androidx.camera:camera-extensions:1.0.0-alpha24",
+                "material": "com.google.android.material:material:1.3.0"
         ]
 
         net = [

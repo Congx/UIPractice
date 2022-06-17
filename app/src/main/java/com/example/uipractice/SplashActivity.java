@@ -4,17 +4,13 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.PersistableBundle;
 import android.view.View;
 import android.view.WindowManager;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.lifecycle.ViewModel;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.base.framwork.activity.BaseActivity;
-import com.lp.base.viewmodel.LifecycleViewModel;
 
 
 /**

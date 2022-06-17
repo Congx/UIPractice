@@ -1,47 +1,73 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
+
 android {
 
-    androidLibConfig(getOwner())
+    compileSdkVersion rootProject.ext.android.compileSdkVersion
+    buildToolsVersion rootProject.ext.android.buildToolsVersion
 
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion rootProject.ext.android.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        ndk {
+            abiFilters 'armeabi-v7a', 'arm64-v8a'
+
+        }
+
+        externalNativeBuild {
+            cmake {
+                arguments '-DANDROID_STL=c++_shared'
+            }
         }
     }
 
     dataBinding {
         enabled = true
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = '1.8'
     }
 
 }
 
-apply plugin: 'maven'
+apply plugin: 'maven-publish'
 /**
  * 打包到本地测试
  */
-uploadArchives {
-    description "Installs the artifacts to the local Maven repository."
-    configuration = configurations['archives']
-    repositories {
-        mavenDeployer {
-            pom.version = "1.0.1"
-            pom.artifactId = "frawork"
-            pom.groupId = "com.base.framwork"
-            def url = "file://${System.properties['user.home']}/.m2/repository"
-            repository url: url
-            println("本地仓库路径：$url")
+afterEvaluate {
+    publishing {
+        publications {
+            // 这里的 hello 可以任意命名
+            release(MavenPublication) {
+                // 插件的组ID，建议设置为插件的包名
+                groupId = 'com.base.framwork'
+                // 翻译过来是 工件ID，我的理解是插件的名字
+                artifactId = 'frawork'
+                version = '1.0.1'
+                from components.release
+            }
+        }
+        repositories {
+            maven {
+                def path = "file://${System.properties['user.home']}/.m2/repository"
+                // change to point to your repo, e.g. http://my.org/repo
+                url = path
+                println("本地仓库路径：$url")
+            }
         }
     }
+
 }
 
 dependencies {
@@ -49,12 +75,8 @@ dependencies {
     // kotlin依赖
     kotlinDependencies()
     implementation rootProject.ext.libs.libsAll
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 //    implementation project(path: ':rxjavalib')
     implementation 'com.safframework.log:saf-logginginterceptor:1.4.8'
     api 'com.jakewharton.timber:timber:4.7.1'
 
-}
-repositories {
-    mavenCentral()
 }

@@ -31,14 +31,14 @@ set_target_properties(
 
 add_library(
         faac-lib
-        STATIC
+        SHARED
         IMPORTED
 )
 
 set_target_properties(
         faac-lib
         PROPERTIES IMPORTED_LOCATION
-        ${CMAKE_SOURCE_DIR}/../libs/${CMAKE_ANDROID_ARCH_ABI}/libfaac.a
+        ${CMAKE_SOURCE_DIR}/../libs/${CMAKE_ANDROID_ARCH_ABI}/libfaac.so
 )
 
 

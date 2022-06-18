@@ -29,6 +29,53 @@ android {
         }
     }
 
+    signingConfigs {
+        //加载资源
+        Properties properties = new Properties()
+        InputStream inputStream = project.rootProject.file('local.properties').newDataInputStream()
+        properties.load(inputStream)
+        //读取文件
+        def sdkDir = properties.getProperty('key.file')
+        //读取字段
+        def keyfile =file(sdkDir)
+        def key_keyAlias = properties.getProperty('keyAlias')
+        def key_keyPassword = properties.getProperty('keyPassword')
+        def key_storePassword = properties.getProperty('storePassword')
+        debug {
+            keyAlias key_keyAlias
+            keyPassword key_keyPassword
+            storeFile file(keyfile)
+            storePassword key_storePassword
+        }
+        release {
+            keyAlias key_keyAlias
+            keyPassword key_keyPassword
+            storeFile file(keyfile)
+            storePassword key_storePassword
+        }
+    }
+
+    buildTypes {
+        debug {
+            debuggable true
+            zipAlignEnabled true
+            debuggable true
+            minifyEnabled false //是否混淆
+            shrinkResources false //是否去除无效的资源文件
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
+        }
+        release {
+            zipAlignEnabled true
+            debuggable false
+            minifyEnabled true //是否混淆
+            shrinkResources true //是否去除无效的资源文件
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+
+        }
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -94,5 +141,6 @@ dependencies {
     implementation 'org.webrtc:google-webrtc:1.0.+'
     implementation 'me.zhanghai.android.materialprogressbar:library:1.6.1'
     implementation 'com.mikhaellopez:circularprogressbar:3.1.0'
+//    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
 
 }

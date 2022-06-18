@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <cstring>
 #include "AudioChannel.h"
+#include "faac.h"
 
 AudioChannel::AudioChannel() {
 

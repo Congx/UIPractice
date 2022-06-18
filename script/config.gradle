@@ -1,10 +1,10 @@
 ext {
 
     android = [
-            "compileSdkVersion": 30,
-            "buildToolsVersion": "30.0.0",
+            "compileSdkVersion": 33,
+            "buildToolsVersion": "33.0.0",
             "minSdkVersion"    : 21,
-            "targetSdkVersion" : 30,
+            "targetSdkVersion" : 31,
             "versionCode"      : 1,
             "versionName"      : '1.0.0'
     ]
@@ -30,7 +30,7 @@ ext {
                 "autodispose": "1.4.0",
         ]
         androidx = [
-                "appcompat"        : "1.2.0",
+                "appcompat"        : "1.4.2",
                 "recyclerview"     : "1.1.0-beta04",
                 "constraintlayout" : "2.0.4",
                 "lifecycle"        : "2.2.0",
@@ -47,7 +47,6 @@ ext {
         libsMap = new HashMap<String, String>()
         //单独引用，用这里
         other = [
-                "leakcanary": "com.squareup.leakcanary:leakcanary-android:2.0",
                 "glide"     : "com.github.bumptech.glide:glide:${rootProject.ext.libVersion.other.glide}",
                 "gson"      : "com.google.code.gson:gson:${rootProject.ext.libVersion.other.gson}",
         ]

@@ -32,5 +32,5 @@ abstract class BaseListActivity<T> : AppCompatActivity() {
     abstract fun bindData(itemView: View, item: T?)
 
 
-    abstract fun getListData(): ArrayList<T>?
+    abstract fun getListData(): ArrayList<out T>?
 }

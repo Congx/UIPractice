@@ -1,5 +1,6 @@
 package com.example.uipractice
 
+import android.app.Activity
 import com.example.uipractice.anim.AnimListActivity
 import com.example.uipractice.architecture.ArchitectureActivity
 import com.example.uipractice.base.BaseItemListActivity
@@ -19,9 +20,9 @@ import com.example.uipractice.rxjava.RxJavaActivity
 import com.example.uipractice.ui.UIActivity
 import com.example.uipractice.window.WindowTestActivity
 
-class MainActivity : BaseItemListActivity() {
+class MainActivity : BaseItemListActivity<Activity>() {
 
-    var list:ArrayList<ItemBean>? = arrayListOf(
+    var list:ArrayList<ItemBean<out Activity>>? = arrayListOf(
         ItemBean("ui相关", UIActivity::class.java),
         ItemBean("架构组件", ArchitectureActivity::class.java),
         ItemBean("rxJava", RxJavaActivity::class.java),
@@ -37,10 +38,11 @@ class MainActivity : BaseItemListActivity() {
         ItemBean("window", WindowTestActivity::class.java),
         ItemBean("插件化", PluginTestActivity::class.java),
         ItemBean("图片相关", GlideActivity::class.java),
-        ItemBean("opengl", OpenglMainActivity::class.java)
+        ItemBean("opengl", OpenglMainActivity::class.java),
+        ItemBean("新架构", NewFragmentListActivity::class.java)
     )
 
-    override fun getListData(): ArrayList<ItemBean>? {
+    override fun getListData(): ArrayList<ItemBean<out Activity>>? {
         return list
     }
 

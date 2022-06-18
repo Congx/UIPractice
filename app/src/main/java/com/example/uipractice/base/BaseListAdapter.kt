@@ -13,10 +13,10 @@ import java.util.Arrays
 
 open abstract class BaseListAdapter<T> : RecyclerView.Adapter<MyHolder<T>> {
 
-    private var list: ArrayList<T>?
+    private var list: MutableList<out T> = mutableListOf()
 
-    constructor(list: ArrayList<T>?) {
-        this.list = list
+    constructor(list: ArrayList<out T>?) {
+        this.list = list?.toMutableList() ?: mutableListOf()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyHolder<T> {
@@ -31,7 +31,7 @@ open abstract class BaseListAdapter<T> : RecyclerView.Adapter<MyHolder<T>> {
 
 
     override fun onBindViewHolder(holder: MyHolder<T>, position: Int) {
-        bindData(holder.itemView, list?.get(position))
+        bindData(holder.itemView, list?.get(position) )
         holder.itemView.setOnClickListener { v->
             onItemClick(v,list?.get(position))
         }
@@ -43,8 +43,8 @@ open abstract class BaseListAdapter<T> : RecyclerView.Adapter<MyHolder<T>> {
 
 
 
-    abstract fun bindData(itemView: View,item:T?)
-    abstract fun onItemClick(itemView: View,item:T?)
+    abstract fun bindData(itemView: View, item: T?)
+    abstract fun onItemClick(itemView: View, item: T?)
 }
 
 

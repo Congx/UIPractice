@@ -1,5 +1,7 @@
 package com.example.uipractice.ui
 
+import android.app.Activity
+import com.example.uipractice.NewFragmentListActivity
 import com.example.uipractice.base.BaseItemListActivity
 import com.example.uipractice.base.ItemBean
 import com.example.uipractice.recyclerview.layoutmanger.LayoutManagerActivity
@@ -12,8 +14,8 @@ import com.example.uipractice.ui.others.ProgressbarActivity
 import com.example.uipractice.ui.recyclerview.RecyclerviewBaseActivity
 import com.example.uipractice.ui.viewPager2.ViewPagerActivity
 
-class UIActivity : BaseItemListActivity() {
-    var list:ArrayList<ItemBean>? = arrayListOf(
+class UIActivity : BaseItemListActivity<Activity>() {
+    var list:ArrayList<ItemBean<out Activity>>? = arrayListOf(
         ItemBean("imageView相关", ImageViewActivity::class.java),
         ItemBean("嵌套滑动", NestedBaseActivity::class.java),
         ItemBean("recyclerview", RecyclerviewBaseActivity::class.java),
@@ -26,7 +28,7 @@ class UIActivity : BaseItemListActivity() {
         ItemBean("其他", OthersUIActivity::class.java)
     )
 
-    override fun getListData(): ArrayList<ItemBean>? {
+    override fun getListData(): ArrayList<ItemBean<out Activity>>? {
         return list
     }
 

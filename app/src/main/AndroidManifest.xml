@@ -26,67 +26,99 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".opengl.OpenglCameractivity"
-            android:exported="false"/>
-        <activity android:name=".opengl.OpenglEffectsActivity"
-            android:exported="false"/>
-        <activity android:name=".opengl.OpenglSplitActivity"
-            android:exported="false"/>
-        <activity android:name=".opengl.OpenglTexActivity"
-            android:exported="false"/>
-        <activity android:name=".opengl.OpenglBeautyActivity"
-            android:exported="false"/>
-        <activity android:name=".camera.CameraXActivity"
-            android:exported="false"/>
-        <activity android:name=".image.GlideActivity"
+        <activity
+            android:name=".NewFragmentListActivity"
             android:exported="false" />
-        <activity android:name=".plugin.PluginTestActivity"
+        <activity
+            android:name=".opengl.OpenglCameractivity"
+            android:exported="false" />
+        <activity
+            android:name=".opengl.OpenglEffectsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".opengl.OpenglSplitActivity"
+            android:exported="false" />
+        <activity
+            android:name=".opengl.OpenglTexActivity"
+            android:exported="false" />
+        <activity
+            android:name=".opengl.OpenglBeautyActivity"
+            android:exported="false" />
+        <activity
+            android:name=".camera.CameraXActivity"
+            android:exported="false" />
+        <activity
+            android:name=".image.GlideActivity"
+            android:exported="false" />
+        <activity
+            android:name=".plugin.PluginTestActivity"
             android:exported="false" /> <!-- <activity android:name=".plugin.PluginActivity"></activity> -->
-        <activity android:name=".recyclerview.layoutmanger.LayoutManagerActivity"
+        <activity
+            android:name=".recyclerview.layoutmanger.LayoutManagerActivity"
             android:exported="false" />
-        <activity android:name=".ndk.NDKActivity"
+        <activity
+            android:name=".ndk.NDKActivity"
             android:exported="false" />
-        <activity android:name=".rxjava.RxTestActivity"
+        <activity
+            android:name=".rxjava.RxTestActivity"
             android:exported="false" />
-        <activity android:name=".window.WindowTestActivity"
+        <activity
+            android:name=".window.WindowTestActivity"
             android:exported="false" />
-        <activity android:name=".net.RetrofitActivity"
+        <activity
+            android:name=".net.RetrofitActivity"
             android:exported="false" />
-        <activity android:name=".rxjava.HotObserverActivity"
+        <activity
+            android:name=".rxjava.HotObserverActivity"
             android:exported="false" />
-        <activity android:name=".others.FileProviderActivity"
+        <activity
+            android:name=".others.FileProviderActivity"
             android:exported="false" />
-        <activity android:name=".net.WebsocketActivity"
+        <activity
+            android:name=".net.WebsocketActivity"
             android:exported="false" />
-        <activity android:name=".ui.others.OthersUIActivity"
+        <activity
+            android:name=".ui.others.OthersUIActivity"
             android:exported="false" />
-        <activity android:name=".ui.others.ProgressbarActivity"
+        <activity
+            android:name=".ui.others.ProgressbarActivity"
             android:exported="false" />
-        <activity android:name=".ui.eventdispatch.EventDispatchActivity"
+        <activity
+            android:name=".ui.eventdispatch.EventDispatchActivity"
             android:exported="false" />
-        <activity android:name=".anim.AnimTestActivity"
+        <activity
+            android:name=".anim.AnimTestActivity"
             android:exported="false" />
-        <activity android:name=".anim.AnimListActivity"
+        <activity
+            android:name=".anim.AnimListActivity"
             android:exported="false" />
-        <activity android:name=".camera.CameraActivity"
+        <activity
+            android:name=".camera.CameraActivity"
             android:exported="false" />
         <activity
             android:name=".camera.Camera2Activity"
             android:configChanges="orientation|screenSize"
             android:exported="false" />
-        <activity android:name=".fragment.FragmentLiveActivity"
+        <activity
+            android:name=".fragment.FragmentLiveActivity"
             android:exported="false" />
-        <activity android:name=".fragment.FragmentLifecyclerActivity"
+        <activity
+            android:name=".fragment.FragmentLifecyclerActivity"
             android:exported="false" />
-        <activity android:name=".fragment.FragmentViewpager2Activity"
+        <activity
+            android:name=".fragment.FragmentViewpager2Activity"
             android:exported="false" />
-        <activity android:name=".fragment.FragmentListActivity"
+        <activity
+            android:name=".fragment.FragmentListActivity"
             android:exported="false" />
-        <activity android:name=".basepractice.StatusActivity"
+        <activity
+            android:name=".basepractice.StatusActivity"
             android:exported="false" />
-        <activity android:name=".basepractice.BaseLibActivity"
+        <activity
+            android:name=".basepractice.BaseLibActivity"
             android:exported="false" />
-        <activity android:name=".SplashActivity"
+        <activity
+            android:name=".SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -94,56 +126,79 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".rxjava.AutoDisposeActivity"
+        <activity
+            android:name=".rxjava.AutoDisposeActivity"
             android:exported="false" />
-        <activity android:name=".ui.viewPager2.ViewPagerActivity"
+        <activity
+            android:name=".ui.viewPager2.ViewPagerActivity"
             android:exported="false" />
-        <activity android:name=".ui.recyclerview.itemdivider.Viewpager2Activity"
+        <activity
+            android:name=".ui.recyclerview.itemdivider.Viewpager2Activity"
             android:exported="false" />
-        <activity android:name=".rxjava.BackPressActivity"
+        <activity
+            android:name=".rxjava.BackPressActivity"
             android:exported="false" />
-        <activity android:name=".rxjava.RxJavaActivity"
+        <activity
+            android:name=".rxjava.RxJavaActivity"
             android:exported="false" />
-        <activity android:name=".rxjava.ThreadActivity"
+        <activity
+            android:name=".rxjava.ThreadActivity"
             android:exported="false" />
-        <activity android:name=".architecture.LiveActivity"
+        <activity
+            android:name=".architecture.LiveActivity"
             android:exported="false" />
-        <activity android:name=".architecture.ArchitectureActivity"
+        <activity
+            android:name=".architecture.ArchitectureActivity"
             android:exported="false" />
-        <activity android:name=".ui.UIActivity"
+        <activity
+            android:name=".ui.UIActivity"
             android:exported="false" />
-        <activity android:name=".ui.AttrStyleActivity"
+        <activity
+            android:name=".ui.AttrStyleActivity"
             android:exported="false" />
         <activity
             android:name=".ui.keybord.KeybordActivity"
+            android:exported="false"
             android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustPan"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".ui.recyclerview.itemdivider.RvDividerActivity"
             android:exported="false" />
-        <activity android:name=".ui.recyclerview.itemdivider.RvDividerActivity"
+        <activity
+            android:name=".ui.recyclerview.RecyclerviewBaseActivity"
             android:exported="false" />
-        <activity android:name=".ui.recyclerview.RecyclerviewBaseActivity"
+        <activity
+            android:name=".MainActivity"
             android:exported="false" />
-        <activity android:name=".MainActivity"
+        <activity
+            android:name=".ui.ivpacage.ImageViewActivity"
             android:exported="false" />
-        <activity android:name=".ui.ivpacage.ImageViewActivity"
+        <activity
+            android:name=".ui.ivpacage.ImageViewHintActivity"
             android:exported="false" />
-        <activity android:name=".ui.ivpacage.ImageViewHintActivity"
+        <activity
+            android:name=".ui.nestedscroll.NestedBaseActivity"
             android:exported="false" />
-        <activity android:name=".ui.nestedscroll.NestedBaseActivity"
+        <activity
+            android:name=".ui.nestedscroll.NestedBaseUsedActivity"
             android:exported="false" />
-        <activity android:name=".ui.nestedscroll.NestedBaseUsedActivity"
+        <activity
+            android:name=".ui.nestedscroll.NestedBehaviorActivity"
             android:exported="false" />
-        <activity android:name=".ui.nestedscroll.NestedBehaviorActivity"
+        <activity
+            android:name=".ui.nestedscroll.AppbarBehaviorActivity"
             android:exported="false" />
-        <activity android:name=".ui.nestedscroll.AppbarBehaviorActivity"
+        <activity
+            android:name=".architecture.ViewModelActivity"
             android:exported="false" />
-        <activity android:name=".architecture.ViewModelActivity"
+        <activity
+            android:name=".net.NetListActivity"
             android:exported="false" />
-        <activity android:name=".net.NetListActivity"
+        <activity
+            android:name=".opengl.OpenglBaseUseActivity"
             android:exported="false" />
-        <activity android:name=".opengl.OpenglBaseUseActivity"
-            android:exported="false" />
-        <activity android:name=".opengl.OpenglMainActivity"
+        <activity
+            android:name=".opengl.OpenglMainActivity"
             android:exported="false" />
 
         <provider
@@ -156,10 +211,12 @@
                 android:resource="@xml/export_paths" />
         </provider>
 
-        <activity android:name=".plugin.StubActivity"
+        <activity
+            android:name=".plugin.StubActivity"
             android:exported="false" />
 
-        <service android:name=".plugin.service.ProxyService"
+        <service
+            android:name=".plugin.service.ProxyService"
             android:exported="false" />
     </application>
 

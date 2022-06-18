@@ -43,6 +43,7 @@ open class LifecycleViewModel : ViewModel(), LifecycleEventObserver, LifecycleOw
             Lifecycle.Event.ON_PAUSE -> onPause()
             Lifecycle.Event.ON_STOP -> onStop()
             Lifecycle.Event.ON_DESTROY -> onDestroy()
+            else -> Lifecycle.Event.ON_DESTROY
         }
         // 事件转发，具有LifecycleOwner能力
         lifecycle.handleLifecycleEvent(event)

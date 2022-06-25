@@ -52,10 +52,10 @@ android {
             storePassword key_storePassword
         }
         release {
-            keyAlias key_keyAlias
-            keyPassword key_keyPassword
-            storeFile file(keyfile)
-            storePassword key_storePassword
+            keyAlias "test"
+            keyPassword "123456"
+            storeFile file("../key/test.jks")
+            storePassword "123456"
         }
     }
 
@@ -67,7 +67,7 @@ android {
             minifyEnabled false //是否混淆
             shrinkResources false //是否去除无效的资源文件
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
         }
         release {
             zipAlignEnabled true
